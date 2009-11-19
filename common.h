@@ -1,1 +1,1 @@
-/* common.h *///
+/* common.h */
