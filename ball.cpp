@@ -2,5 +2,3 @@
 #include "common.h"
 
 //
-
-/* end ball.cpp */
