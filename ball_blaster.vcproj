@@ -161,6 +161,50 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\ball.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ball_blaster.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\editor_event_handler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\event_handler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\graphics.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\level.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\objects.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\physics.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\simulator_event_handler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\vec.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -168,7 +212,47 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\ball.h"
+				>
+			</File>
+			<File
 				RelativePath=".\common.h"
+				>
+			</File>
+			<File
+				RelativePath=".\editor_event_handler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\event_handler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\game.h"
+				>
+			</File>
+			<File
+				RelativePath=".\graphics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\level.h"
+				>
+			</File>
+			<File
+				RelativePath=".\objects.h"
+				>
+			</File>
+			<File
+				RelativePath=".\physics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\simulator_event_handler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\vec.h"
 				>
 			</File>
 		</Filter>
