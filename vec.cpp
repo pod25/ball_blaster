@@ -1,4 +1,6 @@
-/* file: vec.cpp */
+/*
+ * File: vec.cpp
+ */
 #include "common.h"
 
 //

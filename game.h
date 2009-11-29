@@ -1,8 +1,12 @@
-/* file: game.h */
+/*
+ * File: game.h
+ */
 #ifndef GAME_H
 #define GAME_H
 
-// game class
+/*
+ * game class
+ */
 class game {
 
 };

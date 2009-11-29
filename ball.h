@@ -1,8 +1,12 @@
-/* file: ball.h */
+/*
+ * File: ball.h
+ */
 #ifndef BALL_H
 #define BALL_H
 
-// ball class
+/*
+ * ball class
+ */
 class ball {
 
 };

@@ -1,8 +1,12 @@
-/* file: level.h */
+/*
+ * File: level.h
+ */
 #ifndef LEVEL_H
 #define LEVEL_H
 
-// level class
+/*
+ * level class
+ */
 class level {
 
 };

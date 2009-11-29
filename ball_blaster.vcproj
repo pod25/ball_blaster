@@ -57,7 +57,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_ttf.lib"
+				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

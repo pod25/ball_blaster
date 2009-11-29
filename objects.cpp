@@ -1,4 +1,6 @@
-/* file: objects.cpp */
+/*
+ * File: objects.cpp
+ */
 #include "common.h"
 
 //

@@ -1,4 +1,6 @@
-/* file: simulator_event_handler.cpp */
+/*
+ * File: simulator_event_handler.cpp
+ */
 #include "common.h"
 
 //

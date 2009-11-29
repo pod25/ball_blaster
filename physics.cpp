@@ -1,4 +1,6 @@
-/* file: physics.cpp */
+/*
+ * File: physics.cpp
+ */
 #include "common.h"
 
 //

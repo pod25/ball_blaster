@@ -1,4 +1,6 @@
-/* file: game.cpp */
+/*
+ * File: game.cpp
+ */
 #include "common.h"
 
 //

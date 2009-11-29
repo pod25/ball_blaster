@@ -1,10 +1,16 @@
-/* file: vec.h */
+/*
+ * File: vec.h
+ */
 #ifndef VEC_H
 #define VEC_H
 
-// vec struct
+/*
+ * vec struct
+ */
 struct vec {
-
+public:
+	double		x;
+	double		y;
 };
 
 #endif

@@ -1,33 +1,50 @@
-/* file: objects.h */
+/*
+ * File: objects.h
+ */
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-// object class
+/*
+ * object class
+ */
 class object abstract {
-
+private:
+	vec		_pos;
+	bool	_locked;
 };
 
-// directed object class
+/*
+ * directed object class
+ */
 class directed_object : public object {
-
+private:
+	int		dir;
 };
 
-// magnet class
+/*
+ * magnet class
+ */
 class magnet : public directed_object {
 
 };
 
-// nondirected object class
+/*
+ * nondirected object class
+ */
 class nondirected_object : public object {
 
 };
 
-// wall class
+/*
+ * wall class
+ */
 class wall : public nondirected_object {
 
 };
 
-// goal class
+/*
+ * goal class
+ */
 class goal : public nondirected_object {
 
 };

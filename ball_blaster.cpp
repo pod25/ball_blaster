@@ -1,10 +1,11 @@
-/* file: ball_blaster.cpp */
+/*
+ * File: ball_blaster.cpp
+ */
 #include "common.h"
 
-SDL_Surface *load_image(std::string filename);
-void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface* destination );
-
-//main function
+/* 
+ * main function
+ */
 int main(int argc, char* args[]) {
 
 	// TODO: Temporary SDL implementation
@@ -16,9 +17,9 @@ int main(int argc, char* args[]) {
 	const int SCREEN_BPP = 32;
 
 	//The surfaces that will be used
-	SDL_Surface *message = NULL;
-	SDL_Surface *background = NULL;
-	SDL_Surface *screen = NULL;
+	sdl_surface* message	= NULL;
+	sdl_surface* background	= NULL;
+	sdl_surface* screen		= NULL;
 
 	//The event structure that will be used
 	SDL_Event event;
@@ -33,7 +34,7 @@ int main(int argc, char* args[]) {
 	if(screen == NULL) return 1;
 
 	//Set the window caption
-	SDL_WM_SetCaption( "Hello World", NULL);
+	SDL_WM_SetCaption("Hello World", NULL);
 
 	//Load the images
 	message = load_image("hello.bmp");
@@ -76,39 +77,4 @@ int main(int argc, char* args[]) {
 
 	//Return
 	return 0;
-}
-
-SDL_Surface *load_image(std::string filename) {
-	//The image that's loaded
-	SDL_Surface* loadedImage = NULL;
-
-	//The optimized image that will be used
-	SDL_Surface* optimizedImage = NULL;
-
-	//Load the image using SDL_image
-	loadedImage = IMG_Load(filename.c_str());
-
-	//If the image loaded
-	if(loadedImage != NULL) {
-		//Create an optimized image
-		optimizedImage = SDL_DisplayFormat(loadedImage);
-
-		//Free the old image
-		SDL_FreeSurface(loadedImage);
-	}
-
-	//Return the optimized image
-	return optimizedImage;
-}
-
-void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface* destination) {
-	//Make a temporary rectangle to hold the offsets
-	SDL_Rect offset;
-
-	//Give the offsets to the rectangle
-	offset.x = x;
-	offset.y = y;
-
-	//Blit the surface
-	SDL_BlitSurface(source, NULL, destination, &offset);
 }

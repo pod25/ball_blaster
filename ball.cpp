@@ -1,4 +1,6 @@
-/* file: ball.cpp */
+/*
+ * File: ball.cpp
+ */
 #include "common.h"
 
 //

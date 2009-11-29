@@ -1,4 +1,6 @@
-/* file: event_handler.cpp */
+/*
+ * File: event_handler.cpp
+ */
 #include "common.h"
 
 //

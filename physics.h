@@ -1,8 +1,12 @@
-/* file: physics.h */
+/*
+ * File: physics.h
+ */
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-// physics class
+/*
+ * physics class
+ */
 class physics {
 
 };
