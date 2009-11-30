@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="Headers"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -58,6 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_ttf.lib"
+				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -112,6 +114,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories=""
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -165,47 +168,47 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ball.cpp"
+				RelativePath=".\Source\ball.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ball_blaster.cpp"
+				RelativePath=".\Source\ball_blaster.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\editor_event_handler.cpp"
+				RelativePath=".\Source\editor_event_handler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\event_handler.cpp"
+				RelativePath=".\Source\event_handler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\game.cpp"
+				RelativePath=".\Source\game.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\graphics.cpp"
+				RelativePath=".\Source\graphics.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\level.cpp"
+				RelativePath=".\Source\level.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\objects.cpp"
+				RelativePath=".\Source\objects.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\physics.cpp"
+				RelativePath=".\Source\physics.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\simulator_event_handler.cpp"
+				RelativePath=".\Source\simulator_event_handler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\vec.cpp"
+				RelativePath=".\Source\vec.cpp"
 				>
 			</File>
 		</Filter>
@@ -215,47 +218,47 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\ball.h"
+				RelativePath=".\Headers\ball.h"
 				>
 			</File>
 			<File
-				RelativePath=".\common.h"
+				RelativePath=".\Headers\common.h"
 				>
 			</File>
 			<File
-				RelativePath=".\editor_event_handler.h"
+				RelativePath=".\Headers\editor_event_handler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\event_handler.h"
+				RelativePath=".\Headers\event_handler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\game.h"
+				RelativePath=".\Headers\game.h"
 				>
 			</File>
 			<File
-				RelativePath=".\graphics.h"
+				RelativePath=".\Headers\graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\level.h"
+				RelativePath=".\Headers\level.h"
 				>
 			</File>
 			<File
-				RelativePath=".\objects.h"
+				RelativePath=".\Headers\objects.h"
 				>
 			</File>
 			<File
-				RelativePath=".\physics.h"
+				RelativePath=".\Headers\physics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\simulator_event_handler.h"
+				RelativePath=".\Headers\simulator_event_handler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\vec.h"
+				RelativePath=".\Headers\vec.h"
 				>
 			</File>
 		</Filter>
