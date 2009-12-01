@@ -8,7 +8,11 @@
  * ball class
  */
 class ball {
-
+	friend	level;
+private:
+	vec		_pos;
+	vec		_vel;
+	bool	_visible;
 };
 
 #endif

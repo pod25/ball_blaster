@@ -8,6 +8,9 @@
  * Library includes
  */
 #include <string>
+using std::string;
+#include <vector>
+using std::vector;
 
 /*
  * SDL includes
@@ -39,8 +42,10 @@ class goal;
 /*
  * Typedefs
  */
-typedef SDL_Surface		sdl_surface;
-typedef std::string		str;
+typedef SDL_Surface					sdl_surface;
+typedef vector<vector<object*>>		vvobj;
+typedef unsigned int				uint;
+typedef uint						size_t;
 
 /*
  * Global variables

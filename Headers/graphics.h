@@ -14,7 +14,7 @@ class graphics {
 /*
  * Graphic function declarations
  */
-sdl_surface*	load_image(str filename);
+sdl_surface*	load_image(string filename);
 void			apply_surface(int x, int y, sdl_surface* src, sdl_surface* dest);
 
 #endif
