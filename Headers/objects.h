@@ -8,16 +8,20 @@
  * object class
  */
 class object abstract {
-private:
+	friend	level;
+protected:
 	vec		_pos;
 	bool	_locked;
+public:
+	virtual void test(); // TODO: Remove this muddafukka (needed for class to be polymorphic)
 };
 
 /*
  * directed object class
  */
 class directed_object : public object {
-private:
+	friend	level;
+protected:
 	int		dir;
 };
 

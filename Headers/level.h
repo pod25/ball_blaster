@@ -23,8 +23,8 @@ private:
 public:
 	size_t		num_objects		(size_t x, size_t y);
 	object*		get_object		(size_t x, size_t y, size_t index);
-	void		remove_obj		(size_t x, size_t y, size_t index);
-	void		insert_obj		(size_t x, size_t y, object* obj);
+	bool		remove_obj		(size_t x, size_t y, size_t index);
+	bool		insert_obj		(size_t x, size_t y, object* obj);
 	size_t		get_width		();
 	size_t		get_height		();
 	bool		set_size		(size_t w, size_t h);

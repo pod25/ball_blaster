@@ -25,6 +25,7 @@ size_t level::num_objects(size_t x, size_t y) {
  * Get object pointer at (x, y, index)
  */
 object*	level::get_object(size_t x, size_t y, size_t index) {
+	// Checks that object exists
 	if(index < num_objects(x, y))
 		return _objects[_index_from_coord(x, y)][index];
 	else
@@ -34,17 +35,42 @@ object*	level::get_object(size_t x, size_t y, size_t index) {
 /*
  * Remove object at (x, y, index)
  */
-void level::remove_obj(size_t x, size_t y, size_t index) {
+bool level::remove_obj(size_t x, size_t y, size_t index) {
+	// Checks that object exists
 	if(index < num_objects(x, y)) {
 		vector<object*>* cur_vec = &_objects[_index_from_coord(x, y)];
 		cur_vec->erase(cur_vec->begin() + index);
+		return true;
 	}
+	return false;
 }	
 
 /*
  * Insert object at (x, y)
  */
-void level::insert_obj(size_t x, size_t y, object* obj) {
+bool level::insert_obj(size_t x, size_t y, object* obj) {
+	// Type casts the input object to directed object if that is the case
+	directed_object* dir_obj = dynamic_cast<directed_object*>(obj);
+
+	// Is object directed?
+	bool in_dir = (dir_obj == 0) ? false: true;
+	// Gets number of objects in selected square
+	size_t num_obj = num_objects(x, y);
+
+	// Checks when insert is forbidden
+	if(num_obj == 1 && dynamic_cast<directed_object*>(get_object(x, y, 0)))
+		return false;
+	else if(!in_dir && num_obj > 0)
+		return false;
+	else if(in_dir) {
+		for(size_t n = 0; n < num_obj; n++) {
+			if(dynamic_cast<directed_object*>(get_object(x, y, n))->dir == dir_obj->dir)
+				return false;
+		}
+	}
+	// Inserts object into desired coordinate.
+	_objects[_index_from_coord(x, y)].push_back(obj);
+	return true;
 }
 
 /*
@@ -65,6 +91,9 @@ size_t level::get_height() {
  * Get level size in squares
  */
 bool level::set_size(size_t w, size_t h) {
+	// Come back!!  Loop to find and store objects!
+	_w = w;
+	_h = h;
 	return false;
 }
 
@@ -79,7 +108,12 @@ uint level::get_grid_size() {
  * Set visual grid size (in pixels)
  */
 bool level::set_grid_size(uint size) {
-	return false;
+	if(size > 0) {
+		_grid_size = size;
+		return true;
+	}
+	else
+		return false;
 }
 
 /*
@@ -93,7 +127,12 @@ double level::get_square_scale() {
  * Set square scale factor (physical)
  */
 bool level::set_square_scale(double scale) {
-	return false;
+	if(scale > 0) {
+		_square_scale = scale;
+		return true;
+	}
+	else
+		return false;
 }
 
 /*
@@ -107,7 +146,12 @@ double level::get_ball_scale() {
  * Set ball scale factor (visual and physical)
  */
 bool level::set_ball_scale(double scale) {
-	return false;
+	if(scale > 0) {
+		_ball_scale = scale;
+		return true;
+	}
+	else
+		return false;
 }
 
 /*
@@ -121,7 +165,8 @@ vec	level::get_gravity() {
  * Set gravity force vector
  */
 bool level::set_gravity(vec gravity) {
-	return false;
+	_gravity = gravity;
+	return true;
 }
 
 /*
@@ -135,7 +180,9 @@ vec level::get_ball_pos() {
  * Set ball position to vector
  */
 bool level::set_ball_pos(vec pos) {
-	return false;
+	if(pos.x >= 0 && pos.y >= 0)
+		_ball._pos = pos;
+	return true;
 }
 
 /*
