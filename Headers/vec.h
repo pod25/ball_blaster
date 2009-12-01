@@ -42,4 +42,5 @@ public:
 vec operator*(double, const vec&);
 
 #endif
+//test
 /* end vec.h */

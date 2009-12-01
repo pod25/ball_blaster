@@ -6,7 +6,7 @@
 /*
  * Image load function
  */
-sdl_surface* load_image(str filename) {
+sdl_surface* load_image(string filename) {
 	sdl_surface* loaded_image = NULL;
 	
 	// Optimized version of the image

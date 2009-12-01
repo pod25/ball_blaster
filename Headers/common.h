@@ -8,6 +8,12 @@
  * Library includes
  */
 #include <string>
+using std::string;
+#include <vector>
+using std::vector;
+#include <fstream>
+using std::ofstream;
+using std::ifstream;
 
 /*
  * SDL includes
@@ -39,8 +45,10 @@ class goal;
 /*
  * Typedefs
  */
-typedef SDL_Surface		sdl_surface;
-typedef std::string		str;
+typedef SDL_Surface					sdl_surface;
+typedef vector<vector<object*>>		vvobj;
+typedef unsigned int				uint;
+typedef uint						size_t;
 
 /*
  * Global variables
@@ -60,6 +68,7 @@ extern level					lev;
 #include "event_handler.h"
 #include "editor_event_handler.h"
 #include "simulator_event_handler.h"
+#include "files.h"
 #include "game.h"
 #include "graphics.h"
 #include "level.h"
