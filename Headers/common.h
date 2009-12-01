@@ -11,6 +11,9 @@
 using std::string;
 #include <vector>
 using std::vector;
+#include <fstream>
+using std::ofstream;
+using std::ifstream;
 
 /*
  * SDL includes
@@ -65,6 +68,7 @@ extern level					lev;
 #include "event_handler.h"
 #include "editor_event_handler.h"
 #include "simulator_event_handler.h"
+#include "files.h"
 #include "game.h"
 #include "graphics.h"
 #include "level.h"
