@@ -43,6 +43,16 @@ typedef SDL_Surface		sdl_surface;
 typedef std::string		str;
 
 /*
+ * Global variables
+ */
+extern editor_event_handler		editor_eh;
+extern simulator_event_handler	sim_eh;
+extern event_handler*			cur_eh;
+extern graphics					gra;
+extern physics					phy;
+extern level					lev;
+
+/*
  * Ball Blaster includes
  */
 #include "vec.h"

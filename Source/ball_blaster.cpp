@@ -3,6 +3,16 @@
  */
 #include "common.h"
 
+/*
+ * Global (!) variables (extern in common.h)
+ */
+editor_event_handler	editor_eh;	// Editor event handler
+simulator_event_handler	sim_eh;		// Simulator event handler
+event_handler*			cur_eh;		// Pointer to current event handler
+graphics				gra;		// Graphics
+physics					phy;		// Physics
+level					lev;		// Level
+
 /* 
  * main function
  */
