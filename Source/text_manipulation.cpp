@@ -24,7 +24,7 @@ vector<string> explode(const string& text, const char delimiter) {
 /*
  * Combines elements in a vector to a string separated with given delimiter
  */
-string implode(const string& text, const char delimiter) {
+string implode(vector<string> text, const char delimiter) {
 	string result;
 
 	return result;

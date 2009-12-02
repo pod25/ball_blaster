@@ -43,9 +43,9 @@ public:
 	bool		ball_visible	();
 	void		show_ball		();
 	void		hide_ball		();
-	void		save_level		(string name);
-	void		load_level		(string name);
-	void		new_level		(string name);
+	bool		save_level		(string name);
+	bool		load_level		(string name);
+	bool		new_level		(string name);
 
 	level() {}; // Default constructor
 private:

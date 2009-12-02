@@ -234,18 +234,41 @@ void level::hide_ball() {
 /*
  * Save the level to 'Levels/{name}.lev'
  */
-void level::save_level(string name) {
+bool level::save_level(string name) {
+	vector<vector<string>> structure;
+	vector<vector<string>>::iterator curr_obj = structure.begin();
+	
+	// Level properties
+	curr_obj->push_back(ID_LEVEL);
+	curr_obj->push_back(PROP_GRAVITY);
+	curr_obj->push_back(to_string(get_gravity().x));
+	curr_obj->push_back(to_string(get_gravity().y));
+
+	// Generate object strings
+	vector<string> out;
+	for(curr_obj = structure.begin(); curr_obj != structure.end(); curr_obj++)
+		out.push_back(implode(*curr_obj, ','));
+
+	// Generate file string and save
+	if(save_level_file(name, implode(out,'|'))) {
+		// If successful set current level name
+		_level_name = name;
+		return true;
+	}
+	return false;
 }
 
 /*
  * Load a level from 'Levels/{name}.lev'
  */
-void level::load_level(string name) {
+bool level::load_level(string name) {
+	return false;
 }
 
 /*
  * Reset the level and set level name
  */
-void level::new_level(string name) {
+bool level::new_level(string name) {
+	return false;
 }
 /*************************************************/

@@ -7,7 +7,7 @@
 // Function declarations
 string			trim	(const string& text);
 vector<string>	explode	(const string& text, const char delimiter);
-string			implode	(const string& text, const char delimiter);
+string			implode	(vector<string> text, const char delimiter);
 
 string			to_string(int);
 string			to_string(double);

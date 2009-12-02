@@ -73,6 +73,7 @@ extern level					lev;
 /*
  * Ball Blaster includes
  */
+#include "text_manipulation.h"
 #include "vec.h"
 #include "ball.h"
 #include "image.h"
