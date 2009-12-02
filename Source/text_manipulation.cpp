@@ -58,6 +58,14 @@ string implode(vector<string> text, const char delimiter) {
 /*
  * Convert values to string
  */
+string to_string(size_t value) {
+	string result;
+	std::stringstream out;
+	out << value;
+	result = out.str();
+
+	return result;
+}
 string to_string(int value) {
 	string result;
 	std::stringstream out;
@@ -73,4 +81,18 @@ string to_string(double value) {
 	result = out.str();
 
 	return result;
+}
+
+/*
+ * Convert string to double
+ */
+double to_double (string val) {
+	return atof(val.c_str());
+}
+
+/*
+ * Convert string to int
+ */
+int to_int (string val) {
+	return atoi(val.c_str());
 }

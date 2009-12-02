@@ -62,15 +62,8 @@ int main(int argc, char* args[]) {
 		if((screen.flip()) == -1) return 1;
 
 		/* LEVEL TEST */
-		wall* obj1 = new wall();
-		wall* obj2 = new wall();
-		wall* obj3 = new wall();
-		lev.set_size(2,2);
-		lev.insert_obj(0,0,obj1);
-		lev.insert_obj(0,1,obj2);
-		lev.insert_obj(1,0,obj3);
-		lev.set_size(1,1);
-		lev.save_level("hej");
+		lev.load_level("in");
+		lev.save_level("out");
 
 		//While the user hasn't quit
 		bool quit = false;

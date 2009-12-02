@@ -4,6 +4,12 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
+// Defaults
+#define LEVEL_DEFAULT_WIDTH		160
+#define LEVEL_DEFAULT_HEIGHT	100
+#define LEVEL_DEFAULT_GRID_SIZE	32
+#define LEVEL_DEFAULT_GRAVITY	10
+
 /*
  * level class
  */
