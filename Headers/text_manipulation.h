@@ -5,8 +5,8 @@
 #define TEXT_MANIPULATION_H
 
 // Function declarations
-string			trim	(const string& text);
-vector<string>	explode	(const string& text, const char delimiter);
+string			trim	(string text);
+vector<string>	explode	(string text, const char delimiter);
 string			implode	(vector<string> text, const char delimiter);
 
 string			to_string(int);
