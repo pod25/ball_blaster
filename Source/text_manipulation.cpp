@@ -29,3 +29,17 @@ string implode(const string& text, const char delimiter) {
 
 	return result;
 }
+
+/*
+ * Convert values to string
+ */
+string to_string(int) {
+	string result;
+
+	return result;
+}
+string to_string(double) {
+	string result;
+
+	return result;
+}
