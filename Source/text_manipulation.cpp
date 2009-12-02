@@ -6,10 +6,13 @@
 /*
  * Trim spaces/tabs and linebreaks from start and end of string
  */
-string trim(const string& text) {
-	while(substr(0,1) == 
-		text = substr(1, );
-	return result;
+string trim(string text) {
+	while(text.substr(0, 1) == " ")
+		text = text.substr(1);
+	while(text.substr(text.length() - 1, 1) == " ")
+		text = text.substr(0, text.length() - 1);
+
+	return text;
 }
 
 /*
