@@ -3,11 +3,6 @@
  */
 #include "common.h"
 
-#include <iostream> //For debugging
-using std::endl;
-using std::cout;
-using std::cerr;
-
 /*
  * Global (!) variables (extern in common.h)
  */
@@ -66,8 +61,8 @@ int main(int argc, char* args[]) {
 		//Update the screen
 		if((screen.flip()) == -1) return 1;
 
-		//Wait 2 seconds
-		SDL_Delay(2000);
+		string content = "This is rangsdgdom content";
+		save_level_file("test",content);
 
 		//While the user hasn't quit
 		bool quit = false;

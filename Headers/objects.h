@@ -18,7 +18,6 @@ enum OBJECT_CLASSES {
 class object abstract {
 	friend	level;
 protected:
-	vec		_pos;
 	bool	_locked;
 public:
 	virtual void test(); // TODO: Remove this muddafukka (needed for class to be polymorphic)

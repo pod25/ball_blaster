@@ -7,9 +7,9 @@
 /*
  * File function declarations
  */
-//ofstream	open_level_file(string name);
-//bool		save_level_file(const string& content);
-//string		path_from_level_name(string name);
+ifstream*	open_level_file(string name);
+bool		save_level_file(string name, const string& content);
+string		path_from_level_name(string name);
 
 #endif
 /* end files.h */

@@ -2,8 +2,6 @@
  * File: vec.cpp
  */
 #include "common.h"
-#include <cmath>
-
 
 vec& vec::operator=(const vec& rhs) {
 	x = rhs.x;

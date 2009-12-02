@@ -7,6 +7,7 @@
 /*
  * Library includes
  */
+#include <stdio.h>
 #include <string>
 using std::string;
 #include <vector>
@@ -18,6 +19,11 @@ using std::ifstream;
 using std::exception;
 using std::domain_error;
 using std::invalid_argument;
+#include <cmath>
+#include <iostream> //For debugging
+using std::endl;
+using std::cout;
+using std::cerr;
 
 /*
  * SDL includes
