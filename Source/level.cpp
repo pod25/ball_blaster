@@ -10,7 +10,10 @@
  * Get number of objects at (x, y)
  */
 size_t level::num_objects(size_t x, size_t y) {
-	return _objects[x][y].size();
+	if(x < _objects.size())
+		if(y < _objects[x].size())
+			return _objects[x][y].size();
+	return 0;
 }
 
 /*
@@ -40,6 +43,10 @@ bool level::remove_obj(size_t x, size_t y, size_t index) {
  * Insert object at (x, y)
  */
 bool level::insert_obj(size_t x, size_t y, object* obj) {
+	// In bounds?
+	if(x >= _w || y >= _h)
+		return false;
+
 	// Type casts the input object to directed object if that is the case
 	directed_object* dir_obj = dynamic_cast<directed_object*>(obj);
 
@@ -60,7 +67,15 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 		}
 	}
 	// Inserts object into desired coordinate.
+	if(x >= _objects.size()) {
+		_objects.resize(x+1);
+	}
+	if(y >= _objects[x].size()) {
+		_objects[x].resize(y+1);
+	}
+
 	_objects[x][y].push_back(obj);
+
 	return true;
 }
 
@@ -79,22 +94,16 @@ size_t level::get_height() {
 }
 
 /*
- * Get level size in squares
+ * Set level size in squares
  */
 bool level::set_size(size_t w, size_t h) {
 	// Checks if level size has been reduced
-	if(h < _h || w < _w) {
-		// Iterator for last element
-		vvvobj::iterator x = _objects.end()-1;
-		// Removes objects if coordinates exceed new level size
-		for(; x >= _objects.begin() + w; x--) {
-			_objects.erase(x);
-		}
-		for(; x >= _objects.begin(); x--) {
-			for(vvobj::iterator y = x->end()-1; y >= x->begin() + h; y--) {
-				x->erase(y);
-			}
-		}
+	if(w < _w || h < _h) {
+		while(_objects.size() > w)
+			_objects.pop_back();
+		for(vvvobj::iterator x = _objects.begin(); x < _objects.begin() + w && _objects.size() > 0; x++)
+			while(x->size() > h)
+				x->pop_back();
 	}
 	_w = w;
 	_h = h;

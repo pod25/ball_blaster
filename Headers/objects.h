@@ -34,12 +34,12 @@ enum OBJECT_DIRECTIONS {
 /*
  * object class
  */
-class object abstract {
+class object {
 	friend	level;
 protected:
 	bool	_locked;
 public:
-	virtual void test(); // TODO: Remove this muddafukka (needed for class to be polymorphic)
+	virtual void test(){}; // TODO: Remove this muddafukka (needed for class to be polymorphic)
 };
 
 /*

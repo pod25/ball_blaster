@@ -41,8 +41,6 @@ vector<string> explode(string text, const char delimiter) {
 	return result;
 }
 
-
-
 /*
  * Combines elements in a vector to a string separated with given delimiter
  */
