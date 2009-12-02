@@ -15,6 +15,7 @@ using std::vector;
 #include <fstream>
 using std::ofstream;
 using std::ifstream;
+#include <sstream>
 #include <stdexcept>
 using std::exception;
 using std::domain_error;
