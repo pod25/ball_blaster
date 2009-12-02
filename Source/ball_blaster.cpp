@@ -27,8 +27,9 @@ int main(int argc, char* args[]) {
 		const int SCREEN_BPP = 32;
 
 		//The surfaces that will be used
-		video_mode	screen;
-		image		message, background;
+		video_mode	screen(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
+		image		message("images/temp/hello.png");
+		image		background("images/temp/background.png");
 
 		//The event structure that will be used
 		SDL_Event event;
@@ -37,7 +38,7 @@ int main(int argc, char* args[]) {
 		if(SDL_Init(SDL_INIT_EVERYTHING) == -1) return 1;
 
 		//Set up the screen
-		screen.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
+		//screen.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
 
 		//If there was an error in setting up the screen
 		if(screen.empty()) return 1;
@@ -46,8 +47,8 @@ int main(int argc, char* args[]) {
 		SDL_WM_SetCaption("Hello World", NULL);
 
 		//Load the images
-		message.load("images/hello.png");
-		background.load("images/background.png");
+		//message.load("images/temp/hello.png");
+		//background.load("images/temp/background.png");
 
 		//Apply the background to the screen
 		background.apply(screen, 0, 0);

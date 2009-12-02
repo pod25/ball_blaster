@@ -25,11 +25,11 @@ void base_image::apply(base_image dest, int x, int y, SDL_Rect *src_part) {
  * image class methods
  */
 bool image::load(string filename) {
+	// Free old image if any
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
 	// Load the image
 	SDL_Surface* loaded_image = IMG_Load(filename.c_str());
 	if(loaded_image != NULL) {
-		// Free old image if any
-		if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
 		// Create an optimized image
 		_sdl_srf = SDL_DisplayFormat(loaded_image);
 		// Free the old image

@@ -1,5 +1,5 @@
 /*
- * File: level.h
+ * File: image.h
  */
 #ifndef IMAGE_H
 #define IMAGE_H
