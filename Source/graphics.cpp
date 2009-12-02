@@ -3,40 +3,23 @@
  */
 #include "common.h"
 
-/*
- * Image load function
- */
-sdl_surface* load_image(string filename) {
-	sdl_surface* loaded_image = NULL;
-	
-	// Optimized version of the image
-	sdl_surface* optimized_image = NULL;
-
-	// Load the image
-	loaded_image = IMG_Load(filename.c_str());
-
-	// Image loaded?
-	if(loaded_image != NULL) {
-		// Create an optimized image
-		optimized_image = SDL_DisplayFormat(loaded_image);
-
-		// Free the old image
-		SDL_FreeSurface(loaded_image);
-	}
-
-	// Return the optimized image
-	return optimized_image;
+void graphics::set_refresh_flag() {
+	refresh = true;
 }
 
-/*
- * Apply one surface to another at coordinate (x,y)
- */
-void apply_surface(int x, int y, sdl_surface* src, sdl_surface* dest) {
-	// Make a temporary rectangle to hold the offsets
-	SDL_Rect offset;
-	offset.x = x;
-	offset.y = y;
+void graphics::update() {
+	if (!refresh) return;
 
-	// Blit the surface
-	SDL_BlitSurface(src, NULL, dest, &offset);
+	// Your code here
+
+	refresh = false;
+}
+
+graphics::graphics() {
+	refresh = false;
+	//screen_buffer		.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
+	//background_buffer	.load("background.png");
+	//wall_buffer			.load("wall.png");
+	//for (uint i = 0; i < NUM_OBJECT_CLASSES; i++) object_buffers[i].load("objectssss.png");
+	//ball_buffer			.load("ball.png");
 }

@@ -36,13 +36,11 @@ vec& vec::operator/=(const double divider) {
 }
 
 vec vec::operator+(const vec& rhs) {
-	vec temp(x, y);
-	return temp += rhs;
+	return vec(x+rhs.x, y+rhs.y);
 }
 
-vec vec::operator-(const vec& rhs){
-	vec temp(x, y);
-	return temp -= rhs;
+vec vec::operator-(const vec& rhs) {
+	return vec(x-rhs.x, y-rhs.y);
 }
 
 double vec::operator*(const vec& rhs) {
@@ -50,7 +48,7 @@ double vec::operator*(const vec& rhs) {
 }
 
 double vec::operator%(const vec& rhs) {
-return (x*rhs.y - y*rhs.x);
+	return (x*rhs.y - y*rhs.x);
 }
 
 vec vec::operator*(const double multiplier) {
@@ -62,24 +60,27 @@ vec vec::operator/(const double divider) {
 	return temp /= divider;
 }
 
-
 double vec::length() {
 	return sqrt(sqr_length());
 }
 
 double vec::sqr_length() {
-	return (pow(x, 2) + pow(y,2));
+	return (x*x + y*y);
 }
 
 vec vec::normalized() {
-	vec temp(x, y);
-	temp /= length();
-	return temp;
+	double len = length();
+	if (!len) throw domain_error("Trying to normalize a zero-length vec");
+	return vec(x/len, y/len);
+}
+
+void vec::normalize() {
+	double len = length();
+	if (!len) throw domain_error("Trying to normalize a zero-length vec");
+	x /= len;
+	y /= len;
 }
 
 vec operator*(double lhs, const vec& rhs) {
-	vec temp(rhs);
-	return temp *= lhs;
+	return vec(lhs*rhs.x, lhs*rhs.y);
 }
-
-//

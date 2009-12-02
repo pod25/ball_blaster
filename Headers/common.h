@@ -14,6 +14,10 @@ using std::vector;
 #include <fstream>
 using std::ofstream;
 using std::ifstream;
+#include <stdexcept>
+using std::exception;
+using std::domain_error;
+using std::invalid_argument;
 
 /*
  * SDL includes
@@ -45,7 +49,6 @@ class goal;
 /*
  * Typedefs
  */
-typedef SDL_Surface					sdl_surface;
 typedef vector<vector<object*>>		vvobj;
 typedef unsigned int				uint;
 typedef uint						size_t;
@@ -65,15 +68,16 @@ extern level					lev;
  */
 #include "vec.h"
 #include "ball.h"
+#include "image.h"
 #include "event_handler.h"
 #include "editor_event_handler.h"
 #include "simulator_event_handler.h"
 #include "files.h"
 #include "game.h"
-#include "graphics.h"
 #include "level.h"
 #include "objects.h"
 #include "physics.h"
+#include "graphics.h"
 
 #endif
 /* end common.h */

@@ -4,6 +4,14 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
+enum OBJECT_CLASSES {
+	//OC_WALL,
+	OC_GOAL_AREA,
+	OC_FAN,
+	OC_MAGNET,
+	NUM_OBJECT_CLASSES
+};
+
 /*
  * object class
  */

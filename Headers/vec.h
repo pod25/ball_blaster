@@ -12,13 +12,6 @@ public:
 	double		x;
 	double		y;
 
-
-	vec(double x_init = 0, double y_init = 0)
-		: x(x_init), y(y_init) {}
-
-	vec(const vec& existing)
-		: x(existing.x), y(existing.y) {}
-
 	vec&	operator=(const vec&);
 	vec&	operator+=(const vec&);
 	vec&	operator-=(const vec&);
@@ -27,20 +20,25 @@ public:
 
 	vec		operator+(const vec&);
 	vec		operator-(const vec&);
-	double	operator*(const vec&);
-	double	operator%(const vec&);
+	double	operator*(const vec&); // Dot product, scalar product
+	double	operator%(const vec&); // Determinant of corresponding 2x2 matrix
 	vec		operator*(const double);
 	vec		operator/(const double);
 
-	
 	double length();
 	double sqr_length();
 	vec normalized();
+	void normalize();
 
+	vec() : x(0), y(0) {} // Default constructor
+	vec(const vec& existing) // Copy constructor
+		: x(existing.x), y(existing.y) {}
+	vec(double x_init, double y_init)
+		: x(x_init), y(y_init) {}
+	~vec() {} // Default destructor
 };
 
 vec operator*(double, const vec&);
 
 #endif
-//test
 /* end vec.h */

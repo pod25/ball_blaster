@@ -14,7 +14,7 @@ private:
 	size_t		_h;				// Number of squares in height
 	uint		_grid_size;		// Visual square size in pixels
 	double		_square_scale;	// Physical square scale
-	double		_ball_scale;	// Visual and physical ball scale
+	double		_ball_scale;	// Ball diameter vs. square side ratio
 	vec			_gravity;		// Gravity force vector 
 	ball		_ball;			// The ball
 	string		_level_name;	// The name of the current level
@@ -46,6 +46,10 @@ public:
 	void		save_level		(string name);
 	void		load_level		(string name);
 	void		new_level		(string name);
+
+	level() {}; // Default constructor
+private:
+	level(const level&); //Protect from using copy constructor (until desired)
 };
 
 #endif
