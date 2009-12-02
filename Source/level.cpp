@@ -6,9 +6,10 @@
 /*************************************************
  * PRIVATE FUNCTION DEFINITIONS
  *************************************************/ 
-size_t level::_index_from_coord(size_t x, size_t y) {
+// Changed from vvobj to vvvobj, may be needed again. If not, REMOVE!
+/*size_t level::_index_from_coord(size_t x, size_t y) {
 	return y * _w + x;
-}
+}*/
 /*************************************************/
 
 /*************************************************
@@ -18,7 +19,7 @@ size_t level::_index_from_coord(size_t x, size_t y) {
  * Get number of objects at (x, y)
  */
 size_t level::num_objects(size_t x, size_t y) {
-	return _objects[_index_from_coord(x, y)].size();
+	return _objects[x][y].size();
 }
 
 /*
@@ -27,7 +28,7 @@ size_t level::num_objects(size_t x, size_t y) {
 object*	level::get_object(size_t x, size_t y, size_t index) {
 	// Checks that object exists
 	if(index < num_objects(x, y))
-		return _objects[_index_from_coord(x, y)][index];
+		return _objects[x][y][index];
 	else
 		return 0;
 }
@@ -38,8 +39,7 @@ object*	level::get_object(size_t x, size_t y, size_t index) {
 bool level::remove_obj(size_t x, size_t y, size_t index) {
 	// Checks that object exists
 	if(index < num_objects(x, y)) {
-		vector<object*>* cur_vec = &_objects[_index_from_coord(x, y)];
-		cur_vec->erase(cur_vec->begin() + index);
+		_objects[x][y].erase(_objects[x][y].begin() + index);
 		return true;
 	}
 	return false;
@@ -69,7 +69,7 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 		}
 	}
 	// Inserts object into desired coordinate.
-	_objects[_index_from_coord(x, y)].push_back(obj);
+	_objects[x][y].push_back(obj);
 	return true;
 }
 
@@ -91,10 +91,20 @@ size_t level::get_height() {
  * Get level size in squares
  */
 bool level::set_size(size_t w, size_t h) {
-	// Come back!!  Loop to find and store objects!
+	if(h < _h || w < _w) {
+		vvvobj::iterator x = _objects.end()-1;
+		for(; x >= _objects.begin() + w; x--) {
+			_objects.erase(x);
+		}
+		for(; x >= _objects.begin(); x--) {
+			for(vvobj::iterator y = x->end()-1; y >= x->begin() + h; y--) {
+				x->erase(y);
+			}
+		}
+	}
 	_w = w;
 	_h = h;
-	return false;
+	return true;
 }
 
 /*
@@ -196,7 +206,8 @@ vec level::get_ball_vel() {
  * Set ball velocity to vector
  */
 bool level::set_ball_vel(vec vel) {
-	return false;
+	_ball._vel = vel;
+	return true;
 }
 
 /*
@@ -210,12 +221,14 @@ bool level::ball_visible() {
  * Show the ball
  */
 void level::show_ball() {
+	_ball._visible = true;
 }
 
 /*
  * Hide the ball
  */
 void level::hide_ball() {
+	_ball._visible = false;
 }
 
 /*

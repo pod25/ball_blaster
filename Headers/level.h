@@ -9,7 +9,7 @@
  */
 class level {
 private:
-	vvobj		_objects;		// Level object container
+	vvvobj		_objects;		// Level object container
 	size_t		_w;				// Number of squares in width
 	size_t		_h;				// Number of squares in height
 	uint		_grid_size;		// Visual square size in pixels
@@ -19,7 +19,7 @@ private:
 	ball		_ball;			// The ball
 	string		_level_name;	// The name of the current level
 	
-	size_t		_index_from_coord(size_t x, size_t y);
+	size_t		_index_from_coord(size_t x, size_t y); 
 public:
 	size_t		num_objects		(size_t x, size_t y);
 	object*		get_object		(size_t x, size_t y, size_t index);

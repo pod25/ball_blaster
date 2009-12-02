@@ -55,9 +55,10 @@ class goal;
 /*
  * Typedefs
  */
-typedef vector<vector<object*>>		vvobj;
-typedef unsigned int				uint;
-typedef uint						size_t;
+typedef vector<vector<object*>>				vvobj;
+typedef vector<vector<vector<object*>>>		vvvobj;
+typedef unsigned int						uint;
+typedef uint								size_t;
 
 /*
  * Global variables
