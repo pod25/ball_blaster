@@ -62,6 +62,10 @@ int main(int argc, char* args[]) {
 		//Update the screen
 		if((screen.flip()) == -1) return 1;
 
+		/* LEVEL TEST */
+		lev.load_level("in");
+		lev.save_level("out");
+
 		//While the user hasn't quit
 		bool quit = false;
 		while(quit == false) {
