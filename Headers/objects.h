@@ -6,8 +6,9 @@
 
 // Object identifiers
 enum OBJECT_CLASSES {
-	//OC_WALL,
+	OC_WALL,
 	OC_GOAL_AREA,
+	OC_CANNON,
 	OC_FAN,
 	OC_MAGNET,
 	NUM_OBJECT_CLASSES
