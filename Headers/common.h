@@ -55,6 +55,7 @@ class goal;
 /*
  * Typedefs
  */
+typedef vector<object*>						vobj;
 typedef vector<vector<object*>>				vvobj;
 typedef vector<vector<vector<object*>>>		vvvobj;
 typedef unsigned int						uint;

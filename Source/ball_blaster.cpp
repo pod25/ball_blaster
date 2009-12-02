@@ -61,9 +61,6 @@ int main(int argc, char* args[]) {
 		//Update the screen
 		if((screen.flip()) == -1) return 1;
 
-		string content = "This is rangsdgdom content";
-		save_level_file("test",content);
-
 		//While the user hasn't quit
 		bool quit = false;
 		while(quit == false) {

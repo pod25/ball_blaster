@@ -55,7 +55,7 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 		return false;
 	else if(in_dir) {
 		for(size_t n = 0; n < num_obj; n++) {
-			if(dynamic_cast<directed_object*>(get_object(x, y, n))->dir == dir_obj->dir)
+			if(dynamic_cast<directed_object*>(get_object(x, y, n))->_dir == dir_obj->_dir)
 				return false;
 		}
 	}
@@ -229,19 +229,54 @@ void level::hide_ball() {
  * Save the level to 'Levels/{name}.lev'
  */
 bool level::save_level(string name) {
-	vector<vector<string>> structure;
-	vector<vector<string>>::iterator curr_obj = structure.begin();
-	
-	// Level properties
-	curr_obj->push_back(ID_LEVEL);
-	curr_obj->push_back(PROP_GRAVITY);
-	curr_obj->push_back(to_string(get_gravity().x));
-	curr_obj->push_back(to_string(get_gravity().y));
-
-	// Generate object strings
 	vector<string> out;
-	for(curr_obj = structure.begin(); curr_obj != structure.end(); curr_obj++)
-		out.push_back(implode(*curr_obj, ','));
+	
+	/* Level properties */ {
+		vector<string> obj_out;
+		obj_out.push_back(ID_LEVEL);
+		obj_out.push_back(PROP_GRAVITY);
+		obj_out.push_back(to_string(get_gravity().x));
+		obj_out.push_back(to_string(get_gravity().y));
+		out.push_back(implode(obj_out, ','));
+	}
+
+	// Iterate all objects
+	int i_x = 0;
+	for(vvvobj::iterator x = _objects.begin(); x != _objects.end(); x++) {
+		int i_y = 0;
+		for(vvobj::iterator y = x->begin(); y != x->end(); y++) {
+			for(vobj::iterator i = y->begin() ; i != y->end(); i++) {
+				vector<string> obj_out;
+				/* Wall object*/ {
+					wall* o = dynamic_cast<wall*>(*i);
+					if(o) {
+						obj_out.push_back(ID_WALL);
+					}
+				}
+
+				/* Magnet object*/ {
+					magnet* o = dynamic_cast<magnet*>(*i);
+					if(o) {
+						obj_out.push_back(ID_MAGNET);
+						obj_out.push_back(PROP_DIR);
+						obj_out.push_back(to_string(o->_dir));
+						obj_out.push_back(PROP_STRENGTH);
+						obj_out.push_back(to_string(o->_strength));
+					}
+				}
+
+				// Position is common to all objects
+				obj_out.push_back(PROP_POS);
+				obj_out.push_back(to_string(i_x));
+				obj_out.push_back(to_string(i_y));
+
+				// Add object string to out-vector
+				out.push_back(implode(obj_out, ','));
+			}
+			i_y++;
+		}
+		i_x++;
+	}
 
 	// Generate file string and save
 	if(save_level_file(name, implode(out,'|'))) {
@@ -256,6 +291,26 @@ bool level::save_level(string name) {
  * Load a level from 'Levels/{name}.lev'
  */
 bool level::load_level(string name) {
+	// Open file
+	ifstream* file = open_level_file(name);
+	if(!file->is_open())
+		return false;
+
+	int		prop_pos_x		= 0;
+	int		prop_pos_y		= 0;
+	double	prop_gravity_x	= 0;
+	int		prop_gravity_y	= 0;
+	int		prop_dir		= 0;
+	int		prop_strength	= 0;
+
+	// Read file
+	string content_string;
+	string part;
+	while(*file >> part)
+		content_string.append(part);
+
+	// CONTINUE HERE
+
 	return false;
 }
 
