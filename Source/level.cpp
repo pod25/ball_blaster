@@ -4,15 +4,6 @@
 #include "common.h"
 
 /*************************************************
- * PRIVATE FUNCTION DEFINITIONS
- *************************************************/ 
-// Changed from vvobj to vvvobj, may be needed again. If not, REMOVE!
-/*size_t level::_index_from_coord(size_t x, size_t y) {
-	return y * _w + x;
-}*/
-/*************************************************/
-
-/*************************************************
  * PUBLIC FUNCTION DEFINITIONS
  *************************************************/ 
 /*
@@ -91,8 +82,11 @@ size_t level::get_height() {
  * Get level size in squares
  */
 bool level::set_size(size_t w, size_t h) {
+	// Checks if level size has been reduced
 	if(h < _h || w < _w) {
+		// Iterator for last element
 		vvvobj::iterator x = _objects.end()-1;
+		// Removes objects if coordinates exceed new level size
 		for(; x >= _objects.begin() + w; x--) {
 			_objects.erase(x);
 		}

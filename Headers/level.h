@@ -19,7 +19,6 @@ private:
 	ball		_ball;			// The ball
 	string		_level_name;	// The name of the current level
 	
-	size_t		_index_from_coord(size_t x, size_t y); 
 public:
 	size_t		num_objects		(size_t x, size_t y);
 	object*		get_object		(size_t x, size_t y, size_t index);

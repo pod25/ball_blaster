@@ -7,8 +7,8 @@
  * Trim spaces/tabs and linebreaks from start and end of string
  */
 string trim(const string& text) {
-	string result;
-
+	while(substr(0,1) == 
+		text = substr(1, );
 	return result;
 }
 
