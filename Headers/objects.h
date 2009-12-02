@@ -12,6 +12,9 @@ enum OBJECT_CLASSES {
 	NUM_OBJECT_CLASSES
 };
 
+#define ID_LEVEL		"LEVEL"
+#define PROP_GRAVITY	"GRAVITY"
+
 /*
  * object class
  */
