@@ -10,7 +10,7 @@ bool base_image::empty() {
 	return !_sdl_srf;
 }
 
-void base_image::apply(base_image dest, int x, int y, SDL_Rect *src_part) {
+void base_image::apply(base_image &dest, int x, int y, SDL_Rect *src_part) {
 	if (!     _sdl_srf) throw invalid_argument("Image applying not loaded");
 	if (!dest._sdl_srf) throw invalid_argument("Image applyed on not loaded");
 	// Make a temporary rectangle to hold the offsets
@@ -21,21 +21,33 @@ void base_image::apply(base_image dest, int x, int y, SDL_Rect *src_part) {
 	SDL_BlitSurface(_sdl_srf, src_part, dest._sdl_srf, &offset);
 }
 
+void base_image::apply(int x, int y, SDL_Rect *src_part) {
+	apply(gra.get_screen_buffer(), x, y, src_part);
+}
+
 /*
  * image class methods
  */
+
 bool image::load(string filename) {
+	// Free old image if any
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
 	// Load the image
 	SDL_Surface* loaded_image = IMG_Load(filename.c_str());
 	if(loaded_image != NULL) {
-		// Free old image if any
-		if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
 		// Create an optimized image
 		_sdl_srf = SDL_DisplayFormat(loaded_image);
 		// Free the old image
 		SDL_FreeSurface(loaded_image);
 	}
 	// Return true if succeeded
+	return !!_sdl_srf;
+}
+
+bool image::load(string text, font &text_font, SDL_Color text_color) {
+	// Free old image if any
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	_sdl_srf = TTF_RenderText_Blended(text_font.get_sdl_font(), text.c_str(), text_color);
 	return !!_sdl_srf;
 }
 
@@ -47,6 +59,10 @@ void image::free() {
 
 image::image(string filename) { // Constructor using a file name
 	load(filename);
+}
+
+image::image(string text, font &text_font, SDL_Color text_color) { // Constructor using a file name
+	load(text, text_font, text_color);
 }
 
 image::~image() { // Destructor

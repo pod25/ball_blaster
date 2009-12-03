@@ -78,6 +78,7 @@ extern level					lev;
 #include "text_manipulation.h"
 #include "vec.h"
 #include "ball.h"
+#include "font.h"
 #include "image.h"
 #include "event_handler.h"
 #include "editor_event_handler.h"

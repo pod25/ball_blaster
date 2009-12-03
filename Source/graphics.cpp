@@ -13,6 +13,7 @@ void graphics::init_images(bool load_images) {
 	std_obj_images[ OC_MAGNET		] = "Magnet/horshoemagnet1.jpg";
 	if (load_images) {
 		screen_buffer		.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SCREEN_FLAGS);
+		if(screen_buffer.empty()) throw exception("Couldn't set up screen");
 		background_buffer	.load(std_background_img);
 		ball_buffer			.load(std_ball_img);
 		for (uint i = 0; i < NUM_OBJECT_CLASSES; i++) object_buffers[i].load(std_obj_images[i]);
@@ -25,11 +26,11 @@ void graphics::set_refresh_flag() {
 
 void graphics::update() {
 	if (!refresh) return;
-
-	// Your code here
-
+	screen_buffer.flip();
 	refresh = false;
 }
+
+video_mode& graphics::get_screen_buffer() {return screen_buffer;}
 
 graphics::graphics() {
 	init_images(true);
