@@ -252,8 +252,13 @@ bool level::save_level(string name) {
 		obj_out.push_back(to_string(get_gravity().x));
 		obj_out.push_back(to_string(get_gravity().y));
 		obj_out.push_back(PROP_LEVEL_SIZE);
-		obj_out.push_back(to_string(_w));
-		obj_out.push_back(to_string(_h));
+		obj_out.push_back(to_string(get_width()));
+		obj_out.push_back(to_string(get_height()));
+		obj_out.push_back(PROP_LEVEL_SQUARE_SCALE);
+		obj_out.push_back(to_string(get_square_scale()));
+		obj_out.push_back(PROP_LEVEL_BALL_SCALE);
+		obj_out.push_back(to_string(get_ball_scale()));
+
 		out.push_back(implode(obj_out, ','));
 	}
 
@@ -342,14 +347,16 @@ bool level::load_level(string name) {
 			string id = object.front();
 			object.erase(object.begin());
 
-			vec		prop_gravity		(0, 0);
-			int		prop_pos_x			= 0;
-			int		prop_pos_y			= 0;
-			int		prop_dir			= 0;
-			int		prop_strength		= 0;
-			int		prop_lev_size_x		= 0;
-			int		prop_lev_size_y		= 0;
-			int		prop_lev_grid_size	= 0;
+			vec		prop_gravity			(0, 0);
+			int		prop_pos_x				= 0;
+			int		prop_pos_y				= 0;
+			int		prop_dir				= 0;
+			int		prop_strength			= 0;
+			int		prop_lev_size_x			= 0;
+			int		prop_lev_size_y			= 0;
+			int		prop_lev_grid_size		= 0;
+			double	prop_lev_square_scale	= 0;
+			double	prop_lev_ball_scale		= 0;
 
 			// Load the properties
 			while(object.size() > 0) {
@@ -382,6 +389,14 @@ bool level::load_level(string name) {
 					prop_lev_grid_size = to_int(object[0]);
 					object.erase(object.begin(), object.begin() + 1);
 				}
+				else if(prop == PROP_LEVEL_SQUARE_SCALE) {
+					prop_lev_square_scale = to_double(object[0]);
+					object.erase(object.begin(), object.begin() + 1);
+				}
+				else if(prop == PROP_LEVEL_BALL_SCALE) {
+					prop_lev_ball_scale = to_double(object[0]);
+					object.erase(object.begin(), object.begin() + 1);
+				}
 			}
 
 			// Create the object
@@ -389,6 +404,8 @@ bool level::load_level(string name) {
 				set_gravity		(prop_gravity);
 				set_size		(prop_lev_size_x, prop_lev_size_y);
 				set_grid_size	(prop_lev_grid_size);
+				set_square_scale(prop_lev_square_scale);
+				set_ball_scale	(prop_lev_ball_scale);
 				found_level		= true;
 			}
 			else if(id == ID_WALL) {
@@ -420,6 +437,8 @@ bool level::new_level(string name) {
 	set_size		(LEVEL_DEFAULT_WIDTH, LEVEL_DEFAULT_HEIGHT);
 	set_grid_size	(LEVEL_DEFAULT_GRID_SIZE);
 	set_gravity		(vec(0, LEVEL_DEFAULT_GRAVITY));
+	set_square_scale(1);
+	set_ball_scale	(1);
 
 	return false;
 }

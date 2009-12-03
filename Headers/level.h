@@ -4,12 +4,6 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-// Defaults
-#define LEVEL_DEFAULT_WIDTH		160
-#define LEVEL_DEFAULT_HEIGHT	100
-#define LEVEL_DEFAULT_GRID_SIZE	32
-#define LEVEL_DEFAULT_GRAVITY	10
-
 /*
  * level class
  */
@@ -26,6 +20,12 @@ private:
 	string		_level_name;	// The name of the current level
 	
 public:
+	// Default values
+	static const int LEVEL_DEFAULT_WIDTH		= 160;
+	static const int LEVEL_DEFAULT_HEIGHT		= 100;
+	static const int LEVEL_DEFAULT_GRID_SIZE	= 32;
+	static const int LEVEL_DEFAULT_GRAVITY		= 10;
+
 	size_t		num_objects		(size_t x, size_t y);
 	object*		get_object		(size_t x, size_t y, size_t index);
 	bool		remove_obj		(size_t x, size_t y, size_t index);

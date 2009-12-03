@@ -33,6 +33,8 @@ enum OBJECT_DIRECTIONS {
 #define PROP_STRENGTH			"STRENGTH"
 #define PROP_LEVEL_SIZE			"LEVEL_SIZE"
 #define PROP_LEVEL_GRID_SIZE	"GRID_SIZE"
+#define PROP_LEVEL_SQUARE_SCALE	"SQUARE_SCALE"
+#define PROP_LEVEL_BALL_SCALE	"BALL_SCALE"
 
 /*
  * object class
@@ -45,7 +47,7 @@ protected:
 	bool	_locked;
 public:
 	object(bool locked);
-	virtual void test(){}; // TODO: Remove this muddafukka (needed for class to be polymorphic)
+	virtual ~object() {};
 };
 
 /*
