@@ -6,13 +6,15 @@
 /*
  * Global (!) variables (extern in common.h)
  */
-editor_event_handler	editor_eh;	// Editor event handler
-simulator_event_handler	sim_eh;		// Simulator event handler
-event_handler*			cur_eh;		// Pointer to current event handler
+error_handler			err_hndl_obj; // Error handler
+editor_event_handler	editor_eh;	  // Editor event handler
+simulator_event_handler	sim_eh;		  // Simulator event handler
+event_handler*			cur_eh;		  // Pointer to current event handler
 game					gam;		// Game
-level					lev;		// Level
-graphics				gra;		// Graphics
-physics					phy;		// Physics
+level					lev;		  // Level
+sdl_handler				sdl_obj;	  // SDL handler
+graphics				gra;		  // Graphics
+physics					phy;		  // Physics
 
 
 /* 
@@ -35,9 +37,10 @@ int main(int argc, char* args[]) {
 
 		//The surfaces that will be used
 		//video_mode	screen(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
-		image hello("images/temp/hello.png");
+		image hello("temp/hello.png");
 		image message("The quick brown fox jumps over the lazy dog", lazy_font, text_color);
-		image background("images/temp/background.png");
+		image rect_srf;
+		image background("temp/background.png");
 		//Render the text
 
 		//Apply the background to the screen
@@ -46,9 +49,20 @@ int main(int argc, char* args[]) {
 		background.apply(0, 240);
 		background.apply(320, 240);
 
-		//Apply the message to the screen
+		//Apply the images to the screen
+		//hello.set_alpha(64);
 		hello.apply(180, 140);
 		message.apply(10, 160);
+
+		rect_srf.load("wall/Earth SMWar.png");
+		//rect_srf.generate_text("\"The quick brown fox jumps over the lazy dog\"", lazy_font, text_color);
+		rect_srf.disable_alpha ();
+		rect_srf.enable_alpha ();
+		rect_srf.set_alpha(96);
+		SDL_Color color; color.r = 128; color.g = 0; color.b = 255;
+		//rect_srf.set_color(color);
+		//rect_srf.set_color(color.r, color.g, color.b);
+		rect_srf.apply(5, 40);
 
 		//Update the screen
 		gra.set_refresh_flag();
@@ -68,11 +82,7 @@ int main(int argc, char* args[]) {
 		//message.free();
 		//background.free();
 	}
-	catch ( exception &e ) {
-		cerr << "Unexpected error occured" << endl;
-		cerr << "Caught: " << e.what( ) << endl;
-		cerr << "Type: " << typeid( e ).name( ) << endl;
-	};
+	catch (exception &e) {err_hndl_obj.inform_about_error("main()", e);};
 	//Return
 	return 0;
 }

@@ -21,11 +21,18 @@ private:
 
 class image : public base_image {
 public:
-	bool load(string filename);
-	bool load(string text, font &text_font, SDL_Color text_color);
-	void free();
+	void load			(string filename);
+	void generate_rect	(int w, int h);//, SDL_Color color = {0,0,0});
+	void generate_text	(string text, font &text_font, SDL_Color text_color);
+	void free			();
+	void set_alpha		(Uint8 a, bool enabled = true);
+	void enable_alpha	();
+	void disable_alpha	();
+	void set_color		(Uint8 r, Uint8 g, Uint8 b);
+	void set_color		(SDL_Color color);
 
 	image() {} // Default constructor
+	image(int w, int h);//, SDL_Color color = {0,0,0});
 	image(string filename); // Constructor using a file name
 	image(string text, font &text_font, SDL_Color text_color);
 	~image(); // Destructor
@@ -36,8 +43,8 @@ private:
 
 class video_mode : public base_image {
 public:
-	bool init(int width, int height, int bpp, Uint32 flags);
-	int  flip();
+	void init(int width, int height, int bpp, Uint32 flags);
+	void flip();
 
 	video_mode() {} // Default constructor
 	video_mode(int width, int height, int bpp, Uint32 flags);

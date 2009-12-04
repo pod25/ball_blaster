@@ -9,8 +9,17 @@
  */
 class editor_event_handler : public event_handler {
 private:
-	int _mouse_x;
-	int _mouse_y;
+	enum STATES {
+		STATE_DEFAULT,
+		STATE_CANNON_CONFIG,
+		STATE_INSERTION
+	};
+
+	int		_mouse_x;
+	int		_mouse_y;
+	int		_state;
+	bool	_can_edit_const;
+	int		_sel_obj_type;
 public:
 	editor_event_handler();
 

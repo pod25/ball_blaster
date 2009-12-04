@@ -105,10 +105,8 @@ public:
  */
 class wall : public nondirected_object {
 	friend level;
-private:
-	wall();
 public:
-	wall(bool locked) : nondirected_object(locked) {};
+	wall() : nondirected_object(true) {};
 };
 
 /*
@@ -116,10 +114,8 @@ public:
  */
 class goal : public nondirected_object {
 	friend level;
-private:
-	goal();
 public:
-	goal(bool locked) : nondirected_object(locked) {};
+	goal() : nondirected_object(true) {};
 };
 
 /*

@@ -60,6 +60,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_ttf.lib"
 				AdditionalLibraryDirectories=""
+				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -242,7 +243,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Headers\coords.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Headers\editor_event_handler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Headers\error_handler.h"
 				>
 			</File>
 			<File
@@ -283,6 +292,10 @@
 			</File>
 			<File
 				RelativePath=".\Headers\physics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Headers\sdl_handler.h"
 				>
 			</File>
 			<File

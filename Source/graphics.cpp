@@ -8,7 +8,7 @@ void graphics::init_images(bool load_images) {
 	std_ball_img		= "Ball/Black ball.png";
 	std_obj_images[ OC_WALL			] = "Wall/Wall SMB2.png";
 	std_obj_images[ OC_GOAL_AREA	] = "Wall/Mushrom SMWar.png";
-	std_obj_images[ OC_CANNON		] = "Cannon/Artillery_gun_crew-illustration.jpg";
+	std_obj_images[ OC_CANNON		] = "Cannon/Artillery_gun_crew-illustration.jpeg";
 	std_obj_images[ OC_FAN			] = "Fan/tokyo_plusminuszero_fan2.png";
 	std_obj_images[ OC_MAGNET		] = "Magnet/horshoemagnet1.jpg";
 	if (load_images) {
@@ -33,6 +33,9 @@ void graphics::update() {
 video_mode& graphics::get_screen_buffer() {return screen_buffer;}
 
 graphics::graphics() {
-	init_images(true);
-	refresh = false;
+	try {
+		init_images(true);
+		refresh = false;
+	}
+	catch (exception &e) {err_hndl_obj.inform_about_error("graphics default constructor", e);};
 }

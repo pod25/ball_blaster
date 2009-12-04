@@ -327,21 +327,18 @@ bool level::save_level(string name) {
 						obj_out.push_back(ID_WALL);
 					}
 				}
-
 				/* Goal object */ {
 					goal* o = dynamic_cast<goal*>(*i);
 					if(o) {
 						obj_out.push_back(ID_GOAL);
 					}
 				}
-
 				/* Cannon object */ {
 					cannon* o = dynamic_cast<cannon*>(*i);
 					if(o) {
 						obj_out.push_back(ID_CANNON);
 					}
 				}
-
 				/* Magnet object */ {
 					magnet* o = dynamic_cast<magnet*>(*i);
 					if(o) {
@@ -352,7 +349,6 @@ bool level::save_level(string name) {
 						obj_out.push_back(to_string(o->_strength));
 					}
 				}
-				
 				/* Fan object */ {
 					fan* o = dynamic_cast<fan*>(*i);
 					if(o) {
@@ -479,11 +475,11 @@ bool level::load_level(string name) {
 				found_level		= true;
 			}
 			else if(id == ID_WALL) {
-				wall* o = new wall(true);
+				wall* o = new wall();
 				insert_obj(prop_pos_x, prop_pos_y, o);
 			}
 			else if(id == ID_GOAL) {
-				goal* o = new goal(true);
+				goal* o = new goal();
 				insert_obj(prop_pos_x, prop_pos_y, o);
 			}
 			else if(id == ID_CANNON) {
