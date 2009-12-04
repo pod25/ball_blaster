@@ -54,16 +54,16 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 	directed_object* dir_obj = dynamic_cast<directed_object*>(obj);
 
 	// Is object directed?
-	bool in_dir = (dir_obj == 0) ? false: true;
+	bool is_dir = (dir_obj == 0) ? false: true;
 	// Gets number of objects in selected square
 	size_t num_obj = num_objects(x, y);
 
 	// Checks when insert is forbidden
 	if(num_obj == 1 && dynamic_cast<directed_object*>(get_object(x, y, 0)))
 		return false;
-	else if(!in_dir && num_obj > 0)
+	else if(!is_dir && num_obj > 0)
 		return false;
-	else if(in_dir) {
+	else if(is_dir) {
 		for(size_t n = 0; n < num_obj; n++) {
 			if(dynamic_cast<directed_object*>(get_object(x, y, n))->_dir == dir_obj->_dir)
 				return false;

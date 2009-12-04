@@ -22,7 +22,6 @@ public:
 	coords				level_pos_from_window_pos	(coords pos);
 	coords				window_pos_from_level_pos	(uint x, uint y);
 	coords				window_pos_from_level_pos	(coords pos);
-
 };
 
 #endif
