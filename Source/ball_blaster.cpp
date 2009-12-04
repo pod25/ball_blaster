@@ -53,15 +53,14 @@ int main(int argc, char* args[]) {
 		hello.apply(180, 140);
 		message.apply(10, 160);
 
-		rect_srf.load("wall/Earth SMWar.png");
+		//rect_srf.load("wall/Earth SMWar.png");
 		//rect_srf.generate_text("\"The quick brown fox jumps over the lazy dog\"", lazy_font, text_color);
-		rect_srf.disable_alpha ();
-		rect_srf.enable_alpha ();
-		rect_srf.set_alpha(96);
+		rect_srf.generate_rect(233, 144);
 		SDL_Color color; color.r = 128; color.g = 0; color.b = 255;
-		//rect_srf.set_color(color);
+		rect_srf.set_color(color);
+		rect_srf.set_alpha(96, true);
 		//rect_srf.set_color(color.r, color.g, color.b);
-		rect_srf.apply(5, 40);
+		rect_srf.apply(5, 10);
 
 		//Update the screen
 		gra.set_refresh_flag();
