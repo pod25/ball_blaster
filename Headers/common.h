@@ -37,6 +37,7 @@ using std::cerr;
 /*
  * Class/Struct pre-declarations
  */
+class error_handler;
 class event_handler;
 class editor_event_handler;
 class simulator_event_handler;
@@ -73,6 +74,7 @@ typedef unsigned int						size_t;
 /*
  * Global variables
  */
+extern error_handler			err_hndl_obj;
 extern editor_event_handler		editor_eh;
 extern simulator_event_handler	sim_eh;
 extern event_handler*			cur_eh;
@@ -84,6 +86,7 @@ extern level					lev;
 /*
  * Ball Blaster includes
  */
+#include "error_handler.h"
 #include "text_manipulation.h"
 #include "obj_coords.h"
 #include "vec.h"

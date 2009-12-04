@@ -6,13 +6,14 @@
 /*
  * Global (!) variables (extern in common.h)
  */
-editor_event_handler	editor_eh;	// Editor event handler
-simulator_event_handler	sim_eh;		// Simulator event handler
-event_handler*			cur_eh;		// Pointer to current event handler
-level					lev;		// Level
-sdl_handler				sdl_obj;	// SDL handler
-graphics				gra;		// Graphics
-physics					phy;		// Physics
+error_handler			err_hndl_obj; // Error handler
+editor_event_handler	editor_eh;	  // Editor event handler
+simulator_event_handler	sim_eh;		  // Simulator event handler
+event_handler*			cur_eh;		  // Pointer to current event handler
+level					lev;		  // Level
+sdl_handler				sdl_obj;	  // SDL handler
+graphics				gra;		  // Graphics
+physics					phy;		  // Physics
 
 /* 
  * main function
@@ -50,7 +51,7 @@ int main(int argc, char* args[]) {
 		background.apply(320, 240);
 
 		//Apply the images to the screen
-		hello.set_alpha(64);
+		//hello.set_alpha(64);
 		hello.apply(180, 140);
 		message.apply(10, 160);
 
@@ -58,7 +59,7 @@ int main(int argc, char* args[]) {
 		//rect_srf.generate_text("\"The quick brown fox jumps over the lazy dog\"", lazy_font, text_color);
 		rect_srf.disable_alpha ();
 		rect_srf.enable_alpha ();
-		rect_srf.set_alpha(128);
+		rect_srf.set_alpha(96);
 		SDL_Color color; color.r = 128; color.g = 0; color.b = 255;
 		//rect_srf.set_color(color);
 		//rect_srf.set_color(color.r, color.g, color.b);
@@ -89,12 +90,7 @@ int main(int argc, char* args[]) {
 		//message.free();
 		//background.free();
 	}
-	catch (exception &e) {
-		cerr << "Unexpected error occured in main()" << endl;
-		cerr << "Caught: " << e.what() << endl;
-		cerr << "Type: " << typeid(e).name() << endl;
-		MessageBox(0, e.what(), "main(): An unexpected error has occured", MB_ICONERROR);
-	};
+	catch (exception &e) {err_hndl_obj.inform_about_error("main()", e);};
 	//Return
 	return 0;
 }

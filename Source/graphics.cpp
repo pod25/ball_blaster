@@ -37,10 +37,5 @@ graphics::graphics() {
 		init_images(true);
 		refresh = false;
 	}
-	catch (exception &e) {
-		cerr << "Unexpected error occured in graphics" << endl;
-		cerr << "Caught: " << e.what() << endl;
-		cerr << "Type: " << typeid(e).name() << endl;
-		MessageBox(0, e.what(), "graphics: An unexpected error has occured", MB_ICONERROR);
-	};
+	catch (exception &e) {err_hndl_obj.inform_about_error("graphics default constructor", e);};
 }

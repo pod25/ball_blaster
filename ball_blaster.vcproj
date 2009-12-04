@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Headers\error_handler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Headers\event_handler.h"
 				>
 			</File>
