@@ -20,6 +20,8 @@ private:
 	int		_state;
 	bool	_can_edit_const;
 	int		_sel_obj_type;
+	bool	_objects_changed;
+	bool	_scrolled;
 public:
 	editor_event_handler();
 

@@ -15,6 +15,7 @@ enum OBJECT_CLASSES {
 };
 
 // Object directions
+#define DIR_NODIR 0
 enum OBJECT_DIRECTIONS {
 	DIR_LEFT,
 	DIR_UP,
@@ -63,6 +64,7 @@ protected:
 	int		_dir;
 public:
 	directed_object(bool locked, int dir) : object(locked), _dir(dir) {};
+	int		get_dir() { return _dir; };
 };
 
 /*

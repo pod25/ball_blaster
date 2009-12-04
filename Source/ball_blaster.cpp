@@ -36,40 +36,47 @@ int main(int argc, char* args[]) {
 
 		//The surfaces that will be used
 		//video_mode	screen(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
-		image hello("temp/hello.png");
-		image message("The quick brown fox jumps over the lazy dog", lazy_font, text_color);
-		image rect_srf;
-		image background("temp/background.png");
+		//image hello("temp/hello.png");
+		//image message("The quick brown fox jumps over the lazy dog", lazy_font, text_color);
+		//image rect_srf;
+		//image plain_rect;
+		//image background("temp/background.png");
 		//Render the text
 
 		//Apply the background to the screen
-		background.apply(0, 0);
-		background.apply(320, 0);
-		background.apply(0, 240);
-		background.apply(320, 240);
+		//background.apply(0, 0);
+		//background.apply(320, 0);
+		//background.apply(0, 240);
+		//background.apply(320, 240);
 
 		//Apply the images to the screen
 		//hello.set_alpha(64);
-		hello.apply(180, 140);
-		message.apply(10, 160);
+		//hello.apply(180, 140);
+		//message.apply(10, 160);
 
-		rect_srf.load("wall/Earth SMWar.png");
-		//rect_srf.generate_text("\"The quick brown fox jumps over the lazy dog\"", lazy_font, text_color);
-		rect_srf.disable_alpha ();
-		rect_srf.enable_alpha ();
-		rect_srf.set_alpha(96);
-		SDL_Color color; color.r = 128; color.g = 0; color.b = 255;
-		//rect_srf.set_color(color);
-		//rect_srf.set_color(color.r, color.g, color.b);
-		rect_srf.apply(5, 40);
+		//plain_rect.generate_rect(100,100);
+		//gra.object_buffers[OC_WALL].apply(plain_rect, 0,0);
+		//gra.object_buffers[OC_MAGNET].apply(plain_rect, 32,0);
+		//plain_rect.clear();
+		//gra.object_buffers[OC_WALL].apply(plain_rect, 0,0);
+		//plain_rect.apply(100,100);
+
+		//rect_srf.load("wall/Earth SMWar.png");
+		////rect_srf.generate_text("\"The quick brown fox jumps over the lazy dog\"", lazy_font, text_color);
+		//rect_srf.disable_alpha ();
+		//rect_srf.enable_alpha ();
+		//rect_srf.set_alpha(96);
+		//SDL_Color color; color.r = 128; color.g = 0; color.b = 255;
+		////rect_srf.set_color(color);
+		////rect_srf.set_color(color.r, color.g, color.b);
+		//rect_srf.apply(5, 40);
 
 		//Update the screen
-		gra.set_refresh_flag();
-		gra.update();
+		//gra.update();
 
 		/* LEVEL TEST */
-		lev.load_level("in");
-		lev.save_level("out");
+		//lev.load_level("in");
+		//lev.save_level("out");
 
 		// Initialize game
 		gam.init_game();

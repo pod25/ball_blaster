@@ -340,8 +340,21 @@ obj_coords level::cannon_coords() {
 /*
  * Get vector coordinates from pixel coordinates relative to the level
  */
-coords level::vector_coords_from_pixel(uint pixel_x, uint pixel_y) {
+coords level::vector_coords_from_pixel(int pixel_x, int pixel_y) {
 	return coords(pixel_x/get_grid_size(), pixel_y/get_grid_size());
+}
+coords level::vector_coords_from_pixel(coords pixel) {
+	return vector_coords_from_pixel(pixel.x, pixel.y);
+}
+
+/*
+ * Get pixel coordinates (relative to the level) from vector coordinates
+ */
+coords level::pixel_coords_from_vector(uint vector_x, uint vector_y) {
+	return coords(vector_x*get_grid_size(), vector_y*get_grid_size());
+}
+coords level::pixel_coords_from_vector(coords vector) {
+	return pixel_coords_from_vector(vector.x, vector.y);
 }
 
 /*
@@ -357,11 +370,11 @@ uint level::dir_from_pixel(uint pixel_x, uint pixel_y) {
 		lowest_dist = y_offset;
 		dir = DIR_DOWN;
 	}
-	if(grid - x_offset) {
+	if(grid - x_offset < lowest_dist) {
 		lowest_dist = grid - x_offset;
 		dir = DIR_LEFT;
 	}
-	if(grid - y_offset)
+	if(grid - y_offset < lowest_dist)
 		dir = DIR_UP;
 	return dir;
 }

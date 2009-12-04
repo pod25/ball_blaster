@@ -34,6 +34,7 @@ void game::main() {
 			if(event.type == SDL_QUIT) {
 				//Quit the program
 				quit = true;
+				lev.save_level("out_modified");
 			}
 			// Informs event handler that an action has occured
 			else if(event.type == SDL_KEYDOWN) {
@@ -51,12 +52,12 @@ void game::main() {
 			else if(event.type == SDL_MOUSEBUTTONUP) {
 				cur_eh->e_mouse_up(event.button.x, event.button.y, event.button.button);
 			}
-			
-			uint cur_time = SDL_GetTicks();
-			if(cur_time-last_refreshed >= 1000/FPS) {
-				last_refreshed = cur_time;
-				cur_eh->e_new_frame();
-			}
+		}
+
+		uint cur_time = SDL_GetTicks();
+		if(cur_time-last_refreshed >= 1000/FPS) {
+			last_refreshed = cur_time;
+			cur_eh->e_new_frame();
 		}
 	}
 }

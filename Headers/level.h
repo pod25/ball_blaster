@@ -55,7 +55,10 @@ public:
 	void		hide_ball			();
 	bool		cannon_exists		();
 	obj_coords	cannon_coords		();
-	coords		vector_coords_from_pixel(uint pixel_x, uint pixel_y);
+	coords		vector_coords_from_pixel(int pixel_x, int pixel_y);
+	coords		vector_coords_from_pixel(coords pixel);
+	coords		pixel_coords_from_vector(uint vector_x, uint vector_y);
+	coords		pixel_coords_from_vector(coords vector);
 	uint		dir_from_pixel		(uint pixel_x, uint pixel_y);
 
 	bool		save_level		(string name);

@@ -28,8 +28,9 @@ public:
 	void set_alpha		(Uint8 a, bool enabled = true);
 	void enable_alpha	();
 	void disable_alpha	();
-	void set_color		(Uint8 r, Uint8 g, Uint8 b);
+	void set_color		(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
 	void set_color		(SDL_Color color);
+	void clear			();
 
 	image() {} // Default constructor
 	image(int w, int h);//, SDL_Color color = {0,0,0});

@@ -22,7 +22,9 @@ void base_image::apply(base_image &dest, int x, int y, SDL_Rect *src_part) {
 		throw exception("Couldn't blit image");
 }
 
-void base_image::apply(int x, int y, SDL_Rect *src_part) {apply(gra.get_screen_buffer(), x, y, src_part);}
+void base_image::apply(int x, int y, SDL_Rect *src_part) {
+	apply(gra.get_screen_buffer(), x, y, src_part);
+}
 
 /*
  * image class methods
@@ -72,8 +74,8 @@ void image::set_alpha(Uint8 a, bool enabled) {
 void image:: enable_alpha() {set_alpha(_sdl_srf->format->alpha, true );}
 void image::disable_alpha() {set_alpha(_sdl_srf->format->alpha, false);}
 
-void image::set_color(Uint8 r, Uint8 g, Uint8 b) {
-	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, 255);
+void image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
 	Uint8  Bpp   = _sdl_srf->format->BytesPerPixel;
 	Uint16 pitch = _sdl_srf->pitch;
 	int x, y;
@@ -82,6 +84,13 @@ void image::set_color(Uint8 r, Uint8 g, Uint8 b) {
 			*(Uint32*)((byte*)_sdl_srf->pixels + x*Bpp + y*pitch) = pixel;
 }
 void image::set_color(SDL_Color color) {set_color(color.r, color.g, color.b);}
+
+/*
+ *	Clear buffer (to total transparency)
+ */
+void image::clear() {
+	set_color(0, 0, 0, 0);
+}
 
 // This function is not used, but illustrates how a SDL_Color can be transformed to an Uint32
 /*void image::set_pixel(int x, int y, SDL_Color color, Uint8 alpha) {
