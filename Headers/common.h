@@ -71,6 +71,7 @@ extern event_handler*			cur_eh;
 extern graphics					gra;
 extern physics					phy;
 extern level					lev;
+extern game						gam;
 
 /*
  * Ball Blaster includes

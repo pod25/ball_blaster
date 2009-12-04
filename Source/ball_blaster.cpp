@@ -9,9 +9,11 @@
 editor_event_handler	editor_eh;	// Editor event handler
 simulator_event_handler	sim_eh;		// Simulator event handler
 event_handler*			cur_eh;		// Pointer to current event handler
+game					gam;		// Game
 level					lev;		// Level
 graphics				gra;		// Graphics
 physics					phy;		// Physics
+
 
 /* 
  * main function
@@ -38,9 +40,6 @@ int main(int argc, char* args[]) {
 		image background("images/temp/background.png");
 		//Render the text
 
-		//The event structure that will be used
-		SDL_Event event;
-
 		//Apply the background to the screen
 		background.apply(0, 0);
 		background.apply(320, 0);
@@ -59,18 +58,11 @@ int main(int argc, char* args[]) {
 		lev.load_level("in");
 		lev.save_level("out");
 
-		//While the user hasn't quit
-		bool quit = false;
-		while(quit == false) {
-			//While there's an event to handle
-			while(SDL_PollEvent(&event)) {
-				//If the user has Xed out the window
-				if(event.type == SDL_QUIT) {
-					//Quit the program
-					quit = true;
-				}
-			}
-		}
+		// Initialize game
+		gam.init_game();
+
+		// Initialize game main
+		gam.main();
 
 		//Free the surfaces
 		//message.free();
