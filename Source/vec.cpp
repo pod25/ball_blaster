@@ -55,6 +55,7 @@ vec vec::operator*(const double multiplier) {
 }
 vec vec::operator/(const double divider) {
 	vec temp(x, y);
+	if(!divider) throw domain_error("Not defined to divide with zero")
 	return temp /= divider;
 }
 
