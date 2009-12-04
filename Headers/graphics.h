@@ -20,10 +20,10 @@ public:
     static const Uint32 BMASK = 0x0000FF00; static const Uint8 BSHIFT = 1*8, BLOSS = 0;
     static const Uint32 AMASK = 0x000000FF; static const Uint8 ASHIFT = 0*8, ALOSS = 0;
 #else
-    static const Uint32 RMASK = 0x000000FF; static const Uint8 RSHIFT = 3*8, RLOSS = 0;
-    static const Uint32 GMASK = 0x0000FF00; static const Uint8 GSHIFT = 2*8, GLOSS = 0;
-    static const Uint32 BMASK = 0x00FF0000; static const Uint8 BSHIFT = 1*8, BLOSS = 0;
-    static const Uint32 AMASK = 0xFF000000; static const Uint8 ASHIFT = 0*8, ALOSS = 0;
+    static const Uint32 RMASK = 0x000000FF; static const Uint8 RSHIFT = 0*8, RLOSS = 0;
+    static const Uint32 GMASK = 0x0000FF00; static const Uint8 GSHIFT = 1*8, GLOSS = 0;
+    static const Uint32 BMASK = 0x00FF0000; static const Uint8 BSHIFT = 2*8, BLOSS = 0;
+    static const Uint32 AMASK = 0xFF000000; static const Uint8 ASHIFT = 3*8, ALOSS = 0;
 #endif
 private:
 	string std_background_img;
