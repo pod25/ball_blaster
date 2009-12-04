@@ -7,7 +7,7 @@ void graphics::init_images(bool load_images) {
 	std_background_img	= "Background/tb_jungle_guatemala.jpg";
 	std_ball_img		= "Ball/Black ball.png";
 	std_obj_images[ OC_WALL			] = "Wall/Wall SMB2.png";
-	std_obj_images[ OC_GOAL_AREA	] = "Wall/Mushrom SMWar.png";
+	std_obj_images[ OC_GOAL			] = "Wall/Mushrom SMWar.png";
 	std_obj_images[ OC_CANNON		] = "Cannon/Artillery_gun_crew-illustration.jpeg";
 	std_obj_images[ OC_FAN			] = "Fan/tokyo_plusminuszero_fan2.png";
 	std_obj_images[ OC_MAGNET		] = "Magnet/horshoemagnet1.jpg";

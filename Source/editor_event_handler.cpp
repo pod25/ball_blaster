@@ -39,7 +39,8 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 				break;
 			case STATE_INSERTION:
 				// Insert object at position
-				
+				coords level_pos = gam.level_pos_from_window_pos(mouse_x, mouse_y);
+				lev.insert_obj_at_pixel(_sel_obj_type, level_pos.x, level_pos.y, _can_edit_const);
 				break;
 		}
 	}

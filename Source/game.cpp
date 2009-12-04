@@ -10,7 +10,8 @@
  * Initialize game
  */
 void game::init_game() {
-
+	// TODO: Replace with menu_event_handler
+	cur_eh = &editor_eh;
 }
 
 /*
