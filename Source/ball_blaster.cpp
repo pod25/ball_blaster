@@ -16,7 +16,6 @@ sdl_handler				sdl_obj;		// SDL handler
 graphics				gra;			// Graphics
 physics					phy;			// Physics
 
-
 /* 
  * main function
  */
@@ -75,7 +74,7 @@ int main(int argc, char* args[]) {
 		// Initialize game
 		gam.init_game();
 
-		// Initialize game main
+		// Go to main loop
 		gam.main();
 
 		//Free the surfaces

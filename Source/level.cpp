@@ -7,6 +7,13 @@
  * PUBLIC FUNCTION DEFINITIONS
  *************************************************/ 
 /*
+ * Constructor
+ */
+level::level() {
+	new_level("");
+}
+
+/*
  * Get number of objects at (x, y)
  */
 size_t level::num_objects(size_t x, size_t y) {
@@ -43,7 +50,7 @@ bool level::remove_obj(size_t x, size_t y, size_t index) {
 }	
 
 /*
- * Insert object at (x, y)
+ * Insert object at vector coordinates (x, y)
  */
 bool level::insert_obj(size_t x, size_t y, object* obj) {
 	// In bounds?
@@ -85,6 +92,45 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 	_objects[x][y].push_back(obj);
 
 	return true;
+}
+
+/*
+ * Insert object of type oc at pixel coordinates (pixel_x, pixel_y)
+ */
+bool level::insert_obj_at_pixel(uint oc, uint pixel_x, uint pixel_y, bool locked) {
+	coords	vector_pos	= vector_coords_from_pixel(pixel_x, pixel_y);
+	uint	dir			= dir_from_pixel(pixel_x, pixel_y);
+	object* o;
+	switch(oc) {
+	case OC_CANNON:
+		o = new cannon();
+		if(insert_obj(vector_pos.x, vector_pos.y, o))
+			return true;
+		break;
+	case OC_WALL:
+		o = new wall();
+		if(insert_obj(vector_pos.x, vector_pos.y, o))
+			return true;
+		break;
+	case OC_GOAL:
+		o = new goal();
+		if(insert_obj(vector_pos.x, vector_pos.y, o))
+			return true;
+		break;
+	case OC_MAGNET:
+		o = new magnet(locked, dir, MAGNET_DEFAULT_STRENGTH);
+		if(insert_obj(vector_pos.x, vector_pos.y, o))
+			return true;
+		break;
+	case OC_FAN:
+		o = new fan(locked, dir, MAGNET_DEFAULT_STRENGTH);
+		if(insert_obj(vector_pos.x, vector_pos.y, o))
+			return true;
+		break;
+	}
+	// Delete object in case the insertion went wrong
+	delete o;
+	return false;
 }
 
 /*
@@ -289,6 +335,35 @@ obj_coords level::cannon_coords() {
 		}
 	}
 	return obj_coords(0, 0, 0);
+}
+
+/*
+ * Get vector coordinates from pixel coordinates relative to the level
+ */
+coords level::vector_coords_from_pixel(uint pixel_x, uint pixel_y) {
+	return coords(pixel_x/get_grid_size(), pixel_y/get_grid_size());
+}
+
+/*
+ * Get object direction from pixel coordinates relative to the level
+ */
+uint level::dir_from_pixel(uint pixel_x, uint pixel_y) {
+	uint grid = get_grid_size();
+	uint x_offset = pixel_x % grid;
+	uint y_offset = pixel_y % grid;
+	uint lowest_dist = x_offset;
+	uint dir = DIR_RIGHT;
+	if(y_offset < lowest_dist) {
+		lowest_dist = y_offset;
+		dir = DIR_DOWN;
+	}
+	if(grid - x_offset) {
+		lowest_dist = grid - x_offset;
+		dir = DIR_LEFT;
+	}
+	if(grid - y_offset)
+		dir = DIR_UP;
+	return dir;
 }
 
 /*
