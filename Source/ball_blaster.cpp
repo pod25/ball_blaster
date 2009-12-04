@@ -6,15 +6,15 @@
 /*
  * Global (!) variables (extern in common.h)
  */
-error_handler			err_hndl_obj; // Error handler
-editor_event_handler	editor_eh;	  // Editor event handler
-simulator_event_handler	sim_eh;		  // Simulator event handler
-event_handler*			cur_eh;		  // Pointer to current event handler
-game					gam;		// Game
-level					lev;		  // Level
-sdl_handler				sdl_obj;	  // SDL handler
-graphics				gra;		  // Graphics
-physics					phy;		  // Physics
+error_handler			err_hndl_obj;	// Error handler
+editor_event_handler	editor_eh;		// Editor event handler
+simulator_event_handler	sim_eh;			// Simulator event handler
+event_handler*			cur_eh;			// Pointer to current event handler
+game					gam;			// Game
+level					lev;			// Level
+sdl_handler				sdl_obj;		// SDL handler
+graphics				gra;			// Graphics
+physics					phy;			// Physics
 
 
 /* 

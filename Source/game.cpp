@@ -60,3 +60,32 @@ void game::main() {
 	}
 }
 
+void game::set_window_pos(uint x, uint y) {
+	window_pos.x = x;
+	window_pos.y = y;
+}
+
+void game::set_window_pos(coords pos) {
+	window_pos.x = pos.x;
+	window_pos.y = pos.y;
+}
+
+coords game::get_window_pos() {
+	return window_pos;
+}
+
+coords game::level_pos_from_window_pos(uint x, uint y) {
+	return coords(window_pos.x + x, window_pos.y + y);
+}
+
+coords game::level_pos_from_window_pos(coords pos) {
+	return coords(window_pos.x + pos.x, window_pos.y + pos.y);
+}
+
+coords game::window_pos_from_level_pos(uint x, uint y) {
+	return coords(x - window_pos.x, y - window_pos.y);
+}
+
+coords game::window_pos_from_level_pos(coords pos) {
+	return coords(pos.x - window_pos.x, pos.y - window_pos.y);
+}
