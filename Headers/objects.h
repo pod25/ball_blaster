@@ -27,6 +27,8 @@ enum OBJECT_DIRECTIONS {
 #define ID_WALL					"WALL"
 #define ID_GOAL					"GOAL"
 #define ID_MAGNET				"MAGNET"
+#define ID_FAN					"FAN"
+#define ID_CANNON				"CANNON"
 #define PROP_GRAVITY			"GRAVITY"
 #define PROP_POS				"POS"
 #define PROP_DIR				"DIR"
@@ -46,7 +48,7 @@ private:
 protected:
 	bool	_locked;
 public:
-	object(bool locked);
+	object(bool locked) : _locked(locked) {};
 	virtual ~object() {};
 };
 
@@ -60,7 +62,7 @@ private:
 protected:
 	int		_dir;
 public:
-	directed_object(bool locked, int dir);
+	directed_object(bool locked, int dir) : object(locked), _dir(dir) {};
 };
 
 /*
@@ -71,7 +73,7 @@ class nondirected_object : public object {
 private:
 	nondirected_object();
 public:
-	nondirected_object(bool locked);
+	nondirected_object(bool locked) : object(locked) {};
 };
 
 /*
@@ -80,10 +82,22 @@ public:
 class magnet : public directed_object {
 	friend level;
 private:
+	int _strength;
 	magnet();
+public:
+	magnet(bool locked, int dir, int strength) : directed_object(locked, dir), _strength(strength) {};
+};
+
+/*
+ * fan class
+ */
+class fan : public directed_object {
+	friend level;
 private:
-	magnet(bool locked, int dir, int strength);
-	int		_strength;
+	int _strength;
+	fan();
+public:
+	fan(bool locked, int dir, int strength) : directed_object(locked, dir), _strength(strength) {};
 };
 
 /*
@@ -94,7 +108,7 @@ class wall : public nondirected_object {
 private:
 	wall();
 public:
-	wall(bool locked);
+	wall(bool locked) : nondirected_object(locked) {};
 };
 
 /*
@@ -105,7 +119,16 @@ class goal : public nondirected_object {
 private:
 	goal();
 public:
-	goal(bool locked);
+	goal(bool locked) : nondirected_object(locked) {};
+};
+
+/*
+ * cannon class
+ */
+class cannon : public nondirected_object {
+	friend level;
+public:
+	cannon() : nondirected_object(true) {};
 };
 
 #endif
