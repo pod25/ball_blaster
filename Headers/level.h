@@ -20,9 +20,16 @@ private:
 	string		_level_name;	// The name of the current level
 	
 public:
+	// Default values
+	static const int LEVEL_DEFAULT_WIDTH		= 160;
+	static const int LEVEL_DEFAULT_HEIGHT		= 100;
+	static const int LEVEL_DEFAULT_GRID_SIZE	= 32;
+	static const int LEVEL_DEFAULT_GRAVITY		= 10;
+
 	size_t		num_objects		(size_t x, size_t y);
 	object*		get_object		(size_t x, size_t y, size_t index);
 	bool		remove_obj		(size_t x, size_t y, size_t index);
+	bool		remove_obj		(obj_coords coords);
 	bool		insert_obj		(size_t x, size_t y, object* obj);
 	size_t		get_width		();
 	size_t		get_height		();
@@ -42,6 +49,9 @@ public:
 	bool		ball_visible	();
 	void		show_ball		();
 	void		hide_ball		();
+	bool		cannon_exists	();
+	obj_coords	cannon_coords	();
+	
 	bool		save_level		(string name);
 	bool		load_level		(string name);
 	bool		new_level		(string name);

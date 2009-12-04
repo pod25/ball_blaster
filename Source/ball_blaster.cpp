@@ -26,40 +26,38 @@ int main(int argc, char* args[]) {
 		const int SCREEN_HEIGHT = 480;
 		const int SCREEN_BPP = 32;
 
+		//The font that's going to be used
+		font lazy_font("Fonts/lazy.ttf", 28);
+		//The color of the font
+		SDL_Color text_color = {0, 0, 0}; 
+
 		//The surfaces that will be used
-		video_mode	screen;
-		image		message, background;
+		//video_mode	screen(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
+		image hello("images/temp/hello.png");
+		image message("The quick brown fox jumps over the lazy dog", lazy_font, text_color);
+		image background("images/temp/background.png");
+		//Render the text
 
 		//The event structure that will be used
 		SDL_Event event;
 
-		//Initialize all SDL subsystems
-		if(SDL_Init(SDL_INIT_EVERYTHING) == -1) return 1;
-
-		//Set up the screen
-		screen.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
-
-		//If there was an error in setting up the screen
-		if(screen.empty()) return 1;
-
-		//Set the window caption
-		SDL_WM_SetCaption("Hello World", NULL);
-
-		//Load the images
-		message.load("images/hello.png");
-		background.load("images/background.png");
-
 		//Apply the background to the screen
-		background.apply(screen, 0, 0);
-		background.apply(screen, 320, 0);
-		background.apply(screen, 0, 240);
-		background.apply(screen, 320, 240);
+		background.apply(0, 0);
+		background.apply(320, 0);
+		background.apply(0, 240);
+		background.apply(320, 240);
 
 		//Apply the message to the screen
-		message.apply(screen, 180, 140);
+		hello.apply(180, 140);
+		message.apply(10, 160);
 
 		//Update the screen
-		if((screen.flip()) == -1) return 1;
+		gra.set_refresh_flag();
+		gra.update();
+
+		/* LEVEL TEST */
+		lev.load_level("in");
+		lev.save_level("out");
 
 		//While the user hasn't quit
 		bool quit = false;
@@ -77,9 +75,6 @@ int main(int argc, char* args[]) {
 		//Free the surfaces
 		//message.free();
 		//background.free();
-
-		//Quit SDL
-		SDL_Quit();
 	}
 	catch ( exception &e ) {
 		cerr << "Unexpected error occured" << endl;

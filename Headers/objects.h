@@ -6,8 +6,9 @@
 
 // Object identifiers
 enum OBJECT_CLASSES {
-	//OC_WALL,
+	OC_WALL,
 	OC_GOAL_AREA,
+	OC_CANNON,
 	OC_FAN,
 	OC_MAGNET,
 	NUM_OBJECT_CLASSES
@@ -22,24 +23,33 @@ enum OBJECT_DIRECTIONS {
 	NUM_DIRECTIONS
 };
 
-#define ID_LEVEL		"LEVEL"
-#define ID_WALL			"WALL"
-#define ID_GOAL			"GOAL"
-#define ID_MAGNET		"MAGNET"
-#define PROP_GRAVITY	"GRAVITY"
-#define PROP_POS		"POS"
-#define PROP_DIR		"DIR"
-#define PROP_STRENGTH	"STRENGTH"
+#define ID_LEVEL				"LEVEL"
+#define ID_WALL					"WALL"
+#define ID_GOAL					"GOAL"
+#define ID_MAGNET				"MAGNET"
+#define ID_FAN					"FAN"
+#define ID_CANNON				"CANNON"
+#define PROP_GRAVITY			"GRAVITY"
+#define PROP_POS				"POS"
+#define PROP_DIR				"DIR"
+#define PROP_STRENGTH			"STRENGTH"
+#define PROP_LEVEL_SIZE			"LEVEL_SIZE"
+#define PROP_LEVEL_GRID_SIZE	"GRID_SIZE"
+#define PROP_LEVEL_SQUARE_SCALE	"SQUARE_SCALE"
+#define PROP_LEVEL_BALL_SCALE	"BALL_SCALE"
 
 /*
  * object class
  */
-class object abstract {
+class object {
 	friend	level;
+private:
+	object();
 protected:
 	bool	_locked;
 public:
-	virtual void test(); // TODO: Remove this muddafukka (needed for class to be polymorphic)
+	object(bool locked) : _locked(locked) {};
+	virtual ~object() {};
 };
 
 /*
@@ -47,8 +57,23 @@ public:
  */
 class directed_object : public object {
 	friend	level;
+private:
+	directed_object();
 protected:
 	int		_dir;
+public:
+	directed_object(bool locked, int dir) : object(locked), _dir(dir) {};
+};
+
+/*
+ * nondirected object class
+ */
+class nondirected_object : public object {
+	friend level;
+private:
+	nondirected_object();
+public:
+	nondirected_object(bool locked) : object(locked) {};
 };
 
 /*
@@ -57,14 +82,22 @@ protected:
 class magnet : public directed_object {
 	friend level;
 private:
-	int		_strength;
+	int _strength;
+	magnet();
+public:
+	magnet(bool locked, int dir, int strength) : directed_object(locked, dir), _strength(strength) {};
 };
 
 /*
- * nondirected object class
+ * fan class
  */
-class nondirected_object : public object {
+class fan : public directed_object {
 	friend level;
+private:
+	int _strength;
+	fan();
+public:
+	fan(bool locked, int dir, int strength) : directed_object(locked, dir), _strength(strength) {};
 };
 
 /*
@@ -72,6 +105,10 @@ class nondirected_object : public object {
  */
 class wall : public nondirected_object {
 	friend level;
+private:
+	wall();
+public:
+	wall(bool locked) : nondirected_object(locked) {};
 };
 
 /*
@@ -79,6 +116,19 @@ class wall : public nondirected_object {
  */
 class goal : public nondirected_object {
 	friend level;
+private:
+	goal();
+public:
+	goal(bool locked) : nondirected_object(locked) {};
+};
+
+/*
+ * cannon class
+ */
+class cannon : public nondirected_object {
+	friend level;
+public:
+	cannon() : nondirected_object(true) {};
 };
 
 #endif
