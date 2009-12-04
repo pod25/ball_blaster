@@ -60,6 +60,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_ttf.lib"
 				AdditionalLibraryDirectories=""
+				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -279,6 +280,10 @@
 			</File>
 			<File
 				RelativePath=".\Headers\physics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Headers\sdl_handler.h"
 				>
 			</File>
 			<File

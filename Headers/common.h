@@ -25,6 +25,7 @@ using std::invalid_argument;
 using std::endl;
 using std::cout;
 using std::cerr;
+#include <windows.h>
 
 /*
  * SDL includes
@@ -42,8 +43,9 @@ class simulator_event_handler;
 
 class ball;
 class game;
-class graphics;
 class level;
+class sdl_handler;
+class graphics;
 class physics;
 
 class object;
@@ -60,7 +62,13 @@ typedef vector<object*>						vobj;
 typedef vector<vector<object*>>				vvobj;
 typedef vector<vector<vector<object*>>>		vvvobj;
 typedef unsigned int						uint;
-typedef uint								size_t;
+typedef uint8_t								byte;
+//The type size_t
+#ifndef _SIZE_T_DEFINED
+#define _SIZE_T_DEFINED
+typedef unsigned int						size_t;
+#endif
+
 
 /*
  * Global variables
@@ -68,6 +76,7 @@ typedef uint								size_t;
 extern editor_event_handler		editor_eh;
 extern simulator_event_handler	sim_eh;
 extern event_handler*			cur_eh;
+extern sdl_handler				sdl_obj;
 extern graphics					gra;
 extern physics					phy;
 extern level					lev;
@@ -87,8 +96,9 @@ extern level					lev;
 #include "game.h"
 #include "level.h"
 #include "objects.h"
-#include "physics.h"
+#include "sdl_handler.h"
 #include "graphics.h"
+#include "physics.h"
 
 #endif
 /* end common.h */

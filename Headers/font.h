@@ -10,7 +10,7 @@ protected:
 public:
 	bool empty() const;
 	TTF_Font* get_sdl_font() const;
-	bool load(string file, int ptsize);
+	void load(string file, int ptsize);
 
 	font()                        : sdl_font(NULL) {} // Default constructor
 	font(string file, int ptsize);
