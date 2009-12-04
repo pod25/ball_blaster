@@ -30,6 +30,9 @@ object*	level::get_object(size_t x, size_t y, size_t index) {
 /*
  * Remove object at (x, y, index)
  */
+bool level::remove_obj(obj_coords coords) {
+	return remove_obj(coords.x, coords.y, coords.i);
+}
 bool level::remove_obj(size_t x, size_t y, size_t index) {
 	// Checks that object exists
 	if(index < num_objects(x, y)) {
@@ -66,6 +69,11 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 				return false;
 		}
 	}
+
+	// Allow only one cannon
+	if(dynamic_cast<cannon*>(obj) && cannon_exists())
+		remove_obj(cannon_coords());
+
 	// Inserts object into desired coordinate.
 	if(x >= _objects.size()) {
 		_objects.resize(x+1);
@@ -240,6 +248,50 @@ void level::hide_ball() {
 }
 
 /*
+ * Cannon exists?
+ */
+bool level::cannon_exists() {
+	// Find cannon
+	vvvobj::iterator	c;
+	vvobj::iterator		r;
+	vobj::iterator		ind;
+	size_t x;
+	size_t y;
+	size_t i;
+	for(c = _objects.begin(), x = 0; c != _objects.end(); c++, x++) {
+		for(r = c->begin(), y = 0; r != c->end(); r++, y++) {
+			for(ind = r->begin(), i = 0; ind != r->end(); ind++, i++) {
+				if(dynamic_cast<cannon*>(*ind))
+					return true;
+			}
+		}
+	}
+	return false;
+}
+
+/*
+ * Get cannon position
+ */
+obj_coords level::cannon_coords() {
+	// Find cannon
+	vvvobj::iterator	c;
+	vvobj::iterator		r;
+	vobj::iterator		ind;
+	int x;
+	int y;
+	int i;
+	for(c = _objects.begin(), x = 0; c != _objects.end(); c++, x++) {
+		for(r = c->begin(), y = 0; r != c->end(); r++, y++) {
+			for(ind = r->begin(), i = 0; ind != r->end(); ind++, i++) {
+				if(dynamic_cast<cannon*>(*ind))
+					return obj_coords(x, y, i);
+			}
+		}
+	}
+	return obj_coords(0, 0, 0);
+}
+
+/*
  * Save the level to 'Levels/{name}.lev'
  */
 bool level::save_level(string name) {
@@ -269,24 +321,42 @@ bool level::save_level(string name) {
 		for(vvobj::iterator y = x->begin(); y != x->end(); y++) {
 			for(vobj::iterator i = y->begin() ; i != y->end(); i++) {
 				vector<string> obj_out;
-				/* Wall object*/ {
+				/* Wall object */ {
 					wall* o = dynamic_cast<wall*>(*i);
 					if(o) {
 						obj_out.push_back(ID_WALL);
 					}
 				}
 
-				/* Goal object*/ {
+				/* Goal object */ {
 					goal* o = dynamic_cast<goal*>(*i);
 					if(o) {
 						obj_out.push_back(ID_GOAL);
 					}
 				}
 
-				/* Magnet object*/ {
+				/* Cannon object */ {
+					cannon* o = dynamic_cast<cannon*>(*i);
+					if(o) {
+						obj_out.push_back(ID_CANNON);
+					}
+				}
+
+				/* Magnet object */ {
 					magnet* o = dynamic_cast<magnet*>(*i);
 					if(o) {
 						obj_out.push_back(ID_MAGNET);
+						obj_out.push_back(PROP_DIR);
+						obj_out.push_back(to_string(o->_dir));
+						obj_out.push_back(PROP_STRENGTH);
+						obj_out.push_back(to_string(o->_strength));
+					}
+				}
+				
+				/* Fan object */ {
+					fan* o = dynamic_cast<fan*>(*i);
+					if(o) {
+						obj_out.push_back(ID_FAN);
 						obj_out.push_back(PROP_DIR);
 						obj_out.push_back(to_string(o->_dir));
 						obj_out.push_back(PROP_STRENGTH);
@@ -416,8 +486,16 @@ bool level::load_level(string name) {
 				goal* o = new goal(true);
 				insert_obj(prop_pos_x, prop_pos_y, o);
 			}
+			else if(id == ID_CANNON) {
+				cannon* o = new cannon();
+				insert_obj(prop_pos_x, prop_pos_y, o);
+			}
 			else if(id == ID_MAGNET) {
 				magnet* o = new magnet(true, prop_dir, prop_strength);
+				insert_obj(prop_pos_x, prop_pos_y, o);
+			}
+			else if(id == ID_FAN) {
+				fan* o = new fan(true, prop_dir, prop_strength);
 				insert_obj(prop_pos_x, prop_pos_y, o);
 			}
 		}

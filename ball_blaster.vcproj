@@ -274,6 +274,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Headers\obj_coords.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Headers\objects.h"
 				>
 			</File>
