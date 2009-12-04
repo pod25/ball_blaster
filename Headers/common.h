@@ -88,6 +88,7 @@ extern level					lev;
  */
 #include "error_handler.h"
 #include "text_manipulation.h"
+#include "coords.h"
 #include "obj_coords.h"
 #include "vec.h"
 #include "ball.h"

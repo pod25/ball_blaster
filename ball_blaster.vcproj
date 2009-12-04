@@ -243,6 +243,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Headers\coords.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Headers\editor_event_handler.h"
 				>
 			</File>
