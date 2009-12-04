@@ -28,6 +28,7 @@ vec& vec::operator*=(const double multiplier) {
 }
 
 vec& vec::operator/=(const double divider) {
+	if (!divider) throw domain_error("Trying to divide a vector by zero");
 	x /= divider;
 	y /= divider;
 	return *this;
@@ -50,13 +51,12 @@ double vec::operator%(const vec& rhs) {
 }
 
 vec vec::operator*(const double multiplier) {
-	vec temp(x, y);
-	return temp *= multiplier;
+	return vec(multiplier*x, multiplier*y);
 }
+
 vec vec::operator/(const double divider) {
-	vec temp(x, y);
 	if(!divider) throw domain_error("Not defined to divide with zero");
-	return temp /= divider;
+	return vec(x/divider, y/divider);
 }
 
 double vec::length() {

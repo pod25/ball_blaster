@@ -19,7 +19,6 @@ void graphics::init_images(bool load_images) {
 	std_obj_images[OC_MAGNET][DIR_DOWN	] = "magnet_down.png";
 	if (load_images) {
 		screen_buffer		.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SCREEN_FLAGS);
-		if(screen_buffer.empty()) throw exception("Couldn't set up screen");
 		background_buffer	.load(std_background_img);
 		object_layer_buffer	.generate_rect(SCREEN_WIDTH, SCREEN_HEIGHT);
 		ball_buffer			.load(std_ball_img);

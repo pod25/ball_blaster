@@ -30,6 +30,9 @@ void base_image::apply(int x, int y, SDL_Rect *src_part) {
  * image class methods
  */
 
+void image::  lock() {if (SDL_MUSTLOCK(_sdl_srf) && SDL_LockSurface(_sdl_srf) == -1) throw exception("Couldn't lock image");}
+void image::unlock() {if (SDL_MUSTLOCK(_sdl_srf)) SDL_UnlockSurface(_sdl_srf);}
+
 void image::load(string filename) {
 	filename = "Images/" + filename;
 	// Free old image if any
@@ -74,23 +77,41 @@ void image::set_alpha(Uint8 a, bool enabled) {
 void image:: enable_alpha() {set_alpha(_sdl_srf->format->alpha, true );}
 void image::disable_alpha() {set_alpha(_sdl_srf->format->alpha, false);}
 
-void image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+void image::fill_rect(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
+	if(SDL_FillRect(_sdl_srf, dstrect, pixel)) throw exception("Couldn't fill rectangle in image");
+	/*
 	Uint8  Bpp   = _sdl_srf->format->BytesPerPixel;
 	Uint16 pitch = _sdl_srf->pitch;
+	lock();
 	int x, y;
 	for (y = 0; y < _sdl_srf->h; y++)
 		for (x = 0; x < _sdl_srf->w; x++)
 			*(Uint32*)((byte*)_sdl_srf->pixels + x*Bpp + y*pitch) = pixel;
+	unlock();
+	*/
 }
-void image::set_color(SDL_Color color) {set_color(color.r, color.g, color.b);}
+void image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+	fill_rect(NULL, r, g, b, a);
+	/*
+	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
+	Uint8  Bpp   = _sdl_srf->format->BytesPerPixel;
+	Uint16 pitch = _sdl_srf->pitch;
+	lock();
+	int x, y;
+	for (y = 0; y < _sdl_srf->h; y++)
+		for (x = 0; x < _sdl_srf->w; x++)
+			*(Uint32*)((byte*)_sdl_srf->pixels + x*Bpp + y*pitch) = pixel;
+	unlock();
+	*/
+}
+
+//void image::set_color(SDL_Color color, Uint8 alpha) {set_color(color.r, color.g, color.b, alpha);}
 
 /*
  *	Clear buffer (to total transparency)
  */
-void image::clear() {
-	set_color(0, 0, 0, 0);
-}
+void image::clear() {set_color(0, 0, 0, 0);}
 
 // This function is not used, but illustrates how a SDL_Color can be transformed to an Uint32
 /*void image::set_pixel(int x, int y, SDL_Color color, Uint8 alpha) {

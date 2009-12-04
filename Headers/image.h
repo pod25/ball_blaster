@@ -20,6 +20,8 @@ private:
 };
 
 class image : public base_image {
+	void lock();
+	void unlock();
 public:
 	void load			(string filename);
 	void generate_rect	(int w, int h);//, SDL_Color color = {0,0,0});
@@ -28,8 +30,9 @@ public:
 	void set_alpha		(Uint8 a, bool enabled = true);
 	void enable_alpha	();
 	void disable_alpha	();
+	void fill_rect		(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	void set_color		(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
-	void set_color		(SDL_Color color);
+	//void set_color		(SDL_Color color, Uint8 alpha = 255);
 	void clear			();
 
 	image() {} // Default constructor
