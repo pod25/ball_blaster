@@ -22,6 +22,8 @@ private:
 	int		_sel_obj_type;
 	bool	_objects_changed;
 	bool	_scrolled;
+
+	bool	_is_const_type(uint oc);
 public:
 	editor_event_handler();
 

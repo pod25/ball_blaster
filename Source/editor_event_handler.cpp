@@ -3,6 +3,16 @@
  */
 #include "common.h"
 
+bool editor_event_handler::_is_const_type(uint oc) {
+	switch(oc) {
+		case OC_WALL:
+		case OC_GOAL:
+		case OC_CANNON:
+			return true;
+	}
+	return false;
+}
+
 /*
  * Editor event handler constructor
  */
@@ -57,6 +67,28 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 				break;
 		}
 	}
+	// Mouse wheel up
+	else if(button == SDL_BUTTON_WHEELUP) {
+		switch(_state) {
+			case STATE_DEFAULT:
+				// Goto insertion mode
+				_state = STATE_INSERTION;
+				break;
+			case STATE_INSERTION:
+				_sel_obj_type++;
+				if(_sel_obj_type >= NUM_OBJECT_CLASSES)
+					_sel_obj_type = 0;
+				if(!_can_edit_const) 
+					while(_is_const_type(_sel_obj_type)) {
+						_sel_obj_type++;
+						if(_sel_obj_type >= NUM_OBJECT_CLASSES)
+							_sel_obj_type = 0;
+					}
+				break;
+		}
+	}
+
+
 }
 
 /*
@@ -66,7 +98,19 @@ void editor_event_handler::e_key_down(int key) {
 
 }
 void editor_event_handler::e_key_up(int key) {
-
+	coords pos = gam.get_window_pos();
+	if(key == SDLK_UP)
+		pos.y -= 5;
+	if(key == SDLK_DOWN)
+		pos.y += 5;
+	if(key == SDLK_LEFT)
+		pos.x -= 5;
+	if(key == SDLK_RIGHT)
+		pos.x += 5;
+	if(pos.x < 0) pos.x = 0;
+	if(pos.y < 0) pos.y = 0;
+	gam.set_window_pos(pos);
+	_scrolled = true;
 }
 
 /*
