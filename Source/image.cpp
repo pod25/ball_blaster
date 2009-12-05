@@ -41,7 +41,7 @@ void image::load(string filename) {
 	SDL_Surface* loaded_image = IMG_Load(filename.c_str());
 	if(loaded_image != NULL) {
 		// Create an optimized image
-		_sdl_srf = SDL_DisplayFormat(loaded_image);
+		_sdl_srf = SDL_DisplayFormatAlpha(loaded_image);
 		// Free the old image
 		SDL_FreeSurface(loaded_image);
 	}
@@ -70,12 +70,16 @@ void image::free() {
 }
 
 void image::set_alpha(Uint8 a, bool enabled) {
-	if (SDL_SetAlpha(_sdl_srf, enabled ? SDL_SRCALPHA : 0, a+(a==127)) == -1)
+	if (SDL_SetAlpha(_sdl_srf, (enabled ? SDL_SRCALPHA : 0), a+(a==127)) == -1)
 		throw exception("Couldn't set alpha");
 }
 
-void image:: enable_alpha() {set_alpha(_sdl_srf->format->alpha, true );}
-void image::disable_alpha() {set_alpha(_sdl_srf->format->alpha, false);}
+void image:: enable_alpha() {
+	set_alpha(_sdl_srf->format->alpha, true );
+}
+void image::disable_alpha() {
+	set_alpha(_sdl_srf->format->alpha, false);
+}
 
 void image::fill_rect(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);

@@ -39,7 +39,6 @@ int main(int argc, char* args[]) {
 		//image hello("temp/hello.png");
 		//image message("The quick brown fox jumps over the lazy dog", lazy_font, text_color);
 		//image rect_srf;
-		//image plain_rect;
 		//image background("temp/background.png");
 		//Render the text
 
@@ -53,13 +52,6 @@ int main(int argc, char* args[]) {
 		//hello.set_alpha(64);
 		//hello.apply(180, 140);
 		//message.apply(10, 160);
-
-		//plain_rect.generate_rect(100,100);
-		//gra.object_buffers[OC_WALL].apply(plain_rect, 0,0);
-		//gra.object_buffers[OC_MAGNET].apply(plain_rect, 32,0);
-		//plain_rect.clear();
-		//gra.object_buffers[OC_WALL].apply(plain_rect, 0,0);
-		//plain_rect.apply(100,100);
 
 		//rect_srf.load("wall/Earth SMWar.png");
 		////rect_srf.generate_text("\"The quick brown fox jumps over the lazy dog\"", lazy_font, text_color);
@@ -75,7 +67,7 @@ int main(int argc, char* args[]) {
 		//gra.update();
 
 		/* LEVEL TEST */
-		//lev.load_level("in");
+		lev.load_level("in");
 		//lev.save_level("out");
 
 		// Initialize game

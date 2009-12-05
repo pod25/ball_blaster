@@ -22,8 +22,10 @@ void game::main() {
 	SDL_Event event;
     
 	uint last_refreshed = 0;
+	uint last_stepped	= 0;
 	//Start the timer
-    last_refreshed = SDL_GetTicks();
+    last_refreshed	= SDL_GetTicks();
+	last_stepped	= SDL_GetTicks();
 
 	//While the user hasn't quit
 	bool quit = false;
