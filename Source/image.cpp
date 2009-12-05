@@ -80,16 +80,6 @@ void image::disable_alpha() {set_alpha(_sdl_srf->format->alpha, false);}
 void image::fill_rect(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
 	if(SDL_FillRect(_sdl_srf, dstrect, pixel)) throw exception("Couldn't fill rectangle in image");
-	/*
-	Uint8  Bpp   = _sdl_srf->format->BytesPerPixel;
-	Uint16 pitch = _sdl_srf->pitch;
-	lock();
-	int x, y;
-	for (y = 0; y < _sdl_srf->h; y++)
-		for (x = 0; x < _sdl_srf->w; x++)
-			*(Uint32*)((byte*)_sdl_srf->pixels + x*Bpp + y*pitch) = pixel;
-	unlock();
-	*/
 }
 void image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	fill_rect(NULL, r, g, b, a);
