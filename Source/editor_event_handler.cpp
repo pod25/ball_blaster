@@ -20,7 +20,7 @@ editor_event_handler::editor_event_handler() {
 	_mouse_x			= 0;
 	_mouse_y			= 0;
 	_state				= STATE_DEFAULT;
-	_can_edit_const		= false;
+	_can_edit_const		= true;
 	_sel_obj_type		= OC_MAGNET;
 	_objects_changed	= true;
 	_scrolled			= true;
@@ -69,6 +69,7 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 	}
 	// Mouse wheel up
 	else if(button == SDL_BUTTON_WHEELUP) {
+		SDL_ShowCursor(1);
 		switch(_state) {
 			case STATE_DEFAULT:
 				// Goto insertion mode
@@ -86,6 +87,9 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 					}
 				break;
 		}
+	}
+	else if(button == SDL_BUTTON_WHEELDOWN) {
+		SDL_ShowCursor(0);
 	}
 
 
