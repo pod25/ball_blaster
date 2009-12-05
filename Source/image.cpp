@@ -70,7 +70,7 @@ void image::free() {
 }
 
 void image::set_alpha(Uint8 a, bool enabled) {
-	if (SDL_SetAlpha(_sdl_srf, (enabled ? SDL_SRCALPHA : 0) | SDL_RLEACCEL, a+(a==127)) == -1)
+	if (SDL_SetAlpha(_sdl_srf, (enabled ? SDL_SRCALPHA : 0), a+(a==127)) == -1)
 		throw exception("Couldn't set alpha");
 }
 
