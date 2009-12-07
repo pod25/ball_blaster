@@ -15,6 +15,9 @@ private:
 		STATE_INSERTION
 	};
 
+	static const uint SCROLL_AREA_SIZE	= 25;
+	static const uint MAX_SCROLL_SPEED	= 0; // In pixels/second
+
 	int		_mouse_x;
 	int		_mouse_y;
 	int		_state;

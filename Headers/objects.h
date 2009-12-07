@@ -63,7 +63,7 @@ private:
 protected:
 	int		_dir;
 public:
-	directed_object(bool locked, int dir) : object(locked), _dir(dir) {};
+	directed_object(bool locked, int dir) : object(locked), _dir(min(dir, NUM_DIRECTIONS-1)) {};
 	int		get_dir() { return _dir; };
 };
 

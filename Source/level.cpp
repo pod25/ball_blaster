@@ -47,36 +47,40 @@ bool level::remove_obj(size_t x, size_t y, size_t index) {
 		return true;
 	}
 	return false;
-}	
+}
+/*
+ * Remove object at level pixel coordinates (pixel_x, pixel_y)
+ */
+bool level::remove_obj_at_pixel(uint pixel_x, uint pixel_y, bool can_edit_locked) {
+	coords	vector_pos	= vector_coords_from_pixel(pixel_x, pixel_y);
+	uint	dir			= dir_from_pixel(pixel_x, pixel_y);
+	size_t	num_obj		= num_objects(vector_pos.x, vector_pos.y);
+	for(size_t i = 0 ; i < num_obj; i++) {
+		// Directed object?
+		directed_object* directed = dynamic_cast<directed_object*>(get_object(vector_pos.x, vector_pos.y, i));
+		if((directed && directed->get_dir() == dir) || directed == 0) {
+			remove_obj(vector_pos.x, vector_pos.y, i);
+			return true;
+		}
+	}
+	return false;
+}
 
 /*
  * Insert object at vector coordinates (x, y)
  */
 bool level::insert_obj(size_t x, size_t y, object* obj) {
-	// In bounds?
-	if(x >= _w || y >= _h)
-		return false;
 
 	// Type casts the input object to directed object if that is the case
 	directed_object* dir_obj = dynamic_cast<directed_object*>(obj);
 
 	// Is object directed?
-	bool is_dir = (dir_obj == 0) ? false: true;
-	// Gets number of objects in selected square
-	size_t num_obj = num_objects(x, y);
-
-	// Checks when insert is forbidden
-	if(num_obj == 1 && dynamic_cast<nondirected_object*>(get_object(x, y, 0)))
+	bool is_dir		= (dir_obj == 0) ? false: true;
+	uint direction	= (dir_obj == 0) ? false: dir_obj->_dir;
+	
+	// Insertion possible?
+	if(!can_insert_obj(x, y, is_dir, direction))
 		return false;
-	else if(!is_dir && num_obj > 0)
-		return false;
-	else if(is_dir) {
-		for(size_t n = 0; n < num_obj; n++) {
-			if(dynamic_cast<directed_object*>(get_object(x, y, n))) 
-				if(dynamic_cast<directed_object*>(get_object(x, y, n))->_dir == dir_obj->_dir)
-					return false;
-		}
-	}
 
 	// Allow only one cannon
 	if(dynamic_cast<cannon*>(obj) && cannon_exists())
@@ -96,7 +100,7 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 }
 
 /*
- * Insert object of type oc at pixel coordinates (pixel_x, pixel_y)
+ * Insert object of type oc at level pixel coordinates (pixel_x, pixel_y)
  */
 bool level::insert_obj_at_pixel(uint oc, uint pixel_x, uint pixel_y, bool locked) {
 	coords	vector_pos	= vector_coords_from_pixel(pixel_x, pixel_y);
@@ -135,6 +139,34 @@ bool level::insert_obj_at_pixel(uint oc, uint pixel_x, uint pixel_y, bool locked
 }
 
 /*
+ * Can insert directed/nondirected object at vector pos (x, y) ?
+ */
+bool level::can_insert_obj(size_t x, size_t y, bool directed, uint direction) {
+	// In bounds?
+	if(x >= _w || y >= _h)
+		return false;
+
+	// Gets number of objects in selected square
+	size_t num_obj = num_objects(x, y);
+
+	// Checks when insert is forbidden
+	if(num_obj == 1 && dynamic_cast<nondirected_object*>(get_object(x, y, 0)))
+		return false;
+	else if(!directed && num_obj > 0)
+		return false;
+	else if(directed) {
+		for(size_t n = 0; n < num_obj; n++) {
+			if(dynamic_cast<directed_object*>(get_object(x, y, n))) 
+				if(dynamic_cast<directed_object*>(get_object(x, y, n))->_dir == direction)
+					return false;
+		}
+	}
+
+	// Insertion allowed!
+	return true;
+}
+
+/*
  * Get level width in squares
  */
 size_t level::get_width() {
@@ -146,6 +178,20 @@ size_t level::get_width() {
  */
 size_t level::get_height() {
 	return _h;
+}
+
+/*
+ * Get level width in pixels
+ */
+size_t level::get_pixel_width() {
+	return _w * _grid_size;
+}
+
+/*
+ * Get level height in pixels
+ */
+size_t level::get_pixel_height() {
+	return _h * _grid_size;
 }
 
 /*

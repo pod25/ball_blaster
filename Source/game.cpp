@@ -36,9 +36,9 @@ void game::main() {
 			if(event.type == SDL_QUIT) {
 				//Quit the program
 				quit = true;
-				lev.save_level("out_modified");
+				lev.save_level("out_modified"); // TODO: REMOVE TEMP
 			}
-			// Informs event handler that an action has occured
+			// Informs event handler that an event has occured
 			else if(event.type == SDL_KEYDOWN) {
 				cur_eh->e_key_down(event.key.keysym.sym);
 			}
@@ -56,8 +56,14 @@ void game::main() {
 			}
 		}
 
+		// Step event handlers
 		uint cur_time = SDL_GetTicks();
-		if(cur_time-last_refreshed >= 1000/FPS) {
+		last_stepped = cur_time;
+		cur_eh->e_step(cur_time - last_refreshed);
+
+		// Handle frame rate
+		cur_time = SDL_GetTicks();
+		if(cur_time - last_refreshed >= 1000/FPS) {
 			last_refreshed = cur_time;
 			cur_eh->e_new_frame();
 		}
