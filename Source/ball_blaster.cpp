@@ -8,6 +8,7 @@
  */
 error_handler			err_hndl_obj;	// Error handler
 editor_event_handler	editor_eh;		// Editor event handler
+menu_event_handler		menu_eh;		// Menu event handler
 simulator_event_handler	sim_eh;			// Simulator event handler
 event_handler*			cur_eh;			// Pointer to current event handler
 game					gam;			// Game
@@ -30,9 +31,9 @@ int main(int argc, char* args[]) {
 		const int SCREEN_BPP = 32;
 
 		//The font that's going to be used
-		font lazy_font("Fonts/lazy.ttf", 28);
+		//font lazy_font("Fonts/lazy.ttf", 28);
 		//The color of the font
-		SDL_Color text_color = {0, 0, 0}; 
+		//SDL_Color text_color = {0, 0, 0}; 
 
 		//The surfaces that will be used
 		//video_mode	screen(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);

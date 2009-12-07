@@ -45,3 +45,31 @@ string path_from_level_name(string name) {
 	path.append(".lev");
 	return path;
 }
+
+/*
+ * Get level file list
+ */
+vstring get_level_file_list() {
+	vstring list;
+	WIN32_FIND_DATA file_image;
+	HANDLE file_handle = FindFirstFile("Levels/*.lev", &file_image);
+
+	bool working = true;
+	if(file_handle != INVALID_HANDLE_VALUE) {
+		string buffer = file_image.cFileName;
+		list.push_back(file_name_to_level_name(buffer));
+		while(working) {
+			FindNextFile(file_handle, &file_image);
+			if(file_image.cFileName != buffer) {
+				buffer = file_image.cFileName;
+				list.push_back(file_name_to_level_name(buffer));
+			}
+			else {
+				//end of files reached
+				working=false;
+			}
+		}
+	}
+
+	return list;
+}

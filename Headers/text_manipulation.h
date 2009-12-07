@@ -15,4 +15,9 @@ string			to_string	(double);
 double			to_double	(string);
 int				to_int		(string);
 
+string			to_lower(string in);
+string			replace_char(string in, char from, char to);
+string			file_name_to_level_name(string file);
+string			level_name_to_file_name(string file);
+
 #endif

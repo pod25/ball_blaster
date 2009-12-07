@@ -10,8 +10,8 @@
  * Initialize game
  */
 void game::init_game() {
-	// TODO: Replace with menu_event_handler
-	cur_eh = &editor_eh;
+	_quit = false;
+	cur_eh = &menu_eh;
 	set_window_pos(0, 0);
 }
 
@@ -29,14 +29,13 @@ void game::main() {
 	last_stepped	= SDL_GetTicks();
 
 	//While the user hasn't quit
-	bool quit = false;
-	while(quit == false) {
+	while(_quit == false) {
 		//While there's an event to handle
 		while(SDL_PollEvent(&event)) {
 			//If the user has Xed out the window
 			if(event.type == SDL_QUIT) {
 				//Quit the program
-				quit = true;
+				_quit = true;
 				lev.save_level("out_modified"); // TODO: REMOVE TEMP
 			}
 			// Informs event handler that an event has occured
@@ -71,6 +70,13 @@ void game::main() {
 			cur_eh->e_new_frame();
 		}
 	}
+}
+
+/*
+ * Quit game
+ */
+void game::quit() {
+	_quit = true;
 }
 
 void game::set_window_pos(uint x, uint y) {

@@ -4,8 +4,9 @@
 #include "common.h"
 
 void graphics::init_images(bool load_images) {
-	std_background_img	= "background.png";
-	std_ball_img		= "Ball/Black ball.png";
+	std_background_img		= "background.png";
+	std_menu_background_img	= "menu_background.png";
+	std_ball_img			= "Ball/Black ball.png";
 	std_obj_images[OC_WALL	][DIR_NODIR	] = "wall.png";
 	std_obj_images[OC_GOAL	][DIR_NODIR	] = "goal.png";
 	std_obj_images[OC_CANNON][DIR_NODIR	] = "cannon.png";
@@ -18,9 +19,10 @@ void graphics::init_images(bool load_images) {
 	std_obj_images[OC_MAGNET][DIR_RIGHT	] = "magnet_right.png";
 	std_obj_images[OC_MAGNET][DIR_DOWN	] = "magnet_down.png";
 	if (load_images) {
-		screen_buffer		.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SCREEN_FLAGS);
-		background_buffer	.load(std_background_img);
-		ball_buffer			.load(std_ball_img);
+		screen_buffer			.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SCREEN_FLAGS);
+		background_buffer		.load(std_background_img);
+		menu_background_buffer	.load(std_menu_background_img);
+		ball_buffer				.load(std_ball_img);
 		for(uint i = 0; i < NUM_OBJECT_CLASSES; i++)
 			for(uint d = 0; d < NUM_DIRECTIONS; d++)
 				if(!std_obj_images[i][d].empty()) object_buffers[i][d].load(std_obj_images[i][d]);
@@ -37,6 +39,10 @@ graphics::graphics() {
 	try {
 		init_images(true);
 		refresh = false;
+
+		menu_font.load("Fonts/lazy.ttf", 28);
+		menu_color.r = 0; menu_color.g = 0; menu_color.b = 0;
+		menu_color_selected.r = 255; menu_color_selected.g = 255; menu_color_selected.b = 255;
 	}
 	catch (exception &e) {err_hndl_obj.inform_about_error("graphics default constructor", e);};
 }

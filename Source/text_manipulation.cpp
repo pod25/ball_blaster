@@ -86,13 +86,40 @@ string to_string(double value) {
 /*
  * Convert string to double
  */
-double to_double (string val) {
+double to_double(string val) {
 	return atof(val.c_str());
 }
 
 /*
  * Convert string to int
  */
-int to_int (string val) {
+int to_int(string val) {
 	return atoi(val.c_str());
 }
+
+/*
+ * String manipulation
+ */
+string replace_char(string in, char from, char to) {
+	for(int i = 0; i < (int)in.length(); i++)
+		if(in[i] == from)
+			in[i] = to;
+	return in;
+}
+string to_lower(string in) {
+	for(int i = 0; i < (int)in.length(); i++)
+		if(in[i] >= 'A' && in[i] <= 'Z')
+			in[i] = in[i] + 'a' - 'A';
+	return in;
+}
+
+/*
+ * Level name conversions
+ */
+string file_name_to_level_name(string file) {
+	return replace_char(explode(file,'.')[0], '_', ' ');
+}
+string level_name_to_file_name(string name) {
+	return replace_char(to_lower(name.append(".lev")), ' ', '_');
+}
+
