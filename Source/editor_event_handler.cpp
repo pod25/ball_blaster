@@ -24,6 +24,8 @@ editor_event_handler::editor_event_handler() {
 	_sel_obj_type		= OC_MAGNET;
 	_objects_changed	= true;
 	_scrolled			= true;
+	_floating_window_pos.x = 0;
+	_floating_window_pos.y = 0;
 }
 
 /*
@@ -206,7 +208,7 @@ void editor_event_handler::_plot_square(size_t x, size_t y) {
  * Editor step handler
  */
 void editor_event_handler::e_step(int delta_t) {
-	coords	pos			= gam.get_window_pos();
+	vec		pos			= _floating_window_pos;
 	uint	scr_width	= gra.SCREEN_WIDTH;
 	uint	scr_height	= gra.SCREEN_HEIGHT;
 	uint	lev_width	= lev.get_pixel_width();
@@ -216,28 +218,32 @@ void editor_event_handler::e_step(int delta_t) {
 
 	// Scroll left?
 	if(x >= 0 && x < SCROLL_AREA_SIZE)
-		pos.x -= (int)((double)MAX_SCROLL_SPEED * 0.001 * (double)delta_t);
+		pos.x -= _scroll_distance(x, delta_t);
 	// Scroll right?
 	if(x < scr_width && x >= scr_width - SCROLL_AREA_SIZE)
-		pos.x += (int)((double)MAX_SCROLL_SPEED * 0.001 * (double)delta_t);
+		pos.x += _scroll_distance(scr_width - x, delta_t);
 	// Scroll up?
 	if(y >= 0 && y < SCROLL_AREA_SIZE)
-		pos.y -= (int)((double)MAX_SCROLL_SPEED * 0.001 * (double)delta_t);
+		pos.y -= _scroll_distance(y, delta_t);
 	// Scroll down?
 	if(y < scr_height && y >= scr_height - SCROLL_AREA_SIZE)
-		pos.y += (int)((double)MAX_SCROLL_SPEED * 0.001 * (double)delta_t);
+		pos.y += _scroll_distance(scr_height - y, delta_t);
 
 	if(pos.x < 0)
 		pos.x = 0;
-	if(pos.x >= (int)lev_width)
-		pos.x =  lev_width - 1;
+	if(pos.x + scr_width > lev_width)
+		pos.x =  lev_width - scr_width;
 	if(pos.y < 0)
 		pos.y = 0;
-	if(pos.y >= (int)lev_height)
-		pos.y =  lev_height - 1;
+	if(pos.y + scr_height > lev_height)
+		pos.y =  lev_height - scr_height;
+	_floating_window_pos = pos;
 	
-	if(pos.x != gam.get_window_pos().x || pos.y != gam.get_window_pos().y ) {
-		gam.set_window_pos(pos);
+	if(floor(pos.x) != gam.get_window_pos().x || floor(pos.y) != gam.get_window_pos().y ) {
+		gam.set_window_pos((uint)floor(pos.x), (uint)floor(pos.y));
 		_scrolled = true;
 	}
+}
+double editor_event_handler::_scroll_distance(int mouse_offset, uint delta_t) {
+	return pow(2.718, -0.1*(mouse_offset - 1)) * MAX_SCROLL_SPEED * 0.001 * delta_t;
 }

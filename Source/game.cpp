@@ -12,6 +12,7 @@
 void game::init_game() {
 	// TODO: Replace with menu_event_handler
 	cur_eh = &editor_eh;
+	set_window_pos(0, 0);
 }
 
 /*
@@ -58,8 +59,10 @@ void game::main() {
 
 		// Step event handlers
 		uint cur_time = SDL_GetTicks();
-		last_stepped = cur_time;
-		cur_eh->e_step(cur_time - last_refreshed);
+		if(cur_time - last_refreshed >= 5) {
+			cur_eh->e_step(cur_time - last_stepped);
+			last_stepped = cur_time;
+		}
 
 		// Handle frame rate
 		cur_time = SDL_GetTicks();

@@ -16,7 +16,7 @@ private:
 	};
 
 	static const uint SCROLL_AREA_SIZE	= 25;
-	static const uint MAX_SCROLL_SPEED	= 0; // In pixels/second
+	static const uint MAX_SCROLL_SPEED	= 200; // In pixels/second
 
 	int		_mouse_x;
 	int		_mouse_y;
@@ -25,9 +25,11 @@ private:
 	int		_sel_obj_type;
 	bool	_objects_changed;
 	bool	_scrolled;
+	vec		_floating_window_pos;
 
 	bool	_is_const_type(uint oc);
 	void	_plot_square(size_t x, size_t y);
+	double	_scroll_distance(int mouse_offset, uint delta_t);
 public:
 	editor_event_handler();
 
