@@ -13,6 +13,15 @@ bool editor_event_handler::_is_const_type(uint oc) {
 	return false;
 }
 
+bool editor_event_handler::_is_dir_type(uint oc) {
+	switch(oc) {
+		case OC_MAGNET:
+		case OC_FAN:
+			return true;
+	}
+	return false;
+}
+
 /*
  * Editor event handler constructor
  */
@@ -138,6 +147,30 @@ void editor_event_handler::e_new_frame() {
 
 	gra.object_layer_buffer.apply(0, 0, &src_rect);
 
+	switch(_state) {
+		case STATE_INSERTION:
+			// Plot object placement preview
+			image*	image_buffer_array	= gra.object_buffers[_sel_obj_type];
+			image*	image_buffer_ptr;
+			coords	mouse_level_pos		= gam.level_pos_from_window_pos(_mouse_x, _mouse_y);
+			coords	square_vector		= lev.vector_coords_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
+			coords	square_pos			= gam.window_pos_from_level_pos(lev.pixel_coords_from_vector(square_vector));
+			bool	directed			= _is_dir_type(_sel_obj_type);
+			uint	dir					= lev.dir_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
+			if(directed)
+				image_buffer_ptr = &image_buffer_array[dir]; 
+			else
+				image_buffer_ptr = &image_buffer_array[DIR_NODIR];
+			if(lev.can_insert_obj(square_vector.x, square_vector.y, directed, dir))
+				image_buffer_ptr->set_alpha(128, true);
+			else
+				image_buffer_ptr->set_alpha(64, true);
+			image_buffer_ptr->apply(square_pos.x, square_pos.y);
+			image_buffer_ptr->set_alpha(SDL_ALPHA_OPAQUE, true);
+
+			break;
+	}
+
 	gra.update();
 }
 
@@ -154,7 +187,6 @@ void editor_event_handler::objects_changed(size_t x, size_t y, bool all) {
 				_plot_square(cur_x, cur_y);
 			}
 		}
-
 	}
 	else {
 		// Clear square

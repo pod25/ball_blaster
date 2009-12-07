@@ -24,6 +24,16 @@ size_t level::num_objects(size_t x, size_t y) {
 }
 
 /*
+* Check for object wall in square
+*/
+bool level::is_wall(size_t x, size_t y) {
+	if (dynamic_cast<wall*>(get_object(x, y, 0)))
+		return true;
+	else
+		return false;
+}
+
+/*
  * Get object pointer at (x, y, index)
  */
 object*	level::get_object(size_t x, size_t y, size_t index) {
@@ -166,6 +176,21 @@ bool level::can_insert_obj(size_t x, size_t y, bool directed, uint direction) {
 				if(dynamic_cast<directed_object*>(get_object(x, y, n))->_dir == direction)
 					return false;
 		}
+		// Checks that directed object is inserted against wall
+		if(direction == DIR_DOWN)
+			if(!is_wall(x, (y - 1)))
+				return false;
+		if(direction == DIR_UP)
+			if(!is_wall(x, (y + 1)))
+				return false;
+		if(direction == DIR_RIGHT)
+			if(!is_wall((x - 1), y))
+				return false;
+		if(direction == DIR_LEFT)
+			if(!is_wall((x + 1), y))
+				return false;
+		
+				
 	}
 
 	// Insertion allowed!

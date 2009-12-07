@@ -7,27 +7,28 @@
 class base_image {
 protected:
 	SDL_Surface* _sdl_srf;
-
-	void lock();
-	void unlock();
 public:
 	bool empty();
-	void apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part = NULL);
-	void apply(Sint16 x, Sint16 y, SDL_Rect *src_part = NULL); // Apply on screen buffer
+	void lock();
+	void unlock();
+	SDL_Surface* get_sdl_srf();
 
-	base_image() : _sdl_srf(NULL) {} // Default constructor
-	~base_image() {} // Destructor
+	base_image	() : _sdl_srf(NULL) {} // Default constructor
+	~base_image	() {} // Destructor
 private:
-	base_image(const base_image&) {} // Disable copy constructor
+	base_image	(const base_image&) {} // Disable copy constructor
 	base_image& operator=(const base_image&) {} // Disable assignment
 };
 
 class image : public base_image {
+	Uint8 alpha;
 public:
 	void load			(string filename);
 	void generate_rect	(int w, int h);//, SDL_Color color = {0,0,0});
 	void generate_text	(string text, font &text_font, SDL_Color text_color);
 	void free			();
+	void apply			(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part = NULL);
+	void apply			(Sint16 x, Sint16 y, SDL_Rect *src_part = NULL); // Apply on screen buffer
 	void set_alpha		(Uint8 a, bool enabled = true);
 	void enable_alpha	();
 	void disable_alpha	();
@@ -36,7 +37,7 @@ public:
 	//void set_color		(SDL_Color color, Uint8 alpha = 255);
 	void clear			();
 
-	image() {} // Default constructor
+	image() : alpha(255) {} // Default constructor
 	image(int w, int h);//, SDL_Color color = {0,0,0});
 	image(string filename); // Constructor using a file name
 	image(string text, font &text_font, SDL_Color text_color);
