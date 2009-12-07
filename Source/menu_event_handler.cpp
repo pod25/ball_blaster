@@ -48,17 +48,36 @@ void menu_event_handler::e_key_down(int key) {
 				if(_list[_selection] == MENU_BACK)
 					_init_main_menu();
 				else {
-					string sel_level = _list[_selection];
-					sel_level = sel_level.substr(2);
-					lev.load_level(sel_level);
-					cur_eh = &editor_eh;
+					string sel_level_play = _list[_selection];
+					sel_level_play = sel_level_play.substr(2);
+					lev.load_level(sel_level_play);
+					editor_eh.set_mode(false);
+					cur_eh = &editor_eh; // Change with _can_edit_const
 				}
 			}
+			if(key == SDLK_ESCAPE)
+				_init_main_menu();
+
 		case STATE_EDIT:
 			if(key == SDLK_RETURN) {
 				if(_list[_selection] == MENU_BACK)
 					_init_main_menu();
+				else if(_list[_selection] == MENU_NEW_LEVEL) {
+					lev.new_level("");
+					editor_eh.set_mode(true);
+					cur_eh = &editor_eh; //With const
+
+				}
+				else {
+					string sel_level_edit = _list[_selection];
+					sel_level_edit = sel_level_edit.substr(2);
+					lev.load_level(sel_level_edit);
+					editor_eh.set_mode(true);
+					cur_eh = &editor_eh; //With const
+				}
 			}
+			if(key == SDLK_ESCAPE)
+				_init_main_menu();
 	}
 }
 void menu_event_handler::e_key_up(int key) {
@@ -122,6 +141,11 @@ void menu_event_handler::_init_play_menu() {
 void menu_event_handler::_init_edit_menu() {
 	_state = STATE_EDIT;
 	_clear_list();
+	vstring levels = get_level_file_list();
+	_add_list_item(MENU_NEW_LEVEL);
+	for(int i = 0; i < (int)levels.size(); i++) {
+		_add_list_item(levels[i].insert(0, "- "));
+	}
 	_add_list_item(MENU_BACK);
 }
 

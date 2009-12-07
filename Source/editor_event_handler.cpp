@@ -29,7 +29,7 @@ editor_event_handler::editor_event_handler() {
 	_mouse_x			= 0;
 	_mouse_y			= 0;
 	_state				= STATE_DEFAULT;
-	_can_edit_const		= true;
+	_can_edit_const		= false;
 	_sel_obj_type		= OC_MAGNET;
 	_objects_changed	= true;
 	_scrolled			= true;
@@ -293,4 +293,12 @@ bool editor_event_handler::start_simulation() {
 
 	cur_eh = &sim_eh;
 	return true;
+}
+
+void editor_event_handler::set_mode(bool constant) {
+	_can_edit_const = constant;
+}
+	
+bool editor_event_handler::get_mode(){
+	return _can_edit_const;
 }

@@ -8,6 +8,7 @@
 #define MENU_MAIN_EDIT	"Edit Level"
 #define MENU_MAIN_QUIT	"Quit"
 #define MENU_BACK		"Back"
+#define MENU_NEW_LEVEL	"New Level"
 
 /*
  * menu_event_handler class
