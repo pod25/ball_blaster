@@ -158,7 +158,7 @@ void editor_event_handler::e_new_frame() {
 			bool	directed			= _is_dir_type(_sel_obj_type);
 			uint	dir					= lev.dir_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
 			if(directed)
-				image_buffer_ptr = &image_buffer_array[dir];
+				image_buffer_ptr = &image_buffer_array[dir]; 
 			else
 				image_buffer_ptr = &image_buffer_array[DIR_NODIR];
 			if(lev.can_insert_obj(square_vector.x, square_vector.y, directed, dir))
