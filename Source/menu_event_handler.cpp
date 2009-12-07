@@ -57,7 +57,7 @@ void menu_event_handler::e_key_down(int key) {
 			}
 			if(key == SDLK_ESCAPE)
 				_init_main_menu();
-
+			break;
 		case STATE_EDIT:
 			if(key == SDLK_RETURN) {
 				if(_list[_selection] == MENU_BACK)
