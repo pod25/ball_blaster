@@ -162,9 +162,9 @@ void editor_event_handler::e_new_frame() {
 			else
 				image_buffer_ptr = &image_buffer_array[DIR_NODIR];
 			if(lev.can_insert_obj(square_vector.x, square_vector.y, directed, dir))
-				image_buffer_ptr->set_alpha(128, true);
+				image_buffer_ptr->set_alpha(255, true);
 			else
-				image_buffer_ptr->set_alpha(64, true);
+				image_buffer_ptr->set_alpha(128, true);
 			image_buffer_ptr->apply(square_pos.x, square_pos.y);
 			image_buffer_ptr->set_alpha(SDL_ALPHA_OPAQUE, true);
 

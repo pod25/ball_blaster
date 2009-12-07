@@ -62,7 +62,8 @@ void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
 	offset.x = x;
 	offset.y = y;
 	if (!(_sdl_srf->flags & SDL_SRCALPHA && _sdl_srf->format->Amask &&
-		  dest_srf->flags & SDL_SRCALPHA && dest_srf->format->Amask )) {	  
+		  dest_srf->flags & SDL_SRCALPHA && dest_srf->format->Amask ) &&
+		  alpha == 255) {	  
 		// Blit the surface using SDL's build in blit function
 		if (SDL_BlitSurface(_sdl_srf, src_part, dest_srf, &offset) < 0)
 			sdl_obj.error("Couldn't blit image");
@@ -72,14 +73,16 @@ void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
 		if (_sdl_srf->format->BitsPerPixel != 32) throw invalid_argument("Source image has invalid pixel format");
 		if (dest_srf->format->BitsPerPixel != 32) throw invalid_argument("Destination image has invalid pixel format");
 		// Constrol the masks of the surfaces
+		Uint32 samask = _sdl_srf->format->Amask;
+		Uint32 damask = dest_srf->format->Amask;
 		if (_sdl_srf->format->Rmask != gra.RMASK ||
 			_sdl_srf->format->Gmask != gra.GMASK ||
 			_sdl_srf->format->Bmask != gra.BMASK ||
-			_sdl_srf->format->Amask != gra.AMASK ) throw invalid_argument("Source image has invalid channel masks");
+			_sdl_srf->format->Amask != gra.AMASK && samask) throw invalid_argument("Source image has invalid channel masks");
 		if (dest_srf->format->Rmask != gra.RMASK ||
 			dest_srf->format->Gmask != gra.GMASK ||
 			dest_srf->format->Bmask != gra.BMASK ||
-			dest_srf->format->Amask != gra.AMASK ) throw invalid_argument("Destination image has invalid channel masks");
+			dest_srf->format->Amask != gra.AMASK && damask) throw invalid_argument("Destination image has invalid channel masks");
 		// Get pitches
 		Uint16  src_pitch	= _sdl_srf->pitch;
 		Uint16 dest_pitch	= dest_srf->pitch;
@@ -138,14 +141,14 @@ void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
 				sr = (p & gra.RMASK) >> gra.RSHIFT << gra.RLOSS;
 				sg = (p & gra.GMASK) >> gra.GSHIFT << gra.GLOSS;
 				sb = (p & gra.BMASK) >> gra.BSHIFT << gra.BLOSS;
-				sa = (p & gra.AMASK) >> gra.ASHIFT << gra.ALOSS;
-				sa *= src_pbalpha;//_sdl_srf->format->alpha;
+				sa = samask ? (p & gra.AMASK) >> gra.ASHIFT << gra.ALOSS : 255;
+				sa *= src_pbalpha;
 				// Extract destination colors
 				p = *(Uint32*)(dest_start + x*4 + y*dest_pitch);
 				dr = (p & gra.RMASK) >> gra.RSHIFT << gra.RLOSS;
 				dg = (p & gra.GMASK) >> gra.GSHIFT << gra.GLOSS;
 				db = (p & gra.BMASK) >> gra.BSHIFT << gra.BLOSS;
-				da = (p & gra.AMASK) >> gra.ASHIFT << gra.ALOSS;
+				da = damask ? (p & gra.AMASK) >> gra.ASHIFT << gra.ALOSS : 255;
 				// Calculate new values
 				na = (255*(sa + 255*da) - sa*da); na += !na;
 				nr = (dr*da*(255*255-sa) + sr*sa*255)/na;
