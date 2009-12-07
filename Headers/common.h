@@ -39,6 +39,7 @@ using std::cerr;
  */
 class error_handler;
 class event_handler;
+class menu_event_handler;
 class editor_event_handler;
 class simulator_event_handler;
 
@@ -62,6 +63,8 @@ class goal;
 typedef vector<object*>						vobj;
 typedef vector<vector<object*>>				vvobj;
 typedef vector<vector<vector<object*>>>		vvvobj;
+typedef vector<string>						vstring;
+typedef vector<string>::iterator			vstring_it;
 typedef unsigned int						uint;
 typedef uint8_t								byte;
 //The type size_t
@@ -70,13 +73,13 @@ typedef uint8_t								byte;
 typedef unsigned int						size_t;
 #endif
 
-
 /*
  * Global variables
  */
 extern error_handler			err_hndl_obj;
 extern editor_event_handler		editor_eh;
 extern simulator_event_handler	sim_eh;
+extern menu_event_handler		menu_eh;
 extern event_handler*			cur_eh;
 extern sdl_handler				sdl_obj;
 extern graphics					gra;
@@ -96,6 +99,7 @@ extern game						gam;
 #include "font.h"
 #include "image.h"
 #include "event_handler.h"
+#include "menu_event_handler.h"
 #include "editor_event_handler.h"
 #include "simulator_event_handler.h"
 #include "files.h"

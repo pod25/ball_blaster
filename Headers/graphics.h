@@ -34,6 +34,7 @@ public:
 #endif
 private:
 	string std_background_img;
+	string std_menu_background_img;
 	string std_ball_img;
 	string std_obj_images[NUM_OBJECT_CLASSES][NUM_DIRECTIONS];
 
@@ -45,9 +46,13 @@ private:
 public:
 	video_mode	screen_buffer;						// The buffer that contains the screen image, SDL_Flip to flip
 	image		background_buffer;					// The buffer that contains the background image
+	image		menu_background_buffer;				// The buffer that contains the menu background image
 	image		object_layer_buffer;				// The buffer that contains the object layer
 	image		ball_buffer;						// The buffer for the ball image
 	image		object_buffers[NUM_OBJECT_CLASSES][NUM_DIRECTIONS];	// Every buffer for the images of the object types
+	font		menu_font;
+	SDL_Color	menu_color;
+	SDL_Color	menu_color_selected;
 
 	//void init_graphics				(); // Handeled by constructor ???
 	void update						();
