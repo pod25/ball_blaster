@@ -61,6 +61,11 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 	else if(button == SDL_BUTTON_RIGHT) {
 		// Which state?
 		switch(_state) {
+			case STATE_DEFAULT:
+				// Delete object at cursor
+				lev.remove_obj_at_pixel(mouse_x, mouse_y, _can_edit_const);
+				_objects_changed = true;
+				break;
 			case STATE_INSERTION:
 				// Goto default mode
 				_state = STATE_DEFAULT;
@@ -182,5 +187,38 @@ void editor_event_handler::e_new_frame() {
  * Editor step handler
  */
 void editor_event_handler::e_step(int delta_t) {
+	coords	pos			= gam.get_window_pos();
+	uint	scr_width	= gra.SCREEN_WIDTH;
+	uint	scr_height	= gra.SCREEN_HEIGHT;
+	uint	lev_width	= lev.get_pixel_width();
+	uint	lev_height	= lev.get_pixel_height();
+	uint	x			= _mouse_x;
+	uint	y			= _mouse_y;
 
+	// Scroll left?
+	if(x >= 0 && x < SCROLL_AREA_SIZE)
+		pos.x -= (int)((double)MAX_SCROLL_SPEED * 0.001 * (double)delta_t);
+	// Scroll right?
+	if(x < scr_width && x >= scr_width - SCROLL_AREA_SIZE)
+		pos.x += (int)((double)MAX_SCROLL_SPEED * 0.001 * (double)delta_t);
+	// Scroll up?
+	if(y >= 0 && y < SCROLL_AREA_SIZE)
+		pos.y -= (int)((double)MAX_SCROLL_SPEED * 0.001 * (double)delta_t);
+	// Scroll down?
+	if(y < scr_height && y >= scr_height - SCROLL_AREA_SIZE)
+		pos.y += (int)((double)MAX_SCROLL_SPEED * 0.001 * (double)delta_t);
+
+	if(pos.x < 0)
+		pos.x = 0;
+	if(pos.x >= (int)lev_width)
+		pos.x =  lev_width - 1;
+	if(pos.y < 0)
+		pos.y = 0;
+	if(pos.y >= (int)lev_height)
+		pos.y =  lev_height - 1;
+	
+	if(pos.x != gam.get_window_pos().x || pos.y != gam.get_window_pos().y ) {
+		gam.set_window_pos(pos);
+		_scrolled = true;
+	}
 }

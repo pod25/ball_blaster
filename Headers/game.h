@@ -12,6 +12,7 @@ private:
 	coords				window_pos;
 public:
 	static const int	FPS = 50;
+	static const int	MAX_STEP_DELTA_MS = 20;
 
 	void				init_game					();
 	void				main						();
