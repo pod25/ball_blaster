@@ -177,6 +177,7 @@ bool level::can_insert_obj(size_t x, size_t y, bool directed, uint direction) {
 					return false;
 		}
 		// Checks that directed object is inserted against wall
+
 		if(direction == DIR_DOWN)
 			if(!is_wall(x, (y - 1)))
 				return false;

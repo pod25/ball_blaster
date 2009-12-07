@@ -40,10 +40,7 @@ bool save_level_file(string name, const string& content) {
  * Get path to level with given name
  */
 string path_from_level_name(string name) {
-	string path = "Levels\\";
-	path.append(name);
-	path.append(".lev");
-	return path;
+	return level_name_to_file_name(name.insert(0,"Levels\\"));
 }
 
 /*

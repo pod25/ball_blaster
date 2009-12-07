@@ -131,11 +131,12 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
  * Editor key button handlers
  */
 void editor_event_handler::e_key_down(int key) {
-
-}
-void editor_event_handler::e_key_up(int key) {
 	if(key == SDLK_RETURN)
 		start_simulation();
+	else if(key == SDLK_ESCAPE)
+		cur_eh = &menu_eh;
+}
+void editor_event_handler::e_key_up(int key) {
 }
 
 /*
@@ -167,9 +168,9 @@ void editor_event_handler::e_new_frame() {
 			else
 				image_buffer_ptr = &image_buffer_array[DIR_NODIR];
 			if(lev.can_insert_obj(square_vector.x, square_vector.y, directed, dir))
-				image_buffer_ptr->set_alpha(255, true);
+				image_buffer_ptr->set_alpha(160, true);
 			else
-				image_buffer_ptr->set_alpha(128, true);
+				image_buffer_ptr->set_alpha(64, true);
 			image_buffer_ptr->apply(square_pos.x, square_pos.y);
 			image_buffer_ptr->set_alpha(SDL_ALPHA_OPAQUE, true);
 

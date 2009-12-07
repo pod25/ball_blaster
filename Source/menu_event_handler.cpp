@@ -49,7 +49,7 @@ void menu_event_handler::e_key_down(int key) {
 					_init_main_menu();
 				else {
 					string sel_level = _list[_selection];
-					sel_level = level_name_to_file_name(sel_level.substr(2));
+					sel_level = sel_level.substr(2);
 					lev.load_level(sel_level);
 					cur_eh = &editor_eh;
 				}
