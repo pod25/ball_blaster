@@ -137,6 +137,7 @@ void editor_event_handler::e_new_frame() {
 	src_rect.h = gra.SCREEN_HEIGHT;
 
 	gra.object_layer_buffer.apply(0, 0, &src_rect);
+
 	gra.update();
 }
 
