@@ -53,7 +53,7 @@ void image::free() {
 	_sdl_srf = NULL;
 }
 
-void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
+void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) { // Can't check alpha value of dest so it's ignored
 	SDL_Surface* dest_srf = dest.get_sdl_srf();
 	if (!_sdl_srf) throw invalid_argument("Image being applied not loaded");
 	if (!dest_srf) throw invalid_argument("Image being applied on not loaded");
@@ -61,9 +61,9 @@ void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
 	SDL_Rect offset;
 	offset.x = x;
 	offset.y = y;
-	if (!(_sdl_srf->flags & SDL_SRCALPHA && _sdl_srf->format->Amask &&
-		  dest_srf->flags & SDL_SRCALPHA && dest_srf->format->Amask ) &&
-		  alpha == 255) {	  
+	// Check which of the algorithms should be used
+	if (!(_sdl_srf->flags & SDL_SRCALPHA && (alpha < 255 || _sdl_srf->format->Amask &&
+		  dest_srf->flags & SDL_SRCALPHA && dest_srf->format->Amask)) ) { 
 		// Blit the surface using SDL's build in blit function
 		if (SDL_BlitSurface(_sdl_srf, src_part, dest_srf, &offset) < 0)
 			sdl_obj.error("Couldn't blit image");
@@ -73,8 +73,8 @@ void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
 		if (_sdl_srf->format->BitsPerPixel != 32) throw invalid_argument("Source image has invalid pixel format");
 		if (dest_srf->format->BitsPerPixel != 32) throw invalid_argument("Destination image has invalid pixel format");
 		// Constrol the masks of the surfaces
-		Uint32 samask = _sdl_srf->format->Amask;
-		Uint32 damask = dest_srf->format->Amask;
+		Uint32 samask =                                  _sdl_srf->format->Amask;
+		Uint32 damask = dest_srf->flags & SDL_SRCALPHA ? dest_srf->format->Amask : 0;
 		if (_sdl_srf->format->Rmask != gra.RMASK ||
 			_sdl_srf->format->Gmask != gra.GMASK ||
 			_sdl_srf->format->Bmask != gra.BMASK ||
