@@ -69,6 +69,7 @@ public:
 	coords		pixel_coords_from_vector(uint vector_x, uint vector_y);
 	coords		pixel_coords_from_vector(coords vector);
 	uint		dir_from_pixel		(uint pixel_x, uint pixel_y);
+	bool		is_wall				(size_t x, size_t y);
 
 	bool		save_level		(string name);
 	bool		load_level		(string name);
