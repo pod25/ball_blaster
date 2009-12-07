@@ -73,8 +73,10 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 		// Which state?
 		switch(_state) {
 			case STATE_DEFAULT:
-				// Delete object at cursor
-				lev.remove_obj_at_pixel(mouse_x, mouse_y, _can_edit_const);
+				/* Delete object at cursor */ {
+					coords del_pos = gam.level_pos_from_window_pos(mouse_x, mouse_y);
+					lev.remove_obj_at_pixel(del_pos.x, del_pos.y, _can_edit_const);
+				}
 				_objects_changed = true;
 				break;
 			case STATE_INSERTION:
