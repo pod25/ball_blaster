@@ -43,6 +43,8 @@ public:
 	void e_step				(int delta_t);
 	void objects_changed	(size_t x, size_t y, bool all = false);
 	bool start_simulation	();
+	void set_mode			(bool constant);
+	bool get_mode			();
 };
 
 #endif
