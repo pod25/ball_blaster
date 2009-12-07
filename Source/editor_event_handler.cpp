@@ -85,7 +85,6 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 	}
 	// Mouse wheel up
 	else if(button == SDL_BUTTON_WHEELUP) {
-		SDL_ShowCursor(1);
 		switch(_state) {
 			case STATE_DEFAULT:
 				// Goto insertion mode
@@ -104,11 +103,26 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 				break;
 		}
 	}
+	// Mouse wheel down
 	else if(button == SDL_BUTTON_WHEELDOWN) {
-		SDL_ShowCursor(0);
+				switch(_state) {
+			case STATE_DEFAULT:
+				// Goto insertion mode
+				_state = STATE_INSERTION;
+				break;
+			case STATE_INSERTION:
+				_sel_obj_type--;
+				if(_sel_obj_type < 0)
+					_sel_obj_type = NUM_OBJECT_CLASSES - 1;
+				if(!_can_edit_const) 
+					while(_is_const_type(_sel_obj_type)) {
+						_sel_obj_type--;
+						if(_sel_obj_type < 0)
+							_sel_obj_type = NUM_OBJECT_CLASSES - 1;
+					}
+				break;
+		}
 	}
-
-
 }
 
 /*
@@ -118,19 +132,8 @@ void editor_event_handler::e_key_down(int key) {
 
 }
 void editor_event_handler::e_key_up(int key) {
-	coords pos = gam.get_window_pos();
-	if(key == SDLK_UP)
-		pos.y -= 5;
-	if(key == SDLK_DOWN)
-		pos.y += 5;
-	if(key == SDLK_LEFT)
-		pos.x -= 5;
-	if(key == SDLK_RIGHT)
-		pos.x += 5;
-	if(pos.x < 0) pos.x = 0;
-	if(pos.y < 0) pos.y = 0;
-	gam.set_window_pos(pos);
-	_scrolled = true;
+	if(key == SDLK_RETURN)
+		start_simulation();
 }
 
 /*
@@ -279,4 +282,12 @@ void editor_event_handler::e_step(int delta_t) {
 }
 double editor_event_handler::_scroll_distance(int mouse_offset, uint delta_t) {
 	return pow(2.718, -0.1*(mouse_offset - 1)) * MAX_SCROLL_SPEED * 0.001 * delta_t;
+}
+
+bool editor_event_handler::start_simulation() {
+	if(!lev.cannon_exists()) 
+		return false;
+
+	cur_eh = &sim_eh;
+	return true;
 }

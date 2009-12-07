@@ -34,14 +34,15 @@ private:
 public:
 	editor_event_handler();
 
-	void e_mouse_move	(int mouse_x, int mouse_y);
-	void e_mouse_down	(int mouse_x, int mouse_y, int button);
-	void e_mouse_up		(int mouse_x, int mouse_y, int button);
-	void e_key_down		(int key);
-	void e_key_up		(int key);
-	void e_new_frame	();
-	void e_step			(int delta_t);
-	void objects_changed(size_t x, size_t y, bool all = false);
+	void e_mouse_move		(int mouse_x, int mouse_y);
+	void e_mouse_down		(int mouse_x, int mouse_y, int button);
+	void e_mouse_up			(int mouse_x, int mouse_y, int button);
+	void e_key_down			(int key);
+	void e_key_up			(int key);
+	void e_new_frame		();
+	void e_step				(int delta_t);
+	void objects_changed	(size_t x, size_t y, bool all = false);
+	bool start_simulation	();
 };
 
 #endif
