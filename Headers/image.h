@@ -9,9 +9,16 @@ protected:
 	SDL_Surface* _sdl_srf;
 public:
 	bool empty();
+	SDL_Surface* get_sdl_srf();
+	// Access to variables
 	void lock();
 	void unlock();
-	SDL_Surface* get_sdl_srf();
+	// Filling
+	void fill_rect		(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+	void set_color		(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
+	void clear			();
+	// Shapes
+	void line			(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
 
 	base_image	() : _sdl_srf(NULL) {} // Default constructor
 	~base_image	() {} // Destructor
@@ -35,12 +42,6 @@ public:
 	void set_alpha		(Uint8 a, bool enabled = true);
 	void enable_alpha	();
 	void disable_alpha	();
-	// Filling
-	void fill_rect		(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-	void set_color		(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
-	void clear			();
-	// Shapes
-	void line			(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
 
 	image() : alpha(255) {} // Default constructor
 	image(int w, int h);//, SDL_Color color = {0,0,0});

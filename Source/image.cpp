@@ -12,6 +12,17 @@ void base_image::unlock() {if (SDL_MUSTLOCK(_sdl_srf)) SDL_UnlockSurface(_sdl_sr
 bool base_image::empty() {return !_sdl_srf;}
 SDL_Surface* base_image::get_sdl_srf() {return _sdl_srf;}
 
+void base_image::fill_rect(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
+	if(SDL_FillRect(_sdl_srf, dstrect, pixel)) sdl_obj.error("Couldn't fill rectangle in image");
+}
+void base_image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {fill_rect(NULL, r, g, b, a);}
+void base_image::clear() {set_color(0, 0, 0, 0);} // Clear buffer (to total transparency)
+
+void base_image::line(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+	if (aalineRGBA(_sdl_srf, x1, y1, x2, y2, r, g, b, a)) sdl_obj.error("Couldn't draw line");
+}
+
 /*
  * image class methods
  */
@@ -168,51 +179,15 @@ void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) { //
 		unlock();
 	}
 }
-
-void image::apply(Sint16 x, Sint16 y, SDL_Rect *src_part) {
-	apply(gra.get_screen_buffer(), x, y, src_part);
-}
+void image::apply(Sint16 x, Sint16 y, SDL_Rect *src_part) {apply(gra.get_screen_buffer(), x, y, src_part);}
 
 void image::set_alpha(Uint8 a, bool enabled) {
 	if (SDL_SetAlpha(_sdl_srf, (enabled ? SDL_SRCALPHA : 0), a+(a==127)) == -1)
 		sdl_obj.error("Couldn't set alpha");
 	alpha = a;
 }
-
-void image:: enable_alpha() {
-	set_alpha(_sdl_srf->format->alpha, true );
-}
-void image::disable_alpha() {
-	set_alpha(_sdl_srf->format->alpha, false);
-}
-
-void image::fill_rect(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
-	if(SDL_FillRect(_sdl_srf, dstrect, pixel)) sdl_obj.error("Couldn't fill rectangle in image");
-}
-void image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-	fill_rect(NULL, r, g, b, a);
-	/*
-	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
-	Uint8  Bpp   = _sdl_srf->format->BytesPerPixel;
-	Uint16 pitch = _sdl_srf->pitch;
-	lock();
-	int x, y;
-	for (y = 0; y < _sdl_srf->h; y++)
-		for (x = 0; x < _sdl_srf->w; x++)
-			*(Uint32*)((byte*)_sdl_srf->pixels + x*Bpp + y*pitch) = pixel;
-	unlock();
-	*/
-}
-
-/*
- *	Clear buffer (to total transparency)
- */
-void image::clear() {set_color(0, 0, 0, 0);}
-
-void image::line(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-	if (aalineRGBA(_sdl_srf, x1, y1, x2, y2, r, g, b, a)) sdl_obj.error("Couldn't draw line");
-}
+void image:: enable_alpha() {set_alpha(_sdl_srf->format->alpha, true );}
+void image::disable_alpha() {set_alpha(_sdl_srf->format->alpha, false);}
 
 image::image(string filename) : alpha(255) { // Constructor using a file name
 	load(filename);
