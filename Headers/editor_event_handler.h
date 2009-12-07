@@ -27,6 +27,7 @@ private:
 	bool	_scrolled;
 
 	bool	_is_const_type(uint oc);
+	void	_plot_square(size_t x, size_t y);
 public:
 	editor_event_handler();
 
@@ -37,6 +38,7 @@ public:
 	void e_key_up		(int key);
 	void e_new_frame	();
 	void e_step			(int delta_t);
+	void objects_changed(size_t x, size_t y, bool all = false);
 };
 
 #endif

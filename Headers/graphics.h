@@ -52,6 +52,7 @@ public:
 	//void init_graphics				(); // Handeled by constructor ???
 	void update						();
 	video_mode& get_screen_buffer	();
+	void set_object_layer_size		(size_t w, size_t h);
 
 	graphics();
 private:

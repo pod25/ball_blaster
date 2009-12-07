@@ -126,61 +126,80 @@ void editor_event_handler::e_key_up(int key) {
  * Editor new frame handler
  */
 void editor_event_handler::e_new_frame() {
-	// Update object layer?
-	if(_objects_changed || _scrolled) {
+	gra.background_buffer.apply(0, 0);
+
+	SDL_Rect src_rect;
+	src_rect.x = gam.get_window_pos().x;
+	src_rect.y = gam.get_window_pos().y;
+	src_rect.w = gra.SCREEN_WIDTH;
+	src_rect.h = gra.SCREEN_HEIGHT;
+
+	gra.object_layer_buffer.apply(0, 0, &src_rect);
+	gra.update();
+}
+
+/*
+ * Refresh object layer when objects have changed
+ */
+void editor_event_handler::objects_changed(size_t x, size_t y, bool all) {
+	if(all) {
+		// Clear whole buffer
 		gra.object_layer_buffer.clear();
 
-		coords start_square = lev.vector_coords_from_pixel(gam.level_pos_from_window_pos(0, 0));
-		coords cur_square = start_square;
-
-		while(gam.window_pos_from_level_pos(lev.pixel_coords_from_vector(cur_square.x, cur_square.y)).x < gra.SCREEN_WIDTH) {
-			cur_square.y = start_square.y;
-			while(gam.window_pos_from_level_pos(lev.pixel_coords_from_vector(cur_square.x, cur_square.y)).y < gra.SCREEN_HEIGHT) {
-				coords object_window_pos = gam.window_pos_from_level_pos(lev.pixel_coords_from_vector(cur_square.x, cur_square.y));
-				int num_objects = lev.num_objects(cur_square.x, cur_square.y);
-				for(int i = 0; i < num_objects ; i++) {
-					object*				cur_o		= lev.get_object(cur_square.x, cur_square.y, i);
-					wall*				wall_o		= dynamic_cast<wall*>(cur_o);
-					goal*				goal_o		= dynamic_cast<goal*>(cur_o);
-					cannon*				cannon_o	= dynamic_cast<cannon*>(cur_o);
-					magnet*				magnet_o	= dynamic_cast<magnet*>(cur_o);
-					fan*				fan_o		= dynamic_cast<fan*>(cur_o);
-					directed_object*	dir_o		= dynamic_cast<directed_object*>(cur_o);
-					nondirected_object*	nondir_o	= dynamic_cast<nondirected_object*>(cur_o);
-
-					image* image_buffer_array;
-					image* image_buffer_ptr;
-
-					if(wall_o)
-						image_buffer_array = gra.object_buffers[OC_WALL];
-					else if(goal_o)
-						image_buffer_array = gra.object_buffers[OC_GOAL];
-					else if(cannon_o)
-						image_buffer_array = gra.object_buffers[OC_CANNON];
-					else if(magnet_o)
-						image_buffer_array = gra.object_buffers[OC_MAGNET];
-					else if(fan_o)
-						image_buffer_array = gra.object_buffers[OC_FAN];
-
-					if(dir_o)
-						image_buffer_ptr = &image_buffer_array[dir_o->get_dir()];
-					else if(nondir_o)
-						image_buffer_ptr = &image_buffer_array[DIR_NODIR];
-
-					image_buffer_ptr->apply(gra.object_layer_buffer, object_window_pos.x, object_window_pos.y);
-				}
-				cur_square.y++;
+		for(size_t cur_x = 0; cur_x < lev.get_width(); cur_x++) {
+			for(size_t cur_y = 0; cur_y < lev.get_height(); cur_y++) {
+				_plot_square(cur_x, cur_y);
 			}
-			cur_square.x++;
 		}
+
 	}
+	else {
+		// Clear square
+		coords object_level_pos = lev.pixel_coords_from_vector(x, y);
+		SDL_Rect clear_rect;
+		clear_rect.x = object_level_pos.x;
+		clear_rect.y = object_level_pos.y;
+		clear_rect.w = lev.get_grid_size();
+		clear_rect.h = lev.get_grid_size();
+		gra.object_layer_buffer.fill_rect(&clear_rect, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
 
-	gra.background_buffer.apply(0, 0);
-	gra.object_layer_buffer.apply(0, 0);
-	gra.update();
+		_plot_square(x, y);
+	}
+}
+void editor_event_handler::_plot_square(size_t x, size_t y) {
+	coords object_level_pos = lev.pixel_coords_from_vector(x, y);
+	int num_objects = lev.num_objects(x, y);
+	for(int i = 0; i < num_objects ; i++) {
+		object*				cur_o		= lev.get_object(x, y, i);
+		wall*				wall_o		= dynamic_cast<wall*>(cur_o);
+		goal*				goal_o		= dynamic_cast<goal*>(cur_o);
+		cannon*				cannon_o	= dynamic_cast<cannon*>(cur_o);
+		magnet*				magnet_o	= dynamic_cast<magnet*>(cur_o);
+		fan*				fan_o		= dynamic_cast<fan*>(cur_o);
+		directed_object*	dir_o		= dynamic_cast<directed_object*>(cur_o);
+		nondirected_object*	nondir_o	= dynamic_cast<nondirected_object*>(cur_o);
 
-	_objects_changed = false;
-	_scrolled = false;
+		image* image_buffer_array;
+		image* image_buffer_ptr;
+
+		if(wall_o)
+			image_buffer_array = gra.object_buffers[OC_WALL];
+		else if(goal_o)
+			image_buffer_array = gra.object_buffers[OC_GOAL];
+		else if(cannon_o)
+			image_buffer_array = gra.object_buffers[OC_CANNON];
+		else if(magnet_o)
+			image_buffer_array = gra.object_buffers[OC_MAGNET];
+		else if(fan_o)
+			image_buffer_array = gra.object_buffers[OC_FAN];
+
+		if(dir_o)
+			image_buffer_ptr = &image_buffer_array[dir_o->get_dir()];
+		else if(nondir_o)
+			image_buffer_ptr = &image_buffer_array[DIR_NODIR];
+
+		image_buffer_ptr->apply(gra.object_layer_buffer, object_level_pos.x, object_level_pos.y);
+	}
 }
 
 /*

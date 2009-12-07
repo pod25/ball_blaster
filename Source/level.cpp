@@ -44,6 +44,9 @@ bool level::remove_obj(size_t x, size_t y, size_t index) {
 	// Checks that object exists
 	if(index < num_objects(x, y)) {
 		_objects[x][y].erase(_objects[x][y].begin() + index);
+		
+		// Update object layer
+		editor_eh.objects_changed(x, y);
 		return true;
 	}
 	return false;
@@ -95,6 +98,9 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 	}
 
 	_objects[x][y].push_back(obj);
+
+	// Update object layer
+	editor_eh.objects_changed(x, y);
 
 	return true;
 }
@@ -198,6 +204,16 @@ size_t level::get_pixel_height() {
  * Set level size in squares
  */
 bool level::set_size(size_t w, size_t h) {
+	// New size in bound?
+	if(w < ceil(1.0 * gra.SCREEN_WIDTH / get_grid_size()))
+		w = (size_t)ceil(1.0 * gra.SCREEN_WIDTH / get_grid_size());
+	if(w > lev.LEVEL_MAX_WIDTH)
+		w = lev.LEVEL_MAX_WIDTH;
+	if(h < ceil(1.0 * gra.SCREEN_HEIGHT / get_grid_size()))
+		h = (size_t)ceil(1.0 * gra.SCREEN_HEIGHT / get_grid_size());
+	if(h > lev.LEVEL_MAX_HEIGHT)
+		h = lev.LEVEL_MAX_HEIGHT;
+
 	// Checks if level size has been reduced
 	if(w < _w || h < _h) {
 		while(_objects.size() > w)
@@ -213,6 +229,10 @@ bool level::set_size(size_t w, size_t h) {
 	}
 	_w = w;
 	_h = h;
+
+	// Update object layer
+	gra.set_object_layer_size(get_pixel_width(), get_pixel_height());
+
 	return true;
 }
 
@@ -227,12 +247,16 @@ uint level::get_grid_size() {
  * Set visual grid size (in pixels)
  */
 bool level::set_grid_size(uint size) {
-	if(size > 0) {
-		_grid_size = size;
-		return true;
-	}
+	if(size < lev.LEVEL_MIN_GRID_SIZE)
+		_grid_size = lev.LEVEL_MIN_GRID_SIZE;
+	else if(size > lev.LEVEL_MAX_GRID_SIZE)
+		_grid_size = lev.LEVEL_MAX_GRID_SIZE;
 	else
-		return false;
+		_grid_size = size;
+	
+	// Make sure that this change didn't make the level smaller than the window
+	set_size(get_width(), get_height());
+	return true;
 }
 
 /*

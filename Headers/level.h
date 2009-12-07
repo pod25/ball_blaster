@@ -21,8 +21,13 @@ private:
 	
 public:
 	// Default values
-	static const int LEVEL_DEFAULT_WIDTH		= 160;
-	static const int LEVEL_DEFAULT_HEIGHT		= 100;
+	static const int LEVEL_MAX_WIDTH			= 500;
+	static const int LEVEL_MAX_HEIGHT			= 500;
+	static const int LEVEL_MIN_GRID_SIZE		= 16;
+	static const int LEVEL_MAX_GRID_SIZE		= 64;
+
+	static const int LEVEL_DEFAULT_WIDTH		= 20;
+	static const int LEVEL_DEFAULT_HEIGHT		= 15;
 	static const int LEVEL_DEFAULT_GRID_SIZE	= 32;
 	static const int LEVEL_DEFAULT_GRAVITY		= 10;
 

@@ -20,8 +20,6 @@ void graphics::init_images(bool load_images) {
 	if (load_images) {
 		screen_buffer		.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SCREEN_FLAGS);
 		background_buffer	.load(std_background_img);
-		object_layer_buffer	.generate_rect(SCREEN_WIDTH, SCREEN_HEIGHT);
-		object_layer_buffer	.enable_alpha();
 		ball_buffer			.load(std_ball_img);
 		for(uint i = 0; i < NUM_OBJECT_CLASSES; i++)
 			for(uint d = 0; d < NUM_DIRECTIONS; d++)
@@ -41,4 +39,12 @@ graphics::graphics() {
 		refresh = false;
 	}
 	catch (exception &e) {err_hndl_obj.inform_about_error("graphics default constructor", e);};
+}
+
+void graphics::set_object_layer_size(size_t w, size_t h) {
+	if(!object_layer_buffer.empty())
+		object_layer_buffer.free();
+	object_layer_buffer	.generate_rect(w, h);
+	object_layer_buffer	.enable_alpha();
+	editor_eh			.objects_changed(0, 0, true);
 }
