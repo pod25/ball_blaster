@@ -188,9 +188,7 @@ bool level::can_insert_obj(size_t x, size_t y, bool directed, uint direction) {
 				return false;
 		if(direction == DIR_LEFT)
 			if(!is_wall((x + 1), y))
-				return false;
-		
-				
+				return false;		
 	}
 
 	// Insertion allowed!
