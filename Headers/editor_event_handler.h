@@ -28,6 +28,7 @@ private:
 	vec		_floating_window_pos;
 
 	bool	_is_const_type(uint oc);
+	bool	_is_dir_type(uint oc);
 	void	_plot_square(size_t x, size_t y);
 	double	_scroll_distance(int mouse_offset, uint delta_t);
 public:
