@@ -23,19 +23,24 @@ private:
 class image : public base_image {
 	Uint8 alpha;
 public:
+	// Loading and freeing
 	void load			(string filename);
 	void generate_rect	(int w, int h);//, SDL_Color color = {0,0,0});
 	void generate_text	(string text, font &text_font, SDL_Color text_color);
 	void free			();
+	// Applying
 	void apply			(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part = NULL);
 	void apply			(Sint16 x, Sint16 y, SDL_Rect *src_part = NULL); // Apply on screen buffer
+	// Alpha
 	void set_alpha		(Uint8 a, bool enabled = true);
 	void enable_alpha	();
 	void disable_alpha	();
+	// Filling
 	void fill_rect		(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	void set_color		(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
-	//void set_color		(SDL_Color color, Uint8 alpha = 255);
 	void clear			();
+	// Shapes
+	void line			(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
 
 	image() : alpha(255) {} // Default constructor
 	image(int w, int h);//, SDL_Color color = {0,0,0});

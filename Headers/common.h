@@ -33,6 +33,8 @@ using std::cerr;
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
+#include "SDL_gfxPrimitives.h"
+#include "SDL_rotozoom.h"
 
 /*
  * Class/Struct pre-declarations
