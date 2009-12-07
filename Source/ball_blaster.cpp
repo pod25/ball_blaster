@@ -41,6 +41,7 @@ int main(int argc, char* args[]) {
 		//image message("The quick brown fox jumps over the lazy dog", lazy_font, text_color);
 		//image rect_srf;
 		//image background("temp/background.png");
+		//background.line(20, 10, 40, 200, 255, 0, 255, 255);
 		//Render the text
 
 		//Apply the background to the screen
@@ -66,6 +67,7 @@ int main(int argc, char* args[]) {
 
 		//Update the screen
 		//gra.update();
+		//SDL_Delay(5000); // Delay for trying out new stuff before continuing with the game
 
 		/* LEVEL TEST */
 		lev.load_level("in");

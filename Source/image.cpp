@@ -205,20 +205,14 @@ void image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	*/
 }
 
-//void image::set_color(SDL_Color color, Uint8 alpha) {set_color(color.r, color.g, color.b, alpha);}
-
 /*
  *	Clear buffer (to total transparency)
  */
 void image::clear() {set_color(0, 0, 0, 0);}
 
-// This function is not used, but illustrates how a SDL_Color can be transformed to an Uint32
-/*void image::set_pixel(int x, int y, SDL_Color color, Uint8 alpha) {
-	if (x < 0 || y < 0 || x >= _sdl_srf->w || y >= _sdl_srf->h) throw exception("Trying to set pixel outside of image");
-	Uint32 pixel = ((Uint32)color.r >> gra.RLOSS << gra.RSHIFT) + ((Uint32)color.g >> gra.GLOSS << gra.GSHIFT) +
-		((Uint32)color.b >> gra.BLOSS << gra.BSHIFT) + ((Uint32)alpha >> gra.ALOSS << gra.ASHIFT) ;
-	((byte*)(_sdl_srf->pixels))[x*_sdl_srf->format->BytesPerPixel + y*_sdl_srf->pitch] = pixel;
-}*/
+void image::line(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+	if (aalineRGBA(_sdl_srf, x1, y1, x2, y2, r, g, b, a)) sdl_obj.error("Couldn't draw line");
+}
 
 image::image(string filename) : alpha(255) { // Constructor using a file name
 	load(filename);
