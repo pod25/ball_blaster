@@ -10,9 +10,51 @@
 void base_image::  lock() {if (SDL_MUSTLOCK(_sdl_srf) && SDL_LockSurface(_sdl_srf) == -1) throw exception("Couldn't lock image");}
 void base_image::unlock() {if (SDL_MUSTLOCK(_sdl_srf)) SDL_UnlockSurface(_sdl_srf);}
 bool base_image::empty() {return !_sdl_srf;}
+SDL_Surface* base_image::get_sdl_srf() {return _sdl_srf;}
 
-void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
-	SDL_Surface* dest_srf = dest._sdl_srf;
+/*
+ * image class methods
+ */
+
+void image::load(string filename) {
+	filename = "Images/" + filename;
+	// Free old image if any
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	// Load the image
+	SDL_Surface* loaded_image = IMG_Load(filename.c_str());
+	if(loaded_image != NULL) {
+		// Create an optimized image
+		_sdl_srf = SDL_DisplayFormatAlpha(loaded_image);
+		// Free the old image
+		SDL_FreeSurface(loaded_image);
+		if (!_sdl_srf) sdl_obj.error("Couldn't optimize loaded image");
+	}
+	else sdl_obj.error("Couldn't load image: " + filename);
+}
+
+void image::generate_rect(int w, int h) {//, SDL_Color color) {
+	// Free old image if any
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	_sdl_srf = SDL_CreateRGBSurface(gra.IMAGE_FLAGS, w, h, gra.SCREEN_BPP, gra.RMASK, gra.GMASK, gra.BMASK, gra.AMASK);
+	//if (color.r != 0 || color.g != 0 || color.b != 0) set_color(color);
+	if (!_sdl_srf) sdl_obj.error("Couldn't generate rectangular image");
+}
+
+void image::generate_text(string text, font &text_font, SDL_Color text_color) {
+	// Free old image if any
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	_sdl_srf = TTF_RenderText_Blended(text_font.get_sdl_font(), text.c_str(), text_color);
+	if (!_sdl_srf) sdl_obj.error("Couldn't generate image from text");
+}
+
+void image::free() {
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	else          throw exception("Trying to free image that is not loaded");
+	_sdl_srf = NULL;
+}
+
+void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
+	SDL_Surface* dest_srf = dest.get_sdl_srf();
 	if (!_sdl_srf) throw invalid_argument("Image being applied not loaded");
 	if (!dest_srf) throw invalid_argument("Image being applied on not loaded");
 	// Make a temporary rectangle to hold the offsets
@@ -88,6 +130,7 @@ void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part)
 		// Blit
 		Uint32 p; // Pixel value
 		Uint32 sr, sg, sb, sa, dr, dg, db, da, nr, ng, nb, na; // RGBA values for source, destination and new values
+		Uint8  src_pbalpha = alpha;
 		for (y = 0; y < h; y++) {
 			for (x = 0; x < w; x++) {
 				// Extract source colors
@@ -96,6 +139,7 @@ void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part)
 				sg = (p & gra.GMASK) >> gra.GSHIFT << gra.GLOSS;
 				sb = (p & gra.BMASK) >> gra.BSHIFT << gra.BLOSS;
 				sa = (p & gra.AMASK) >> gra.ASHIFT << gra.ALOSS;
+				sa *= src_pbalpha;//_sdl_srf->format->alpha;
 				// Extract destination colors
 				p = *(Uint32*)(dest_start + x*4 + y*dest_pitch);
 				dr = (p & gra.RMASK) >> gra.RSHIFT << gra.RLOSS;
@@ -103,11 +147,11 @@ void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part)
 				db = (p & gra.BMASK) >> gra.BSHIFT << gra.BLOSS;
 				da = (p & gra.AMASK) >> gra.ASHIFT << gra.ALOSS;
 				// Calculate new values
-				na = (255*(sa + da) - sa*da); na += !na;
-				nr = (dr*da*(255-sa) + sr*sa*255)/na;
-				ng = (dg*da*(255-sa) + sg*sa*255)/na;
-				nb = (db*da*(255-sa) + sb*sa*255)/na;
-				na /= 255;
+				na = (255*(sa + 255*da) - sa*da); na += !na;
+				nr = (dr*da*(255*255-sa) + sr*sa*255)/na;
+				ng = (dg*da*(255*255-sa) + sg*sa*255)/na;
+				nb = (db*da*(255*255-sa) + sb*sa*255)/na;
+				na /= 255*255;
 				// Apply the new values to the pixel
 				p = (nr >> gra.RLOSS << gra.RSHIFT) |
 					(ng >> gra.GLOSS << gra.GSHIFT) |
@@ -122,54 +166,14 @@ void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part)
 	}
 }
 
-void base_image::apply(Sint16 x, Sint16 y, SDL_Rect *src_part) {
+void image::apply(Sint16 x, Sint16 y, SDL_Rect *src_part) {
 	apply(gra.get_screen_buffer(), x, y, src_part);
-}
-
-/*
- * image class methods
- */
-
-void image::load(string filename) {
-	filename = "Images/" + filename;
-	// Free old image if any
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
-	// Load the image
-	SDL_Surface* loaded_image = IMG_Load(filename.c_str());
-	if(loaded_image != NULL) {
-		// Create an optimized image
-		_sdl_srf = SDL_DisplayFormatAlpha(loaded_image);
-		// Free the old image
-		SDL_FreeSurface(loaded_image);
-		if (!_sdl_srf) sdl_obj.error("Couldn't optimize loaded image");
-	}
-	else sdl_obj.error("Couldn't load image: " + filename);
-}
-
-void image::generate_rect(int w, int h) {//, SDL_Color color) {
-	// Free old image if any
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
-	_sdl_srf = SDL_CreateRGBSurface(gra.IMAGE_FLAGS, w, h, gra.SCREEN_BPP, gra.RMASK, gra.GMASK, gra.BMASK, gra.AMASK);
-	//if (color.r != 0 || color.g != 0 || color.b != 0) set_color(color);
-	if (!_sdl_srf) sdl_obj.error("Couldn't generate rectangular image");
-}
-
-void image::generate_text(string text, font &text_font, SDL_Color text_color) {
-	// Free old image if any
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
-	_sdl_srf = TTF_RenderText_Blended(text_font.get_sdl_font(), text.c_str(), text_color);
-	if (!_sdl_srf) sdl_obj.error("Couldn't generate image from text");
-}
-
-void image::free() {
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
-	else          throw exception("Trying to free image that is not loaded");
-	_sdl_srf = NULL;
 }
 
 void image::set_alpha(Uint8 a, bool enabled) {
 	if (SDL_SetAlpha(_sdl_srf, (enabled ? SDL_SRCALPHA : 0), a+(a==127)) == -1)
 		sdl_obj.error("Couldn't set alpha");
+	alpha = a;
 }
 
 void image:: enable_alpha() {
@@ -213,15 +217,15 @@ void image::clear() {set_color(0, 0, 0, 0);}
 	((byte*)(_sdl_srf->pixels))[x*_sdl_srf->format->BytesPerPixel + y*_sdl_srf->pitch] = pixel;
 }*/
 
-image::image(string filename) { // Constructor using a file name
+image::image(string filename) : alpha(255) { // Constructor using a file name
 	load(filename);
 }
 
-image::image(int w, int h) {//, SDL_Color color) {
+image::image(int w, int h) : alpha(255) {//, SDL_Color color) {
 	generate_rect(w, h);//, color);
 }
 
-image::image(string text, font &text_font, SDL_Color text_color) { // Constructor using a file name
+image::image(string text, font &text_font, SDL_Color text_color) : alpha(255) { // Constructor using a file name
 	generate_text(text, text_font, text_color);
 }
 
