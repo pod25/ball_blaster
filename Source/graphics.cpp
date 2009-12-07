@@ -25,10 +25,7 @@ void graphics::init_images(bool load_images) {
 		ball_buffer			.load(std_ball_img);
 		for(uint i = 0; i < NUM_OBJECT_CLASSES; i++)
 			for(uint d = 0; d < NUM_DIRECTIONS; d++)
-				if(!std_obj_images[i][d].empty()) {
-					object_buffers[i][d].load(std_obj_images[i][d]);
-					object_buffers[i][d].disable_alpha();
-				}
+				if(!std_obj_images[i][d].empty()) object_buffers[i][d].load(std_obj_images[i][d]);
 	}
 }
 

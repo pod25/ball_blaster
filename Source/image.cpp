@@ -48,8 +48,8 @@ void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part)
 		Sint16 sy2, dy2 = dy1 + dest_srf->clip_rect.h;
 		if (dx1 < 0) dx1 = 0;
 		if (dy1 < 0) dy1 = 0;
-		if (dx2 >= dest_srf->w) dx2 = dest_srf->w - 1;
-		if (dy2 >= dest_srf->h) dy2 = dest_srf->h - 1;
+		if (dx2 > dest_srf->w) dx2 = dest_srf->w;
+		if (dy2 > dest_srf->h) dy2 = dest_srf->h;
 		// Get surface to write from in source
 		if (src_part) {
 			sx1 =       src_part->x;
@@ -58,8 +58,8 @@ void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part)
 			sy2 = sy1 + src_part->h;
 			if (sx1 < 0) sx1 = 0;
 			if (sy1 < 0) sy1 = 0;
-			if (sx2 >= _sdl_srf->w) sx2 = _sdl_srf->w - 1;
-			if (sy2 >= _sdl_srf->h) sy2 = _sdl_srf->h - 1;
+			if (sx2 > _sdl_srf->w) sx2 = _sdl_srf->w;
+			if (sy2 > _sdl_srf->h) sy2 = _sdl_srf->h;
 		}
 		else {
 			sx1 = 0;
@@ -68,14 +68,14 @@ void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part)
 			sy2 = _sdl_srf->h;
 		}
 		// Calculate overlapping surfaces
-		if (dx1 + x < sx1) dx1 = sx1 - x; //Increase dx1 to equality;
-		else               sx1 = dx1 + x; //Increase sx1 to equality;
-		if (dy1 + y < sy1) dy1 = sy1 - y; //Increase dy1 to equality;
-		else               sy1 = dy1 + y; //Increase sy1 to equality;
-		if (dx2 + x > sx2) dx2 = sx2 - x; //Decrease dx2 to equality;
-		else               sx2 = dx2 + x; //Decrease sx2 to equality;
-		if (dy2 + y > sy2) dy2 = sy2 - y; //Decrease dy2 to equality;
-		else               sy2 = dy2 + y; //Decrease sy2 to equality;
+		if (sx1 + x < dx1) sx1 = dx1 - x; //Increase source      x1 to equality;
+		else               dx1 = sx1 + x; //Increase destination x1 to equality;
+		if (sy1 + y < dy1) sy1 = dy1 - y; //Increase source      y1 to equality;
+		else               dy1 = sy1 + y; //Increase destination y1 to equality;
+		if (sx2 + x > dx2) sx2 = dx2 - x; //Decrease source      x2 to equality;
+		else               dx2 = sx2 + x; //Decrease destination x2 to equality;
+		if (sy2 + y > dy2) sy2 = dy2 - y; //Decrease source      y2 to equality;
+		else               dy2 = sy2 + y; //Decrease destination y2 to equality;
 		// Calculate start addresses and definitive drawing surface dimensions
 		byte*  src_start = (byte*)_sdl_srf->pixels + sx1*4 + sy1* src_pitch;
 		byte* dest_start = (byte*)dest_srf->pixels + dx1*4 + dy1*dest_pitch;
