@@ -21,6 +21,11 @@ class sdl_handler {
 		else ttf_initiated = true;
 	}
 public:
+	void error(string message) {
+		string err_str;
+		err_str = err_str + "SDL error: \'" + SDL_GetError() + "\' Comment: \'" + message + '\'';
+		throw exception(err_str.c_str());
+	}
 	sdl_handler(Uint32 sdl_flags = SDL_INIT_EVERYTHING)
 		: sdl_initiated(false), ttf_initiated(false) { // Embedded default constructor
 		init();

@@ -7,10 +7,13 @@
 class base_image {
 protected:
 	SDL_Surface* _sdl_srf;
+
+	void lock();
+	void unlock();
 public:
 	bool empty();
-	void apply(base_image &dest, int x, int y, SDL_Rect *src_part = NULL);
-	void apply(int x, int y, SDL_Rect *src_part = NULL); // Apply on screen buffer
+	void apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part = NULL);
+	void apply(Sint16 x, Sint16 y, SDL_Rect *src_part = NULL); // Apply on screen buffer
 
 	base_image() : _sdl_srf(NULL) {} // Default constructor
 	~base_image() {} // Destructor
@@ -20,8 +23,6 @@ private:
 };
 
 class image : public base_image {
-	void lock();
-	void unlock();
 public:
 	void load			(string filename);
 	void generate_rect	(int w, int h);//, SDL_Color color = {0,0,0});

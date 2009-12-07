@@ -6,32 +6,129 @@
 /*
  * base_image class methods
  */
-bool base_image::empty() {
-	return !_sdl_srf;
-}
 
-void base_image::apply(base_image &dest, int x, int y, SDL_Rect *src_part) {
-	if (!     _sdl_srf) throw invalid_argument("Image being applied not loaded");
-	if (!dest._sdl_srf) throw invalid_argument("Image being applied on not loaded");
+void base_image::  lock() {if (SDL_MUSTLOCK(_sdl_srf) && SDL_LockSurface(_sdl_srf) == -1) throw exception("Couldn't lock image");}
+void base_image::unlock() {if (SDL_MUSTLOCK(_sdl_srf)) SDL_UnlockSurface(_sdl_srf);}
+bool base_image::empty() {return !_sdl_srf;}
+
+void base_image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) {
+	SDL_Surface* dest_srf = dest._sdl_srf;
+	if (!_sdl_srf) throw invalid_argument("Image being applied not loaded");
+	if (!dest_srf) throw invalid_argument("Image being applied on not loaded");
 	// Make a temporary rectangle to hold the offsets
 	SDL_Rect offset;
 	offset.x = x;
 	offset.y = y;
-	// Blit the surface
-	if (SDL_BlitSurface(_sdl_srf, src_part, dest._sdl_srf, &offset) < 0)
-		throw exception("Couldn't blit image");
+	if (!(_sdl_srf->flags & SDL_SRCALPHA && _sdl_srf->format->Amask &&
+		  dest_srf->flags & SDL_SRCALPHA && dest_srf->format->Amask )) {	  
+		// Blit the surface using SDL's build in blit function
+		if (SDL_BlitSurface(_sdl_srf, src_part, dest_srf, &offset) < 0)
+			sdl_obj.error("Couldn't blit image");
+	}
+	else { // Blit the surface by accessing the pixel data
+		// Control color depth
+		if (_sdl_srf->format->BitsPerPixel != 32) throw invalid_argument("Source image has invalid pixel format");
+		if (dest_srf->format->BitsPerPixel != 32) throw invalid_argument("Destination image has invalid pixel format");
+		// Constrol the masks of the surfaces
+		if (_sdl_srf->format->Rmask != gra.RMASK ||
+			_sdl_srf->format->Gmask != gra.GMASK ||
+			_sdl_srf->format->Bmask != gra.BMASK ||
+			_sdl_srf->format->Amask != gra.AMASK ) throw invalid_argument("Source image has invalid channel masks");
+		if (dest_srf->format->Rmask != gra.RMASK ||
+			dest_srf->format->Gmask != gra.GMASK ||
+			dest_srf->format->Bmask != gra.BMASK ||
+			dest_srf->format->Amask != gra.AMASK ) throw invalid_argument("Destination image has invalid channel masks");
+		// Get pitches
+		Uint16  src_pitch	= _sdl_srf->pitch;
+		Uint16 dest_pitch	= dest_srf->pitch;
+		// Get surface to write to in destination
+		Sint16 sx1, dx1 =       dest_srf->clip_rect.x;
+		Sint16 sy1, dy1 =       dest_srf->clip_rect.y;
+		Sint16 sx2, dx2 = dx1 + dest_srf->clip_rect.w;
+		Sint16 sy2, dy2 = dy1 + dest_srf->clip_rect.h;
+		if (dx1 < 0) dx1 = 0;
+		if (dy1 < 0) dy1 = 0;
+		if (dx2 >= dest_srf->w) dx2 = dest_srf->w - 1;
+		if (dy2 >= dest_srf->h) dy2 = dest_srf->h - 1;
+		// Get surface to write from in source
+		if (src_part) {
+			sx1 =       src_part->x;
+			sy1 =       src_part->y;
+			sx2 = sx1 + src_part->w;
+			sy2 = sy1 + src_part->h;
+			if (sx1 < 0) sx1 = 0;
+			if (sy1 < 0) sy1 = 0;
+			if (sx2 >= _sdl_srf->w) sx2 = _sdl_srf->w - 1;
+			if (sy2 >= _sdl_srf->h) sy2 = _sdl_srf->h - 1;
+		}
+		else {
+			sx1 = 0;
+			sy1 = 0;
+			sx2 = _sdl_srf->w;
+			sy2 = _sdl_srf->h;
+		}
+		// Calculate overlapping surfaces
+		if (dx1 + x < sx1) dx1 = sx1 - x; //Increase dx1 to equality;
+		else               sx1 = dx1 + x; //Increase sx1 to equality;
+		if (dy1 + y < sy1) dy1 = sy1 - y; //Increase dy1 to equality;
+		else               sy1 = dy1 + y; //Increase sy1 to equality;
+		if (dx2 + x > sx2) dx2 = sx2 - x; //Decrease dx2 to equality;
+		else               sx2 = dx2 + x; //Decrease sx2 to equality;
+		if (dy2 + y > sy2) dy2 = sy2 - y; //Decrease dy2 to equality;
+		else               sy2 = dy2 + y; //Decrease sy2 to equality;
+		// Calculate start addresses and definitive drawing surface dimensions
+		byte*  src_start = (byte*)_sdl_srf->pixels + sx1*4 + sy1* src_pitch;
+		byte* dest_start = (byte*)dest_srf->pixels + dx1*4 + dy1*dest_pitch;
+		Sint32 w = Sint32(sx2) - Sint32(sx1);
+		Sint32 h = Sint32(sy2) - Sint32(sy1);
+		if (w <= 0 || h <= 0) return;
+		// Lock both surfaces for pixel access if necessary
+		lock();
+		dest.lock();
+		// Blit
+		Uint32 p; // Pixel value
+		Uint32 sr, sg, sb, sa, dr, dg, db, da, nr, ng, nb, na; // RGBA values for source, destination and new values
+		for (y = 0; y < h; y++) {
+			for (x = 0; x < w; x++) {
+				// Extract source colors
+				p = *(Uint32*)( src_start + x*4 + y* src_pitch);
+				sr = (p & gra.RMASK) >> gra.RSHIFT << gra.RLOSS;
+				sg = (p & gra.GMASK) >> gra.GSHIFT << gra.GLOSS;
+				sb = (p & gra.BMASK) >> gra.BSHIFT << gra.BLOSS;
+				sa = (p & gra.AMASK) >> gra.ASHIFT << gra.ALOSS;
+				// Extract destination colors
+				p = *(Uint32*)(dest_start + x*4 + y*dest_pitch);
+				dr = (p & gra.RMASK) >> gra.RSHIFT << gra.RLOSS;
+				dg = (p & gra.GMASK) >> gra.GSHIFT << gra.GLOSS;
+				db = (p & gra.BMASK) >> gra.BSHIFT << gra.BLOSS;
+				da = (p & gra.AMASK) >> gra.ASHIFT << gra.ALOSS;
+				// Calculate new values
+				na = (255*(sa + da) - sa*da); na += !na;
+				nr = (dr*da*(255-sa) + sr*sa*255)/na;
+				ng = (dg*da*(255-sa) + sg*sa*255)/na;
+				nb = (db*da*(255-sa) + sb*sa*255)/na;
+				na /= 255;
+				// Apply the new values to the pixel
+				p = (nr >> gra.RLOSS << gra.RSHIFT) |
+					(ng >> gra.GLOSS << gra.GSHIFT) |
+					(nb >> gra.BLOSS << gra.BSHIFT) |
+					(na >> gra.ALOSS << gra.ASHIFT) ;
+				*(Uint32*)(dest_start + x*4 + y*dest_pitch) = p;
+			} // for (x = 0; x < w; x++)
+		} // for (y = 0; y < h; y++)
+		// Unlock both surfaces
+		dest.unlock();
+		unlock();
+	}
 }
 
-void base_image::apply(int x, int y, SDL_Rect *src_part) {
+void base_image::apply(Sint16 x, Sint16 y, SDL_Rect *src_part) {
 	apply(gra.get_screen_buffer(), x, y, src_part);
 }
 
 /*
  * image class methods
  */
-
-void image::  lock() {if (SDL_MUSTLOCK(_sdl_srf) && SDL_LockSurface(_sdl_srf) == -1) throw exception("Couldn't lock image");}
-void image::unlock() {if (SDL_MUSTLOCK(_sdl_srf)) SDL_UnlockSurface(_sdl_srf);}
 
 void image::load(string filename) {
 	filename = "Images/" + filename;
@@ -44,8 +141,9 @@ void image::load(string filename) {
 		_sdl_srf = SDL_DisplayFormatAlpha(loaded_image);
 		// Free the old image
 		SDL_FreeSurface(loaded_image);
+		if (!_sdl_srf) sdl_obj.error("Couldn't optimize loaded image");
 	}
-	if (!_sdl_srf) throw exception(("Couldn't load image: " + filename).c_str());
+	else sdl_obj.error("Couldn't load image: " + filename);
 }
 
 void image::generate_rect(int w, int h) {//, SDL_Color color) {
@@ -53,14 +151,14 @@ void image::generate_rect(int w, int h) {//, SDL_Color color) {
 	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
 	_sdl_srf = SDL_CreateRGBSurface(gra.IMAGE_FLAGS, w, h, gra.SCREEN_BPP, gra.RMASK, gra.GMASK, gra.BMASK, gra.AMASK);
 	//if (color.r != 0 || color.g != 0 || color.b != 0) set_color(color);
-	if (!_sdl_srf) throw exception("Couldn't generate rectangular image");
+	if (!_sdl_srf) sdl_obj.error("Couldn't generate rectangular image");
 }
 
 void image::generate_text(string text, font &text_font, SDL_Color text_color) {
 	// Free old image if any
 	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
 	_sdl_srf = TTF_RenderText_Blended(text_font.get_sdl_font(), text.c_str(), text_color);
-	if (!_sdl_srf) throw exception("Couldn't generate image from text with given settings");
+	if (!_sdl_srf) sdl_obj.error("Couldn't generate image from text");
 }
 
 void image::free() {
@@ -71,7 +169,7 @@ void image::free() {
 
 void image::set_alpha(Uint8 a, bool enabled) {
 	if (SDL_SetAlpha(_sdl_srf, (enabled ? SDL_SRCALPHA : 0), a+(a==127)) == -1)
-		throw exception("Couldn't set alpha");
+		sdl_obj.error("Couldn't set alpha");
 }
 
 void image:: enable_alpha() {
@@ -83,7 +181,7 @@ void image::disable_alpha() {
 
 void image::fill_rect(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
-	if(SDL_FillRect(_sdl_srf, dstrect, pixel)) throw exception("Couldn't fill rectangle in image");
+	if(SDL_FillRect(_sdl_srf, dstrect, pixel)) sdl_obj.error("Couldn't fill rectangle in image");
 }
 void image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	fill_rect(NULL, r, g, b, a);
@@ -137,11 +235,11 @@ image::~image() { // Destructor
 void video_mode::init(int width, int height, int bpp, Uint32 flags) {
 	if (_sdl_srf) throw exception("Video mode already initiated");
 	_sdl_srf = SDL_SetVideoMode(width, height, bpp, flags);
-	if (!_sdl_srf) throw exception("Couldn't initiate video mode");
+	if (!_sdl_srf) sdl_obj.error("Couldn't initiate video mode");
 }
 
 void video_mode::flip() {
-	if(SDL_Flip(_sdl_srf)) throw exception("Couldn't flip screen buffer");
+	if(SDL_Flip(_sdl_srf)) sdl_obj.error("Couldn't flip screen buffer");
 }
 
 video_mode::video_mode(int width, int height, int bpp, Uint32 flags) {
