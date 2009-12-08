@@ -41,9 +41,11 @@ int main(int argc, char* args[]) {
 		//image message("The quick brown fox jumps over the lazy dog", lazy_font, text_color);
 		//image rect_srf;
 		//image background("temp/background.png");
+		//image background("ball/black ball.png");
 		//background.line(20, 10, 40, 200, 255, 0, 255, 255);
-		//background.resize(1.5, .7);
-		//background.rotate(10, 1.5);
+		// Unfortunately the rotozoom library perform no anti-aliasing when down-sizing, only when up-sizing
+		//background.resize(.1, .1);
+		//background.rotate(10, .1);
 		//background.rotate_xy(10, 1.5, .7); // Seems to do a normal rotation (using zoomx as zoom) when angle != 0
 
 		// Try out new stuff before continuing with the game
