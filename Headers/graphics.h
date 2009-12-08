@@ -57,6 +57,7 @@ public:
 	video_mode& get_screen_buffer	();
 	void set_object_layer_size		(size_t w, size_t h);
 	void set_grid_size				(uint grid_size);
+	void init_ball_image			(double scale = 1);
 
 	graphics();
 private:

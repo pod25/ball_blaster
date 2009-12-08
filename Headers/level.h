@@ -54,6 +54,7 @@ public:
 	bool		set_square_scale	(double scale);
 	double		get_ball_scale		();
 	bool		set_ball_scale		(double scale);
+	int			get_ball_pixel_size	();
 	vec			get_gravity			();	
 	bool		set_gravity			(vec gravity);
 	bool		set_ball_pos		(vec pos);

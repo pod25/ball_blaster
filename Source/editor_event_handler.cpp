@@ -323,6 +323,7 @@ bool editor_event_handler::start_simulation() {
 		return false;
 
 	cur_eh = &sim_eh;
+	sim_eh.init(_can_edit_const);
 	return true;
 }
 
