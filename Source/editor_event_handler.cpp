@@ -65,7 +65,10 @@ void editor_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
 void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 	// Left mouse button
 	if(button == SDL_BUTTON_LEFT) {
-		coords cannon_dir = coords(mouse_x-lev.cannon_coords().x, mouse_y-lev.cannon_coords().y);
+		coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
+		coords cannon_center(cannon_corner.x+lev.get_grid_size()/2, cannon_corner.y+lev.get_grid_size()/2);
+		coords conv_cannon_c = gam.window_pos_from_level_pos(cannon_center);
+		coords cannon_dir(_mouse_x-conv_cannon_c.x, _mouse_y-conv_cannon_c.y);
 		// Which state?
 		switch(_state) {
 			case STATE_CANNON_CONFIG:
@@ -179,6 +182,7 @@ void editor_event_handler::e_new_frame() {
 
 	coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
 	coords cannon_center(cannon_corner.x+lev.get_grid_size()/2, cannon_corner.y+lev.get_grid_size()/2);
+	coords conv_cannon_c = gam.window_pos_from_level_pos(cannon_center);
 
 	switch(_state) {
 		case STATE_INSERTION:
@@ -196,8 +200,7 @@ void editor_event_handler::e_new_frame() {
 
 			break;
 		case STATE_CANNON_CONFIG:
-			gra.screen_buffer.line	(gam.window_pos_from_level_pos(cannon_center).x,
-									 gam.window_pos_from_level_pos(cannon_center).y,
+			gra.screen_buffer.line	(conv_cannon_c.x, conv_cannon_c.y,
 									 _mouse_x, _mouse_y, 255, 0, 0);
 			break;
 	}
