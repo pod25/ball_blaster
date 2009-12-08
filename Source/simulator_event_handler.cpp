@@ -7,7 +7,7 @@
  * Simulator constructor
  */
 simulator_event_handler::simulator_event_handler() {
-
+	
 }
 void simulator_event_handler::init(bool from_editor) {
 	phy.init_level_simulation();
@@ -15,6 +15,7 @@ void simulator_event_handler::init(bool from_editor) {
 	refresh_obj_layer();
 	gra.init_ball_image(lev.get_grid_size() * 1.0 / lev.LEVEL_DEFAULT_GRID_SIZE * lev.get_ball_scale());
 	_follow_ball();
+	_state = STATE_RUNNING;
 }
 
 /*
@@ -72,9 +73,17 @@ void simulator_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
  * Simulator key button handlers
  */
 void simulator_event_handler::e_key_down(int key) {
-	if(key == SDLK_ESCAPE) {
-		cur_eh = &editor_eh;
-		editor_eh.set_mode(_from_editor);
+	switch(_state) {
+		case STATE_RUNNING:
+			if(key == SDLK_ESCAPE) {
+				cur_eh = &editor_eh;
+				editor_eh.set_mode(_from_editor);
+			}
+			break;
+		case STATE_FINISHED:
+			cur_eh = &menu_eh;
+			menu_eh.menu_reset();
+			break;
 	}
 }
 void simulator_event_handler::e_key_up(int key) {
@@ -85,22 +94,24 @@ void simulator_event_handler::e_key_up(int key) {
  * Simulator new frame handler
  */
 void simulator_event_handler::e_new_frame() {
-	gra.background_buffer.apply(0, 0);
+	if(_state == STATE_RUNNING) {
+		gra.background_buffer.apply(0, 0);
 
-	SDL_Rect src_rect;
-	src_rect.x = gam.get_window_pos().x;
-	src_rect.y = gam.get_window_pos().y;
-	src_rect.w = gra.SCREEN_WIDTH;
-	src_rect.h = gra.SCREEN_HEIGHT;
+		SDL_Rect src_rect;
+		src_rect.x = gam.get_window_pos().x;
+		src_rect.y = gam.get_window_pos().y;
+		src_rect.w = gra.SCREEN_WIDTH;
+		src_rect.h = gra.SCREEN_HEIGHT;
 
-	gra.object_layer_buffer.apply(0, 0, &src_rect);
-	int ball_size = lev.get_ball_pixel_size();
-	coords	ball;
-	ball.x = (int)lev.get_ball_pos().x - ball_size / 2;
-	ball.y = (int)lev.get_ball_pos().y - ball_size / 2;
-	gra.ball_buffer.apply(ball.x, ball.y);
+		gra.object_layer_buffer.apply(0, 0, &src_rect);
+		int ball_size = lev.get_ball_pixel_size();
+		coords	ball;
+		ball.x = (int)lev.get_ball_pos().x - ball_size / 2;
+		ball.y = (int)lev.get_ball_pos().y - ball_size / 2;
+		gra.ball_buffer.apply(ball.x, ball.y);
 
-	gra.update();
+		gra.update();
+	}
 }
 
 /*
@@ -156,5 +167,13 @@ void simulator_event_handler::_plot_square(size_t x, size_t y) {
  * Simulator step handler
  */
 void simulator_event_handler::e_step(int delta_t) {
-	phy.step(delta_t / 1000.0);
+	if(_state == STATE_RUNNING)
+		phy.step(delta_t / 1000.0);
+}
+
+/*
+ * Level complete
+ */
+void simulator_event_handler::level_complete() {
+	_state = STATE_COMPLETE;
 }

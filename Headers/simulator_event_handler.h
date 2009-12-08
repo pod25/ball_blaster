@@ -9,13 +9,12 @@
  */
 class simulator_event_handler : public event_handler {
 	enum SIMULATION_STATES {
-		STATE_NOT_STARTED,
 		STATE_RUNNING,
-		STATE_FINISHED
+		STATE_COMPLETE
 	};
 	static const int	FOLLOW_LIMIT = 100;
 
-	SIMULATION_STATES	curr_state;
+	SIMULATION_STATES	_state;
 	bool				_from_editor;
 	coords				_window_pos;
 	void _follow_ball	();
@@ -31,6 +30,7 @@ public:
 	void e_new_frame		();
 	void e_step				(int delta_t);
 	void refresh_obj_layer	();
+	void level_complete		();
 };
 
 #endif
