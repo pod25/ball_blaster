@@ -177,4 +177,10 @@ void simulator_event_handler::e_step(int delta_t) {
  */
 void simulator_event_handler::level_complete() {
 	_state = STATE_COMPLETE;
+	image completed;
+	completed.generate_text("Congratulations! You have completed the level!", gra.menu_font, gra.menu_color);
+	completed.apply(200, 300);
+	completed.generate_text("Press any key to continue", gra.menu_font, gra.menu_color_selected);
+	completed.apply(310, 340);
+	gra.update();
 }
