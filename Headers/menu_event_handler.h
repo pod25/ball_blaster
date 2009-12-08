@@ -43,6 +43,7 @@ public:
 	void e_key_up		(int key);
 	void e_new_frame	();
 	void e_step			(int delta_t);
+	void menu_reset		();
 };
 
 #endif
