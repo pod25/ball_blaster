@@ -292,6 +292,13 @@ bool level::set_grid_size(uint size) {
 	
 	// Make sure that this change didn't make the level smaller than the window
 	set_size(get_width(), get_height());
+
+	// Resize image buffers
+	gra.set_grid_size(get_grid_size());
+
+	// Redraw object layer
+	editor_eh.objects_changed(0, 0, true);
+
 	return true;
 }
 

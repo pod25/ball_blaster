@@ -154,6 +154,9 @@ void editor_event_handler::e_key_down(int key) {
 		start_simulation();
 	else if(key == SDLK_ESCAPE)
 		cur_eh = &menu_eh;
+	// TODO: REMOVE TEMP
+	else if(key == SDLK_SPACE)
+		lev.set_grid_size(64);
 }
 void editor_event_handler::e_key_up(int key) {
 }
