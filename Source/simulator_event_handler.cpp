@@ -132,12 +132,12 @@ void simulator_event_handler::_plot_square(size_t x, size_t y) {
 		image* image_buffer_array;
 		image* image_buffer_ptr;
 
-		if(wall_o)
+		if(cannon_o)
+			return;
+		else if(wall_o)
 			image_buffer_array = gra.object_buffers[OC_WALL];
 		else if(goal_o)
 			image_buffer_array = gra.object_buffers[OC_GOAL];
-		else if(cannon_o)
-			image_buffer_array = gra.object_buffers[OC_CANNON];
 		else if(magnet_o)
 			image_buffer_array = gra.object_buffers[OC_MAGNET];
 		else if(fan_o)
