@@ -12,9 +12,9 @@ menu_event_handler		menu_eh;		// Menu event handler
 simulator_event_handler	sim_eh;			// Simulator event handler
 event_handler*			cur_eh;			// Pointer to current event handler
 game					gam;			// Game
-level					lev;			// Level
 sdl_handler				sdl_obj;		// SDL handler
 graphics				gra;			// Graphics
+level					lev;			// Level
 physics					phy;			// Physics
 
 /* 
@@ -79,7 +79,7 @@ int main(int argc, char* args[]) {
 		//SDL_Delay(5000);
 
 		/* LEVEL TEST */
-		lev.load_level("in");
+		//lev.load_level("in");
 		//lev.save_level("out");
 
 		// Initialize game

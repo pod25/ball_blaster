@@ -22,11 +22,19 @@ void graphics::init_images(bool load_images) {
 		screen_buffer			.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SCREEN_FLAGS);
 		background_buffer		.load(std_background_img);
 		menu_background_buffer	.load(std_menu_background_img);
-		ball_buffer				.load(std_ball_img);
-		for(uint i = 0; i < NUM_OBJECT_CLASSES; i++)
-			for(uint d = 0; d < NUM_DIRECTIONS; d++)
-				if(!std_obj_images[i][d].empty()) object_buffers[i][d].load(std_obj_images[i][d]);
+		init_object_images();
 	}
+}
+
+void graphics::init_object_images(double scale) {
+	ball_buffer				.load(std_ball_img);
+	ball_buffer				.resize(scale, scale);
+	for(uint i = 0; i < NUM_OBJECT_CLASSES; i++)
+		for(uint d = 0; d < NUM_DIRECTIONS; d++)
+			if(!std_obj_images[i][d].empty()) {
+				object_buffers[i][d].load(std_obj_images[i][d]);
+				object_buffers[i][d].resize(scale, scale);
+			}
 }
 
 void graphics::update() {
@@ -38,7 +46,6 @@ video_mode& graphics::get_screen_buffer() {return screen_buffer;}
 graphics::graphics() {
 	try {
 		init_images(true);
-		refresh = false;
 
 		menu_font.load("Fonts/lazy.ttf", 28);
 		menu_color.r = 0; menu_color.g = 0; menu_color.b = 0;
@@ -53,4 +60,9 @@ void graphics::set_object_layer_size(size_t w, size_t h) {
 	object_layer_buffer	.generate_rect(w, h);
 	object_layer_buffer	.enable_alpha();
 	editor_eh			.objects_changed(0, 0, true);
+}
+
+void graphics::set_grid_size(uint grid_size) {
+	double scale = grid_size * 1.0 / lev.LEVEL_DEFAULT_GRID_SIZE;
+	init_object_images(scale);
 }

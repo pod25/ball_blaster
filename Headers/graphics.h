@@ -33,15 +33,14 @@ public:
 	static const Uint32 AMASK = 0xFF000000; static const Uint8 ASHIFT = 3*8, ALOSS = 0;
 #endif
 private:
-	string std_background_img;
-	string std_menu_background_img;
-	string std_ball_img;
-	string std_obj_images[NUM_OBJECT_CLASSES][NUM_DIRECTIONS];
+	string	std_background_img;
+	string	std_menu_background_img;
+	string	std_ball_img;
+	string	std_obj_images[NUM_OBJECT_CLASSES][NUM_DIRECTIONS];
 
-	bool		refresh;							// Whether the screen should be refreshed or not
-
-	void init_sdl		();
-	void init_images	(bool load_images = false);
+	void init_sdl			();
+	void init_images		(bool load_images = false);
+	void init_object_images	(double scale = 1);
 
 public:
 	video_mode	screen_buffer;						// The buffer that contains the screen image, SDL_Flip to flip
@@ -54,10 +53,10 @@ public:
 	SDL_Color	menu_color;
 	SDL_Color	menu_color_selected;
 
-	//void init_graphics				(); // Handeled by constructor ???
 	void update						();
 	video_mode& get_screen_buffer	();
 	void set_object_layer_size		(size_t w, size_t h);
+	void set_grid_size				(uint grid_size);
 
 	graphics();
 private:
