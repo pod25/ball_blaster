@@ -181,10 +181,7 @@ void editor_event_handler::e_key_down(int key) {
 		cur_eh = &menu_eh;
 		reset_state();
 	}
-	// TODO: REMOVE TEMP
-	else if(key == SDLK_SPACE)
-		lev.set_grid_size(32);
-	else if(key == SDLK_s)
+	else if(key == SDLK_s && _can_edit_const)
 		lev.save_level("");
 }
 void editor_event_handler::e_key_up(int key) {
