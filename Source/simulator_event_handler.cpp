@@ -78,9 +78,10 @@ void simulator_event_handler::e_key_down(int key) {
 			if(key == SDLK_ESCAPE) {
 				cur_eh = &editor_eh;
 				editor_eh.set_mode(_from_editor);
+				editor_eh.objects_changed(0, 0, true);
 			}
 			break;
-		case STATE_FINISHED:
+		case STATE_COMPLETE:
 			cur_eh = &menu_eh;
 			menu_eh.menu_reset();
 			break;
