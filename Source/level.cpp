@@ -69,8 +69,13 @@ bool level::remove_obj_at_pixel(uint pixel_x, uint pixel_y, bool can_edit_locked
 	uint	dir			= dir_from_pixel(pixel_x, pixel_y);
 	size_t	num_obj		= num_objects(vector_pos.x, vector_pos.y);
 	for(size_t i = 0 ; i < num_obj; i++) {
+		// Locked?
+		object* obj = get_object(vector_pos.x, vector_pos.y, i);
+		if(obj->_locked && !can_edit_locked)
+			return false;
+
 		// Directed object?
-		directed_object* directed = dynamic_cast<directed_object*>(get_object(vector_pos.x, vector_pos.y, i));
+		directed_object* directed = dynamic_cast<directed_object*>(obj);
 		if((directed && directed->get_dir() == dir) || directed == 0) {
 			remove_obj(vector_pos.x, vector_pos.y, i);
 			return true;
