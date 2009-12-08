@@ -42,7 +42,14 @@ int main(int argc, char* args[]) {
 		//image rect_srf;
 		//image background("temp/background.png");
 		//background.line(20, 10, 40, 200, 255, 0, 255, 255);
-		//Render the text
+		//background.resize(1.5, .7);
+		//background.rotate(10, 1.5);
+		//background.rotate_xy(10, 1.5, .7); // Seems to do a normal rotation (using zoomx as zoom) when angle != 0
+
+		// Try out new stuff before continuing with the game
+		//background.apply(0, 0);
+		//gra.update();
+		//SDL_Delay(5000); // Delay for trying out new stuff before continuing with the game
 
 		//Apply the background to the screen
 		//background.apply(0, 0);
@@ -67,7 +74,7 @@ int main(int argc, char* args[]) {
 
 		//Update the screen
 		//gra.update();
-		//SDL_Delay(5000); // Delay for trying out new stuff before continuing with the game
+		//SDL_Delay(5000);
 
 		/* LEVEL TEST */
 		lev.load_level("in");

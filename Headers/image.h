@@ -31,22 +31,31 @@ class image : public base_image {
 	Uint8 alpha;
 public:
 	// Loading and freeing
-	void load			(string filename);
-	void generate_rect	(int w, int h);//, SDL_Color color = {0,0,0});
-	void generate_text	(string text, font &text_font, SDL_Color text_color);
-	void free			();
+	void load					(string filename);
+	void generate_rect			(int w, int h);//, SDL_Color color = {0,0,0});
+	void generate_text			(string text, font &text_font, SDL_Color text_color);
+	void generate_resized		(base_image& src, double zoomx, double zoomy);
+	void generate_rotated		(base_image& src, double angle, double zoom = 1);
+	void generate_rotated_xy	(base_image& src, double angle, double zoomx, double zoomy);
+	void resize					(double zoomx, double zoomy);
+	void rotate					(double angle, double zoom = 1);
+	void rotate_xy				(double angle, double zoomx, double zoomy);
+	void free					();
 	// Applying
-	void apply			(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part = NULL);
-	void apply			(Sint16 x, Sint16 y, SDL_Rect *src_part = NULL); // Apply on screen buffer
+	void apply					(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part = NULL);
+	void apply					(Sint16 x, Sint16 y, SDL_Rect *src_part = NULL); // Apply on screen buffer
 	// Alpha
-	void set_alpha		(Uint8 a, bool enabled = true);
-	void enable_alpha	();
-	void disable_alpha	();
+	void set_alpha				(Uint8 a, bool enabled = true);
+	void enable_alpha			();
+	void disable_alpha			();
 
 	image() : alpha(255) {} // Default constructor
 	image(int w, int h);//, SDL_Color color = {0,0,0});
 	image(string filename); // Constructor using a file name
 	image(string text, font &text_font, SDL_Color text_color);
+	image(base_image& src, string how, double p1);
+	image(base_image& src, string how, double p1, double p2);
+	image(base_image& src, string how, double p1, double p2, double p3);
 	~image(); // Destructor
 private:
 	image(const image&) {} // Disable copy constructor

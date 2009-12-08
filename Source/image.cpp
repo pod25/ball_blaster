@@ -58,6 +58,34 @@ void image::generate_text(string text, font &text_font, SDL_Color text_color) {
 	if (!_sdl_srf) sdl_obj.error("Couldn't generate image from text");
 }
 
+void image::generate_resized(base_image& src, double zoomx, double zoomy) {
+	// Free old image if any
+	SDL_Surface* temp_srf = zoomSurface(src.get_sdl_srf(), zoomx, zoomy, 1);
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	_sdl_srf = temp_srf;
+	if (!_sdl_srf) sdl_obj.error("Couldn't generate xy-rotated image");
+}
+
+void image::generate_rotated (base_image& src, double angle, double zoom) {
+	// Free old image if any
+	SDL_Surface* temp_srf = rotozoomSurface(src.get_sdl_srf(), angle, zoom, 1);
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	_sdl_srf = temp_srf;
+	if (!_sdl_srf) sdl_obj.error("Couldn't generate rotated image");
+}
+
+void image::generate_rotated_xy (base_image& src, double angle, double zoomx, double zoomy) {
+	// Free old image if any
+	SDL_Surface* temp_srf = rotozoomSurfaceXY(src.get_sdl_srf(), angle, zoomx, zoomy, 1);
+	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	_sdl_srf = temp_srf;
+	if (!_sdl_srf) sdl_obj.error("Couldn't generate xy-rotated image");
+}
+
+void image::resize   (              double zoomx, double zoomy) {generate_resized   (*this,        zoomx, zoomy);}
+void image::rotate   (double angle, double zoom               ) {generate_rotated   (*this, angle, zoom        );}
+void image::rotate_xy(double angle, double zoomx, double zoomy) {generate_rotated_xy(*this, angle, zoomx, zoomy);}
+
 void image::free() {
 	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
 	else          throw exception("Trying to free image that is not loaded");
@@ -199,6 +227,22 @@ image::image(int w, int h) : alpha(255) {//, SDL_Color color) {
 
 image::image(string text, font &text_font, SDL_Color text_color) : alpha(255) { // Constructor using a file name
 	generate_text(text, text_font, text_color);
+}
+
+
+image::image(base_image& src, string how, double p1) : alpha(255) {
+	if      (how == "rot" ) generate_rotated(src, p1);
+	else if (how == "zoom") generate_resized(src, p1, p1);
+	else                    throw invalid_argument("Can't " + how + " image using 1 argument");
+}
+image::image(base_image& src, string how, double p1, double p2) : alpha(255) {
+	if      (how == "rot" ) generate_rotated(src, p1, p2);
+	else if (how == "zoom") generate_resized(src, p1, p2);
+	else                    throw invalid_argument("Can't " + how + " image using 2 arguments");
+}
+image::image(base_image& src, string how, double p1, double p2, double p3) : alpha(255) {
+	if      (how == "rot-xy") generate_rotated_xy(src, p1, p2, p3);
+	else                      throw invalid_argument("Can't " + how + " image using 3 arguments");
 }
 
 image::~image() { // Destructor
