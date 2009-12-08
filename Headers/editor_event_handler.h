@@ -20,6 +20,8 @@ private:
 
 	int		_mouse_x;
 	int		_mouse_y;
+	bool	_left_mouse_is_down;
+	bool	_right_mouse_is_down;
 	int		_state;
 	bool	_can_edit_const;
 	int		_sel_obj_type;
@@ -45,6 +47,7 @@ public:
 	bool start_simulation	();
 	void set_mode			(bool constant);
 	bool get_mode			();
+	void reset_state		();
 };
 
 #endif

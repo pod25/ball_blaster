@@ -23,11 +23,24 @@ bool editor_event_handler::_is_dir_type(uint oc) {
 }
 
 /*
+ * Event reset
+ */
+void editor_event_handler::reset_state() {
+	_state = STATE_DEFAULT;
+	_left_mouse_is_down	= false;
+	_right_mouse_is_down= false;
+	
+}
+
+
+/*
  * Editor event handler constructor
  */
 editor_event_handler::editor_event_handler() {
 	_mouse_x			= 0;
 	_mouse_y			= 0;
+	_left_mouse_is_down	= false;
+	_right_mouse_is_down= false;
 	_state				= STATE_DEFAULT;
 	_can_edit_const		= false;
 	_sel_obj_type		= OC_MAGNET;
@@ -49,6 +62,10 @@ void editor_event_handler::e_mouse_move(int mouse_x, int mouse_y) {
  * Editor mouse button handlers
  */
 void editor_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
+	if(button == SDL_BUTTON_LEFT)
+		_left_mouse_is_down = true;
+	if(button == SDL_BUTTON_RIGHT)
+		_right_mouse_is_down = true;
 	// Hold left mouse button on cannon
 	if (button == SDL_BUTTON_LEFT && lev.cannon_exists() &&
 		lev.cannon_coords().x == lev.vector_coords_from_pixel(mouse_x, mouse_y).x
@@ -58,11 +75,17 @@ void editor_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
 				case STATE_INSERTION:
 					// Goto cannon config mode
 					_state = STATE_CANNON_CONFIG;
+					SDL_ShowCursor(false);
 					break;
 			}
 	}
 }
 void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
+	if(button == SDL_BUTTON_LEFT)
+		_left_mouse_is_down = false;
+	if(button == SDL_BUTTON_RIGHT)
+		_right_mouse_is_down = false;
+
 	// Left mouse button
 	if(button == SDL_BUTTON_LEFT) {
 		coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
@@ -73,6 +96,7 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 		switch(_state) {
 			case STATE_CANNON_CONFIG:
 				dynamic_cast<cannon*>(lev.get_object(lev.cannon_coords()))->_shot_vec = cannon_dir;
+				SDL_ShowCursor(true);
 				_state = STATE_DEFAULT;
 				break;
 			case STATE_DEFAULT:
@@ -152,11 +176,16 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 void editor_event_handler::e_key_down(int key) {
 	if(key == SDLK_RETURN)
 		start_simulation();
-	else if(key == SDLK_ESCAPE)
+	else if(key == SDLK_ESCAPE){
+		menu_eh.menu_reset();
 		cur_eh = &menu_eh;
+		reset_state();
+	}
 	// TODO: REMOVE TEMP
 	else if(key == SDLK_SPACE)
-		lev.set_grid_size(64);
+		lev.set_grid_size(32);
+	else if(key == SDLK_s)
+		lev.save_level("");
 }
 void editor_event_handler::e_key_up(int key) {
 }
@@ -204,7 +233,7 @@ void editor_event_handler::e_new_frame() {
 			break;
 		case STATE_CANNON_CONFIG:
 			gra.screen_buffer.line	(conv_cannon_c.x, conv_cannon_c.y,
-									 _mouse_x, _mouse_y, 255, 0, 0);
+									 _mouse_x, _mouse_y, 10, 95, 145);
 			break;
 	}
 
@@ -285,6 +314,17 @@ void editor_event_handler::e_step(int delta_t) {
 	uint	lev_height	= lev.get_pixel_height();
 	uint	x			= _mouse_x;
 	uint	y			= _mouse_y;
+
+	// Insert object at position when left mouse is down and when in insertion
+	if(_left_mouse_is_down && _state == STATE_INSERTION) {
+		coords level_pos = gam.level_pos_from_window_pos(_mouse_x, _mouse_y);
+		lev.insert_obj_at_pixel(_sel_obj_type, level_pos.x, level_pos.y, _can_edit_const);
+	}
+
+	if(_right_mouse_is_down && _state == STATE_DEFAULT) {
+		coords del_pos = gam.level_pos_from_window_pos(_mouse_x, _mouse_y);
+		lev.remove_obj_at_pixel(del_pos.x, del_pos.y, _can_edit_const);
+	}
 
 	// Scroll left?
 	if(x >= 0 && x < SCROLL_AREA_SIZE)

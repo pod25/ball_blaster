@@ -263,5 +263,5 @@ void video_mode::flip() {
 }
 
 video_mode::video_mode(int width, int height, int bpp, Uint32 flags) {
-	init(width, height, bpp, flags);	
+	init(width, height, bpp, flags);
 }

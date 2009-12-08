@@ -505,6 +505,8 @@ uint level::dir_from_pixel(uint pixel_x, uint pixel_y) {
  */
 bool level::save_level(string name) {
 	vector<string> out;
+	if(name == "")
+		name = _level_name;
 	
 	/* Level properties */ {
 		vector<string> obj_out;
@@ -519,6 +521,9 @@ bool level::save_level(string name) {
 		obj_out.push_back(to_string(get_square_scale()));
 		obj_out.push_back(PROP_LEVEL_BALL_SCALE);
 		obj_out.push_back(to_string(get_ball_scale()));
+		obj_out.push_back(PROP_LEVEL_GRID_SIZE);
+		obj_out.push_back(to_string(get_grid_size()));
+
 
 		out.push_back(implode(obj_out, ','));
 	}

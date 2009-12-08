@@ -26,9 +26,9 @@ int main(int argc, char* args[]) {
 		// TODO: Remove
 
 		//The attributes of the screen
-		const int SCREEN_WIDTH = 640;
-		const int SCREEN_HEIGHT = 480;
-		const int SCREEN_BPP = 32;
+		//const int SCREEN_WIDTH = 640;
+		//const int SCREEN_HEIGHT = 480;
+		//const int SCREEN_BPP = 32;
 
 		//The font that's going to be used
 		//font lazy_font("Fonts/lazy.ttf", 28);

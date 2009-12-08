@@ -6,10 +6,10 @@
 void graphics::init_images(bool load_images) {
 	std_background_img		= "background.png";
 	std_menu_background_img	= "menu_background.png";
-	std_ball_img			= "Ball/Black ball.png";
+	std_ball_img			= "ball.png";
 	std_obj_images[OC_WALL	][DIR_NODIR	] = "wall.png";
 	std_obj_images[OC_GOAL	][DIR_NODIR	] = "goal.png";
-	std_obj_images[OC_CANNON][DIR_NODIR	] = "cannon.png";
+	std_obj_images[OC_CANNON][DIR_NODIR	] = "ball.png";
 	std_obj_images[OC_FAN	][DIR_LEFT	] = "fan_left.png";
 	std_obj_images[OC_FAN	][DIR_UP	] = "fan_up.png";
 	std_obj_images[OC_FAN	][DIR_RIGHT	] = "fan_right.png";
@@ -22,7 +22,7 @@ void graphics::init_images(bool load_images) {
 		screen_buffer			.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SCREEN_FLAGS);
 		background_buffer		.load(std_background_img);
 		menu_background_buffer	.load(std_menu_background_img);
-		init_object_images();
+		init_object_images		(0.5);
 	}
 }
 

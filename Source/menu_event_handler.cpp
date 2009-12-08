@@ -11,6 +11,10 @@ menu_event_handler::menu_event_handler() {
 	_init_main_menu();
 }
 
+void menu_event_handler::menu_reset() {
+	_init_main_menu();
+}
+
 /*
  * Menu mouse movement handler
  */
@@ -42,6 +46,8 @@ void menu_event_handler::e_key_down(int key) {
 				else if(_list[_selection] == MENU_MAIN_EDIT)
 					_init_edit_menu();
 			}
+			else if(key == SDLK_ESCAPE)
+				gam.quit();
 			break;
 		case STATE_PLAY:
 			if(key == SDLK_RETURN) {
@@ -63,10 +69,10 @@ void menu_event_handler::e_key_down(int key) {
 				if(_list[_selection] == MENU_BACK)
 					_init_main_menu();
 				else if(_list[_selection] == MENU_NEW_LEVEL) {
-					lev.new_level("");
+					// Naming of new edited levels
+					lev.new_level(to_string(1+get_level_file_list().size()).insert(0, "level "));
 					editor_eh.set_mode(true);
 					cur_eh = &editor_eh; //With const
-
 				}
 				else {
 					string sel_level_edit = _list[_selection];
