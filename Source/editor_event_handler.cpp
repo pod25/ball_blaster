@@ -29,7 +29,7 @@ void editor_event_handler::reset_state() {
 	_state = STATE_DEFAULT;
 	_left_mouse_is_down	= false;
 	_right_mouse_is_down= false;
-	
+	_sel_obj_type = 0;
 }
 
 
