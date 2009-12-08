@@ -35,6 +35,10 @@ public:
 		: x(existing.x), y(existing.y) {}
 	vec(double x_init, double y_init)
 		: x(x_init), y(y_init) {}
+	vec(coords c)
+		: x(c.x), y(c.y) {}
+	vec(obj_coords c)
+		: x(c.x), y(c.y) {}
 	~vec() {} // Default destructor
 };
 
