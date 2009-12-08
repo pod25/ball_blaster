@@ -24,6 +24,9 @@ void physics::step(double dt, uint num_calls_left) {
 }
 
 void physics::init_level_simulation() {
+	lev.set_ball_pos((vec(lev.cannon_coords()) + vec(0.5, 0.5))*lev.get_square_scale());
+	//lev.set_ball_vel(vec(lev.get_cannon()->_shot_vec)/100);
+	lev.set_ball_vel(vec(0,0));
 	calculate_ball_acceleration();
 }
 

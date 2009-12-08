@@ -107,13 +107,24 @@ void menu_event_handler::e_new_frame() {
 	gra.menu_background_buffer.apply(0, 0);
 
 	// Display list
+	int start_x;
+	int start_y;
+	if(_state == STATE_MAIN) {
+		start_x = MAIN_LIST_X_POS;
+		start_y = MAIN_LIST_Y_POS;
+	}
+	else {
+		start_x = LEVEL_LIST_X_POS;
+		start_y = LEVEL_LIST_Y_POS;
+	}
+
 	image text;
 	for(uint i = 0; i < _list.size(); i++) {
 		SDL_Color* color = &gra.menu_color;
 		if(i == _selection)
 			color = &gra.menu_color_selected;
 		text.generate_text(_list[i], gra.menu_font, *color);
-		text.apply(LIST_X_POS, LIST_Y_POS + i * LIST_SPACING);
+		text.apply(start_x, start_y + i * LIST_SPACING);
 	}
 
 	gra.update();

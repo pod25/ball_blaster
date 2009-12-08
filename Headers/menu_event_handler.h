@@ -20,9 +20,11 @@ private:
 		STATE_PLAY,
 		STATE_EDIT
 	};
-	static const int LIST_X_POS		= 420;
-	static const int LIST_Y_POS		= 200;
-	static const int LIST_SPACING	= 40;
+	static const int MAIN_LIST_X_POS	= 420;
+	static const int MAIN_LIST_Y_POS	= 360;
+	static const int LEVEL_LIST_X_POS	= 420;
+	static const int LEVEL_LIST_Y_POS	= 200;
+	static const int LIST_SPACING		= 40;
 	uint			_state;
 	vstring			_list;
 	int				_selection;

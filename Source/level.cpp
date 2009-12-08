@@ -459,6 +459,15 @@ obj_coords level::cannon_coords() {
 }
 
 /*
+ * Get cannon pointer
+ */
+cannon* level::get_cannon() {
+	if(!cannon_exists())
+		return 0;
+	return dynamic_cast<cannon*>(get_object(cannon_coords()));
+}
+
+/*
  * Get vector coordinates from pixel coordinates relative to the level
  */
 coords level::vector_coords_from_pixel(int pixel_x, int pixel_y) {

@@ -55,7 +55,9 @@ class physics;
 class object;
 class directed_object;
 class nondirected_object;
+class cannon;
 class magnet;
+class fan;
 class wall;
 class goal;
 
