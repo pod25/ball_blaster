@@ -36,6 +36,7 @@ public:
 				level();
 	size_t		num_objects			(size_t x, size_t y);
 	object*		get_object			(size_t x, size_t y, size_t index);
+	object*		get_object			(obj_coords coords);
 	bool		remove_obj			(size_t x, size_t y, size_t index);
 	bool		remove_obj			(obj_coords coords);
 	bool		remove_obj_at_pixel	(uint pixel_x, uint pixel_y, bool can_edit_locked);

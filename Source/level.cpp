@@ -45,6 +45,13 @@ object*	level::get_object(size_t x, size_t y, size_t index) {
 }
 
 /*
+ * Get object pointer at obj_coords
+ */
+object* level::get_object(obj_coords coords) {
+return get_object(coords.x, coords.y, coords.i);
+}
+
+/*
  * Remove object at (x, y, index)
  */
 bool level::remove_obj(obj_coords coords) {

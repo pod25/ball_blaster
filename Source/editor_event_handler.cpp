@@ -49,13 +49,29 @@ void editor_event_handler::e_mouse_move(int mouse_x, int mouse_y) {
  * Editor mouse button handlers
  */
 void editor_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
-
+	// Hold left mouse button on cannon
+	if (button == SDL_BUTTON_LEFT && lev.cannon_exists() &&
+		lev.cannon_coords().x == lev.vector_coords_from_pixel(mouse_x, mouse_y).x
+		&& lev.cannon_coords().y == lev.vector_coords_from_pixel(mouse_x, mouse_y).y) {
+			switch(_state) {
+				case STATE_DEFAULT:
+				case STATE_INSERTION:
+					// Goto cannon config mode
+					_state = STATE_CANNON_CONFIG;
+					break;
+			}
+	}
 }
 void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 	// Left mouse button
 	if(button == SDL_BUTTON_LEFT) {
+		coords cannon_dir = coords(mouse_x-lev.cannon_coords().x, mouse_y-lev.cannon_coords().y);
 		// Which state?
 		switch(_state) {
+			case STATE_CANNON_CONFIG:
+				dynamic_cast<cannon*>(lev.get_object(lev.cannon_coords()))->_shot_vec = cannon_dir;
+				_state = STATE_DEFAULT;
+				break;
 			case STATE_DEFAULT:
 				// Goto insertion mode
 				_state = STATE_INSERTION;
@@ -153,16 +169,20 @@ void editor_event_handler::e_new_frame() {
 
 	gra.object_layer_buffer.apply(0, 0, &src_rect);
 
+	image*	image_buffer_array	= gra.object_buffers[_sel_obj_type];
+	image*	image_buffer_ptr;
+	coords	mouse_level_pos		= gam.level_pos_from_window_pos(_mouse_x, _mouse_y);
+	coords	square_vector		= lev.vector_coords_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
+	coords	square_pos			= gam.window_pos_from_level_pos(lev.pixel_coords_from_vector(square_vector));
+	bool	directed			= _is_dir_type(_sel_obj_type);
+	uint	dir					= lev.dir_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
+
+	coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
+	coords cannon_center(cannon_corner.x+lev.get_grid_size()/2, cannon_corner.y+lev.get_grid_size()/2);
+
 	switch(_state) {
 		case STATE_INSERTION:
 			// Plot object placement preview
-			image*	image_buffer_array	= gra.object_buffers[_sel_obj_type];
-			image*	image_buffer_ptr;
-			coords	mouse_level_pos		= gam.level_pos_from_window_pos(_mouse_x, _mouse_y);
-			coords	square_vector		= lev.vector_coords_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
-			coords	square_pos			= gam.window_pos_from_level_pos(lev.pixel_coords_from_vector(square_vector));
-			bool	directed			= _is_dir_type(_sel_obj_type);
-			uint	dir					= lev.dir_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
 			if(directed)
 				image_buffer_ptr = &image_buffer_array[dir]; 
 			else
@@ -174,6 +194,11 @@ void editor_event_handler::e_new_frame() {
 			image_buffer_ptr->apply(square_pos.x, square_pos.y);
 			image_buffer_ptr->set_alpha(SDL_ALPHA_OPAQUE, true);
 
+			break;
+		case STATE_CANNON_CONFIG:
+			gra.screen_buffer.line	(gam.window_pos_from_level_pos(cannon_center).x,
+									 gam.window_pos_from_level_pos(cannon_center).y,
+									 _mouse_x, _mouse_y, 255, 0, 0);
 			break;
 	}
 
