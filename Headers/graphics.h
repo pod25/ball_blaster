@@ -12,7 +12,7 @@ public:
 	static const int SCREEN_WIDTH	= 1024;
 	static const int SCREEN_HEIGHT	= 768;
 	static const int SCREEN_BPP		= 32;
-	static const int SCREEN_FLAGS	= SDL_SWSURFACE; // | SDL_FULLSCREEN; // Creates a surface in system memory
+	static const int SCREEN_FLAGS	= SDL_SWSURFACE; //| SDL_FULLSCREEN; // Creates a surface in system memory
 	static const int IMAGE_FLAGS	= SDL_SWSURFACE | SDL_SRCALPHA; // Creates a surface in system memory with alpha-blending enabled
 #if 0
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
