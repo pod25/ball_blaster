@@ -27,14 +27,17 @@ void graphics::init_images(bool load_images) {
 }
 
 void graphics::init_object_images(double scale) {
-	ball_buffer				.load(std_ball_img);
-	ball_buffer				.resize(scale, scale);
 	for(uint i = 0; i < NUM_OBJECT_CLASSES; i++)
 		for(uint d = 0; d < NUM_DIRECTIONS; d++)
 			if(!std_obj_images[i][d].empty()) {
 				object_buffers[i][d].load(std_obj_images[i][d]);
 				object_buffers[i][d].resize(scale, scale);
 			}
+}
+
+void graphics::init_ball_image(double scale) {
+	ball_buffer.load(std_ball_img);
+	ball_buffer.resize(scale, scale);
 }
 
 void graphics::update() {

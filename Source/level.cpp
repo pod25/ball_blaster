@@ -329,6 +329,13 @@ double level::get_ball_scale() {
 }
 
 /*
+ * Get ball size in pixels
+ */
+int level::get_ball_pixel_size() {
+	return (int)(get_grid_size() * get_ball_scale());
+}
+
+/*
  * Set ball scale factor (visual and physical)
  */
 bool level::set_ball_scale(double scale) {

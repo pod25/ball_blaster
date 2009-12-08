@@ -4,11 +4,20 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
+const double	BOUNCE_COEFFICIENT = .8;
+
 /*
  * physics class
  */
 class physics {
-	vec ball_acceleration;
+	//static const double	BOUNCE_COEFFICIENT = .8;
+	static const uint	MAX_FRAME_ITERATIONS = 50;
+
+	vec ball_acc;
+
+	void calculate_ball_acceleration();
+	void apply_ball_acceleration(double dt, double amount);
+	void step(double dt, uint num_calls_left);
 public:
 	void init_level_simulation();
 	void step(double dt);

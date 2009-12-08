@@ -29,7 +29,7 @@ void editor_event_handler::reset_state() {
 	_state = STATE_DEFAULT;
 	_left_mouse_is_down	= false;
 	_right_mouse_is_down= false;
-	
+	_sel_obj_type = 0;
 }
 
 
@@ -181,10 +181,7 @@ void editor_event_handler::e_key_down(int key) {
 		cur_eh = &menu_eh;
 		reset_state();
 	}
-	// TODO: REMOVE TEMP
-	else if(key == SDLK_SPACE)
-		lev.set_grid_size(32);
-	else if(key == SDLK_s)
+	else if(key == SDLK_s && _can_edit_const)
 		lev.save_level("");
 }
 void editor_event_handler::e_key_up(int key) {
@@ -363,6 +360,7 @@ bool editor_event_handler::start_simulation() {
 		return false;
 
 	cur_eh = &sim_eh;
+	sim_eh.init(_can_edit_const);
 	return true;
 }
 
