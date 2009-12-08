@@ -212,15 +212,14 @@ void editor_event_handler::e_new_frame() {
 	coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
 	coords cannon_center(cannon_corner.x+lev.get_grid_size()/2, cannon_corner.y+lev.get_grid_size()/2);
 	coords conv_cannon_c = gam.window_pos_from_level_pos(cannon_center);
-	coords current_shot_vector = dynamic_cast<cannon*>(lev.get_object(lev.cannon_coords()))->_shot_vec;
-
+	if(lev.cannon_exists() && _state != STATE_CANNON_CONFIG) {
+		coords current_shot_vector = lev.get_cannon()->_shot_vec;
+		gra.screen_buffer.line	(conv_cannon_c.x, conv_cannon_c.y,
+						 conv_cannon_c.x+current_shot_vector.x, 
+						 conv_cannon_c.y+current_shot_vector.y, 10, 95, 145);
+	}
+		
 	switch(_state) {
-			case STATE_DEFAULT:
-			gra.screen_buffer.line	(conv_cannon_c.x, conv_cannon_c.y,
-									 conv_cannon_c.x+current_shot_vector.x, 
-									 conv_cannon_c.y+current_shot_vector.y, 10, 95, 145);
-			break;
-
 		case STATE_INSERTION:
 			// Plot object placement preview
 			if(directed)
@@ -233,10 +232,6 @@ void editor_event_handler::e_new_frame() {
 				image_buffer_ptr->set_alpha(64, true);
 			image_buffer_ptr->apply(square_pos.x, square_pos.y);
 			image_buffer_ptr->set_alpha(SDL_ALPHA_OPAQUE, true);
-			gra.screen_buffer.line	(conv_cannon_c.x, conv_cannon_c.y,
-									 conv_cannon_c.x+current_shot_vector.x, 
-									 conv_cannon_c.y+current_shot_vector.y, 10, 95, 145);
-
 			break;
 		case STATE_CANNON_CONFIG:
 			gra.screen_buffer.line	(conv_cannon_c.x, conv_cannon_c.y,
