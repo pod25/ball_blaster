@@ -20,7 +20,7 @@ private:
 		STATE_PLAY,
 		STATE_EDIT
 	};
-	static const int LIST_X_POS		= 100;
+	static const int LIST_X_POS		= 420;
 	static const int LIST_Y_POS		= 200;
 	static const int LIST_SPACING	= 40;
 	uint			_state;
