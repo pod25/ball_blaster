@@ -103,6 +103,14 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 	// If trying to insert wall when any object already is in that position
 	if(dynamic_cast<wall*>(obj) && num_objects(x, y) > 0)
 		return false;
+
+	// If trying to insert fan when max count reached
+	if(dynamic_cast<fan*>(obj) && lev.get_fans_left() < 1)
+		return false;
+
+	// If trying to insert magnet when max count reached
+	if(dynamic_cast<magnet*>(obj) && lev.get_magnets_left() < 1)
+		return false;
 	
 	// Insertion else possible?
 	if(!can_insert_obj(x, y, is_dir, direction))
@@ -516,6 +524,70 @@ uint level::dir_from_pixel(uint pixel_x, uint pixel_y) {
 	return dir;
 }
 
+bool level::set_fan_inserts_allowed(int set_it) {
+	_fan_inserts_allowed = set_it;
+	return true;
+}
+
+bool level::set_mag_inserts_allowed(int set_it) {
+	_magnet_inserts_allowed = set_it;
+	return true;
+}
+
+int level::get_fan_inserts_allowed() {
+	return _fan_inserts_allowed;
+}
+
+int level::get_mag_inserts_allowed() {
+	return _magnet_inserts_allowed;
+}
+
+/*
+ * Return number of fan inserts left
+ */
+int level::get_fans_left() {
+	// Count fans
+	vvvobj::iterator	c;
+	vvobj::iterator		r;
+	vobj::iterator		ind;
+	int x;
+	int y;
+	int i;
+	int n = 0;
+	for(c = _objects.begin(), x = 0; c != _objects.end(); c++, x++) {
+		for(r = c->begin(), y = 0; r != c->end(); r++, y++) {
+			for(ind = r->begin(), i = 0; ind != r->end(); ind++, i++) {
+				if(dynamic_cast<fan*>(*ind))
+					n++;
+			}
+		}
+	}
+	return get_fan_inserts_allowed()-n;
+}
+
+/*
+ * Return number of magnet inserts left
+ */
+int level::get_magnets_left() {
+	// Count magnets
+	vvvobj::iterator	c;
+	vvobj::iterator		r;
+	vobj::iterator		ind;
+	int x;
+	int y;
+	int i;
+	int n = 0;
+	for(c = _objects.begin(), x = 0; c != _objects.end(); c++, x++) {
+		for(r = c->begin(), y = 0; r != c->end(); r++, y++) {
+			for(ind = r->begin(), i = 0; ind != r->end(); ind++, i++) {
+				if(dynamic_cast<magnet*>(*ind))
+					n++;
+			}
+		}
+	}
+	return get_mag_inserts_allowed()-n;
+}
+
 /*
  * Save the level to 'Levels/{name}.lev'
  */
@@ -539,6 +611,10 @@ bool level::save_level(string name) {
 		obj_out.push_back(to_string(get_ball_scale()));
 		obj_out.push_back(PROP_LEVEL_GRID_SIZE);
 		obj_out.push_back(to_string(get_grid_size()));
+		obj_out.push_back(PROP_MAX_FAN_INSERTS);
+		obj_out.push_back(to_string(get_fan_inserts_allowed()));
+		obj_out.push_back(PROP_MAX_MAG_INSERTS);
+		obj_out.push_back(to_string(get_mag_inserts_allowed()));
 
 
 		out.push_back(implode(obj_out, ','));
@@ -651,6 +727,8 @@ bool level::load_level(string name) {
 			int		prop_lev_size_x			= 0;
 			int		prop_lev_size_y			= 0;
 			int		prop_lev_grid_size		= 0;
+			int		prop_fan_inserts		= 0;
+			int		prop_mag_inserts		= 0;
 			double	prop_lev_square_scale	= 0;
 			double	prop_lev_ball_scale		= 0;
 
@@ -685,6 +763,14 @@ bool level::load_level(string name) {
 					prop_lev_grid_size = to_int(object[0]);
 					object.erase(object.begin(), object.begin() + 1);
 				}
+				else if(prop == PROP_MAX_FAN_INSERTS) {
+					prop_fan_inserts = to_int(object[0]);
+					object.erase(object.begin(), object.begin() + 1);
+				}
+				else if(prop == PROP_MAX_MAG_INSERTS) {
+					prop_mag_inserts = to_int(object[0]);
+					object.erase(object.begin(), object.begin() + 1);
+				}
 				else if(prop == PROP_LEVEL_SQUARE_SCALE) {
 					prop_lev_square_scale = to_double(object[0]);
 					object.erase(object.begin(), object.begin() + 1);
@@ -702,6 +788,8 @@ bool level::load_level(string name) {
 				set_grid_size	(prop_lev_grid_size);
 				set_square_scale(prop_lev_square_scale);
 				set_ball_scale	(prop_lev_ball_scale);
+				set_fan_inserts_allowed(prop_fan_inserts);
+				lev.set_mag_inserts_allowed(prop_mag_inserts);
 				found_level		= true;
 			}
 			else if(id == ID_WALL) {
@@ -743,6 +831,8 @@ bool level::new_level(string name) {
 	set_gravity		(vec(0, LEVEL_DEFAULT_GRAVITY));
 	set_square_scale(1);
 	set_ball_scale	(1);
+	set_fan_inserts_allowed(10);
+	set_mag_inserts_allowed(10);
 
 	return false;
 }

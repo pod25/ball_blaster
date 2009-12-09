@@ -18,6 +18,8 @@ private:
 	vec			_gravity;		// Gravity force vector 
 	ball		_ball;			// The ball
 	string		_level_name;	// The name of the current level
+	int			_fan_inserts_allowed; // Number of fan object the user is able to add before simulation
+	int			_magnet_inserts_allowed; // as above, for magnets
 	
 public:
 	// Default values
@@ -74,6 +76,12 @@ public:
 	coords		pixel_coords_from_vector(coords vector);
 	uint		dir_from_pixel		(uint pixel_x, uint pixel_y);
 	bool		is_wall				(size_t x, size_t y);
+	bool		set_fan_inserts_allowed(int);
+	bool		set_mag_inserts_allowed(int);
+	int			get_fan_inserts_allowed();
+	int			get_mag_inserts_allowed();
+	int			get_fans_left		();
+	int			get_magnets_left	();
 
 	bool		save_level		(string name);
 	bool		load_level		(string name);
