@@ -111,7 +111,7 @@ void simulator_event_handler::e_new_frame() {
 		// Apply ball buffer
 		int ball_size = lev.get_ball_pixel_size();
 		coords	ball;
-		ball = vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - ball_size/2*vec(1, 1));
+		ball = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - ball_size/2*vec(1, 1)));
 		gra.ball_buffer.apply(ball.x, ball.y);
 
 		// Refresh screen
