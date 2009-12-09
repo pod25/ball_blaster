@@ -18,81 +18,18 @@ level					lev;			// Level
 physics					phy;			// Physics
 
 /* 
- * main function
+ * Main function
  */
 int main(int argc, char* args[]) {
 	try{
-		// TODO: Temporary SDL implementation
-		// TODO: Remove
-
-		//The attributes of the screen
-		//const int SCREEN_WIDTH = 640;
-		//const int SCREEN_HEIGHT = 480;
-		//const int SCREEN_BPP = 32;
-
-		//The font that's going to be used
-		//font lazy_font("Fonts/lazy.ttf", 28);
-		//The color of the font
-		//SDL_Color text_color = {0, 0, 0}; 
-
-		//The surfaces that will be used
-		//video_mode	screen(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
-		//image hello("temp/hello.png");
-		//image message("The quick brown fox jumps over the lazy dog", lazy_font, text_color);
-		//image rect_srf;
-		//image background("temp/background.png");
-		//image background("ball/black ball.png");
-		//background.line(20, 10, 40, 200, 255, 0, 255, 255);
-		// Unfortunately the rotozoom library perform no anti-aliasing when down-sizing, only when up-sizing
-		//background.resize(.1, .1);
-		//background.rotate(10, .1);
-		//background.rotate_xy(10, 1.5, .7); // Seems to do a normal rotation (using zoomx as zoom) when angle != 0
-
-		// Try out new stuff before continuing with the game
-		//background.apply(0, 0);
-		//gra.update();
-		//SDL_Delay(5000); // Delay for trying out new stuff before continuing with the game
-
-		//Apply the background to the screen
-		//background.apply(0, 0);
-		//background.apply(320, 0);
-		//background.apply(0, 240);
-		//background.apply(320, 240);
-
-		//Apply the images to the screen
-		//hello.set_alpha(64);
-		//hello.apply(180, 140);
-		//message.apply(10, 160);
-
-		//rect_srf.load("wall/Earth SMWar.png");
-		////rect_srf.generate_text("\"The quick brown fox jumps over the lazy dog\"", lazy_font, text_color);
-		//rect_srf.disable_alpha ();
-		//rect_srf.enable_alpha ();
-		//rect_srf.set_alpha(96);
-		//SDL_Color color; color.r = 128; color.g = 0; color.b = 255;
-		////rect_srf.set_color(color);
-		////rect_srf.set_color(color.r, color.g, color.b);
-		//rect_srf.apply(5, 40);
-
-		//Update the screen
-		//gra.update();
-		//SDL_Delay(5000);
-
-		/* LEVEL TEST */
-		//lev.load_level("in");
-		//lev.save_level("out");
-
 		// Initialize game
 		gam.init_game();
 
 		// Go to main loop
 		gam.main();
-
-		//Free the surfaces
-		//message.free();
-		//background.free();
 	}
 	catch (exception &e) {err_hndl_obj.inform_about_error("main()", e);};
-	//Return
+
+	// Quit application
 	return 0;
 }

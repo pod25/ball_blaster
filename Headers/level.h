@@ -5,7 +5,7 @@
 #define LEVEL_H
 
 /*
- * level class
+ * level class declaration
  */
 class level {
 private:
@@ -29,7 +29,7 @@ public:
 	static const int LEVEL_DEFAULT_WIDTH		= 32;
 	static const int LEVEL_DEFAULT_HEIGHT		= 24;
 	static const int LEVEL_DEFAULT_GRID_SIZE	= 64;
-	static const int LEVEL_DEFAULT_GRAVITY		= 10;
+	static const int LEVEL_DEFAULT_GRAVITY		= -10;
 
 	static const int MAGNET_DEFAULT_STRENGTH	= 10;
 

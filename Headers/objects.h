@@ -40,35 +40,35 @@ enum OBJECT_DIRECTIONS {
 #define PROP_LEVEL_BALL_SCALE	"BALL_SCALE"
 
 /*
- * object class
+ * object class declaration
  */
 class object {
 	friend	level;
 private:
 	object();
 protected:
-	bool	_locked;
+	bool _locked;
 public:
 	object(bool locked) : _locked(locked) {};
 	virtual ~object() {};
 };
 
 /*
- * directed object class
+ * directed object class declaration
  */
 class directed_object : public object {
 	friend	level;
 private:
 	directed_object();
 protected:
-	int		_dir;
+	int	_dir;
 public:
 	directed_object(bool locked, int dir) : object(locked), _dir(min(dir, NUM_DIRECTIONS-1)) {};
-	int		get_dir() { return _dir; };
+	int	get_dir() { return _dir; };
 };
 
 /*
- * nondirected object class
+ * nondirected object class declaration
  */
 class nondirected_object : public object {
 	friend level;
@@ -79,7 +79,7 @@ public:
 };
 
 /*
- * magnet class
+ * magnet class declaration
  */
 class magnet : public directed_object {
 	friend level;
@@ -91,7 +91,7 @@ public:
 };
 
 /*
- * fan class
+ * fan class declaration
  */
 class fan : public directed_object {
 	friend level;
@@ -103,7 +103,7 @@ public:
 };
 
 /*
- * wall class
+ * wall class declaration
  */
 class wall : public nondirected_object {
 	friend level;
@@ -112,7 +112,7 @@ public:
 };
 
 /*
- * goal class
+ * goal class declaration
  */
 class goal : public nondirected_object {
 	friend level;
@@ -121,7 +121,7 @@ public:
 };
 
 /*
- * cannon class
+ * cannon class declaration
  */
 class cannon : public nondirected_object {
 	friend level;

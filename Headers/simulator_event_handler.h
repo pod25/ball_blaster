@@ -5,7 +5,7 @@
 #define SIMULATOR_EVENT_HANDLER_H
 
 /*
- * simulator_event_handler class
+ * simulator_event_handler class declaration
  */
 class simulator_event_handler : public event_handler {
 	enum SIMULATION_STATES {

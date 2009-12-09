@@ -27,7 +27,7 @@ using std::exception;
 using std::domain_error;
 using std::invalid_argument;
 #include <cmath>
-#include <iostream> //For debugging
+#include <iostream>
 using std::endl;
 using std::cout;
 using std::cerr;
@@ -86,7 +86,7 @@ typedef unsigned int						size_t;
 #endif
 
 /*
- * Global variables
+ * Global variables (defined in ball_blaster.cpp)
  */
 extern error_handler			err_hndl_obj;
 extern editor_event_handler		editor_eh;

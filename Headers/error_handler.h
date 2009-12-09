@@ -5,7 +5,7 @@
 #define ERROR_HANDLER_H
 
 /*
- * error_handler class
+ * error_handler class declaration
  */
 class error_handler {
 public:
