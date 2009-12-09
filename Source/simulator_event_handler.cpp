@@ -79,9 +79,10 @@ void simulator_event_handler::e_key_down(int key) {
 				cur_eh = &editor_eh;
 				editor_eh.set_mode(_from_editor);
 				editor_eh.objects_changed(0, 0, true);
+				_state = STATE_NOT_RUNNING;
 			}
 			break;
-		case STATE_COMPLETE:
+		case STATE_NOT_RUNNING:
 			cur_eh = &menu_eh;
 			menu_eh.menu_reset();
 			break;
@@ -175,7 +176,7 @@ void simulator_event_handler::e_step(int delta_t) {
  * Level complete
  */
 void simulator_event_handler::level_complete() {
-	_state = STATE_COMPLETE;
+	_state = STATE_NOT_RUNNING;
 	image completed;
 	completed.generate_text("Congratulations! You have completed the level!", gra.menu_font, gra.menu_color);
 	completed.apply(200, 300);
