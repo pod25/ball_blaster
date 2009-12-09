@@ -79,7 +79,12 @@ void physics::step(double dt, uint num_calls_left) {
 			for (x = x1; x < x2; x++) {
 				if (!lev.num_objects(x, y)) continue;
 				curr_obj = lev.get_object(x, y, 0);
+#if 0
 				if (dynamic_cast<nondirected_object*>(curr_obj)) {
+#else				
+				if (dynamic_cast<wall*>(curr_obj) || dynamic_cast<goal*>(curr_obj) ) {
+#endif				
+					
 					hit_test_obj(vec(x, -int(y))*lev.get_square_scale(), bp1, bp2-bp1);
 				}
 			}
