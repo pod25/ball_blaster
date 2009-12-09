@@ -11,7 +11,7 @@
 #define MENU_NEW_LEVEL	"New Level"
 
 /*
- * menu_event_handler class
+ * menu_event_handler class declaration
  */
 class menu_event_handler : public event_handler {
 private:

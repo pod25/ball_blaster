@@ -5,7 +5,7 @@
 #define BALL_H
 
 /*
- * ball class
+ * ball class declaration
  */
 class ball {
 	friend	level;

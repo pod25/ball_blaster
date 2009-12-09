@@ -5,7 +5,7 @@
 #define GRAPHICS_H
 
 /*
- * graphics class
+ * graphics class declaration
  */
 class graphics {
 public:

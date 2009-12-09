@@ -5,11 +5,11 @@
 #define GAME_H
 
 /*
- * game class
+ * game class declaration
  */
 class game {
 private:
-	coords				window_pos;
+	coords				_window_pos;
 	bool				_quit;
 public:
 	static const int	FPS = 50;

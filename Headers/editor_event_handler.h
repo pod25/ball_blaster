@@ -5,7 +5,7 @@
 #define EDITOR_EVENT_HANDLER_H
 
 /*
- * editor_event_handler class
+ * editor_event_handler class declaration
  */
 class editor_event_handler : public event_handler {
 private:
@@ -29,11 +29,11 @@ private:
 	bool	_scrolled;
 	vec		_floating_window_pos;
 
-	bool	_is_const_type(uint oc);
-	bool	_is_dir_type(uint oc);
-	void	_plot_square(size_t x, size_t y);
+	bool	_is_const_type	(uint oc);
+	bool	_is_dir_type	(uint oc);
+	void	_plot_square	(size_t x, size_t y);
 	double	_scroll_distance(int mouse_offset, uint delta_t);
-	coords	_mouse_coords();
+	coords	_mouse_coords	();
 public:
 	editor_event_handler();
 

@@ -5,7 +5,7 @@
 #define EVENT_HANDLER_H
 
 /*
- * event_handler class
+ * event_handler class declaration
  */
 class event_handler abstract {
 public:
