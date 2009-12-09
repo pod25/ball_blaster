@@ -29,7 +29,7 @@ void editor_event_handler::reset_state() {
 	_state = STATE_DEFAULT;
 	_left_mouse_is_down	= false;
 	_right_mouse_is_down= false;
-	_sel_obj_type = 0;
+	_sel_obj_type = 3;
 }
 
 
@@ -88,14 +88,15 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 
 	// Left mouse button
 	if(button == SDL_BUTTON_LEFT) {
-		coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
-		coords cannon_center(cannon_corner.x+lev.get_grid_size()/2, cannon_corner.y+lev.get_grid_size()/2);
+		coords cannon_corner = lev.pixel_coords_from_vector(coords(lev.cannon_coords()));
+		coords cannon_center = cannon_corner + coords(1,1) * (lev.get_grid_size()/2);
 		coords conv_cannon_c = gam.window_pos_from_level_pos(cannon_center);
-		coords cannon_dir(_mouse_x-conv_cannon_c.x, _mouse_y-conv_cannon_c.y);
+		vec    cannon_dir    = _mouse_coords() - conv_cannon_c;
 		// Which state?
 		switch(_state) {
 			case STATE_CANNON_CONFIG:
-				dynamic_cast<cannon*>(lev.get_object(lev.cannon_coords()))->_shot_vec = cannon_dir;
+				dynamic_cast<cannon*>(lev.get_object(lev.cannon_coords()))->_shot_vec =
+					negated_y(cannon_dir/lev.get_pixels_per_le());
 				SDL_ShowCursor(true);
 				_state = STATE_DEFAULT;
 				break;
@@ -210,13 +211,15 @@ void editor_event_handler::e_new_frame() {
 	uint	dir					= lev.dir_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
 
 	coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
-	coords cannon_center(cannon_corner.x+lev.get_grid_size()/2, cannon_corner.y+lev.get_grid_size()/2);
+	coords cannon_center = cannon_corner + coords(1,1) * (lev.get_grid_size()/2);
 	coords conv_cannon_c = gam.window_pos_from_level_pos(cannon_center);
 	if(lev.cannon_exists() && _state != STATE_CANNON_CONFIG) {
-		coords current_shot_vector = lev.get_cannon()->_shot_vec;
-		gra.screen_buffer.line	(conv_cannon_c.x, conv_cannon_c.y,
-						 conv_cannon_c.x+current_shot_vector.x, 
-						 conv_cannon_c.y+current_shot_vector.y, 10, 95, 145);
+		vec line_vec = negated_y(lev.get_cannon()->_shot_vec);
+		line_vec *= lev.get_pixels_per_le();
+		gra.screen_buffer.line(conv_cannon_c.x, conv_cannon_c.y,
+			conv_cannon_c.x + Sint16(line_vec.x),
+			conv_cannon_c.y + Sint16(line_vec.y),
+			10, 95, 145);
 	}
 		
 	switch(_state) {
@@ -358,6 +361,10 @@ void editor_event_handler::e_step(int delta_t) {
 }
 double editor_event_handler::_scroll_distance(int mouse_offset, uint delta_t) {
 	return pow(2.718, -0.1*(mouse_offset - 1)) * MAX_SCROLL_SPEED * 0.001 * delta_t;
+}
+
+coords	editor_event_handler::_mouse_coords() {
+	return coords(_mouse_x, _mouse_y);
 }
 
 bool editor_event_handler::start_simulation() {

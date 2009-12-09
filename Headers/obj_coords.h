@@ -12,6 +12,7 @@ public:
 	size_t i;
 	obj_coords(size_t in_x, size_t in_y, size_t in_i) : x(in_x), y(in_y), i(in_i) {};
 	obj_coords() : x(0), y(0), i(0) {};
+	obj_coords(coords c) : x(c.x), y(c.y), i(0) {};
 };
 
 #endif

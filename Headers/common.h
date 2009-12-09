@@ -39,6 +39,8 @@ using std::cerr;
 /*
  * Class/Struct pre-declarations
  */
+class obj_coords;
+
 class error_handler;
 class event_handler;
 class menu_event_handler;

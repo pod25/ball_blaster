@@ -52,6 +52,7 @@ public:
 	bool		set_grid_size		(uint size);
 	double		get_square_scale	();
 	bool		set_square_scale	(double scale);
+	double		get_pixels_per_le	();
 	double		get_ball_scale		();
 	bool		set_ball_scale		(double scale);
 	int			get_ball_pixel_size	();

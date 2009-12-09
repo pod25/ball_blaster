@@ -177,6 +177,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\coords.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\editor_event_handler.cpp"
 				>
 			</File>
