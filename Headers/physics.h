@@ -4,6 +4,11 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
+enum HIT_TYPE {
+	HIT_BOUNCE,
+	HIT_GOAL
+};
+
 /*
  * bounce_event class
  */
@@ -32,13 +37,14 @@ class physics {
 	bounce_event	next_bounce;
 	// Goal statistics
 	bool			goal_reached;
+	bool			in_goal_this_step;
 
 	void calculate_ball_acceleration();
 	void apply_ball_acceleration	(double dt, double amount);
-	bool bounce_check_line			(vec lp1, vec dlp, vec bp1, vec bdp);
-	bool bounce_check_circle		(vec cp, double crad, vec bp1, vec bdp, bool will_bounce = true);
-	bool bounce_check_obj			(vec ul_crnr_pos, vec bp1, vec bdp);
 	void bounce_ball				(double& dt);
+	void hit_test_line				(vec lp1, vec dlp, vec bp1, vec bdp);
+	void hit_test_circle			(vec cp, double crad, vec bp1, vec bdp, bool will_bounce = true);
+	void hit_test_obj				(vec ul_crnr_pos, vec bp1, vec bdp);
 	void step						(double dt, uint num_calls_left);
 public:
 	void init_level_simulation		();

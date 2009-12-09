@@ -11,53 +11,50 @@ void physics::apply_ball_acceleration(double dt, double amount) {
 	lev.set_ball_vel(lev.get_ball_vel() + amount * dt * ball_acc);
 }
 
-bool physics::bounce_check_line(vec lp1, vec dlp, vec bp1, vec bdp) {
-	return false;
-}
-
-bool physics::bounce_check_circle(vec cp, double crad, vec bp1, vec bdp, bool will_bounce) {
-	double	bdp_sq			= bdp.sqr_length();
-	if (!bdp_sq) return false; // The ball isn't moving
-	vec		bp1_to_c		= cp - bp1; // Form ball mid to circle mid
-	double	tot_rad			= crad + ball_rad; // Total radius
-	double	tot_rad_sq		= tot_rad*tot_rad;
-	double	b_line_to_c_sq	= square(bp1_to_c % bdp)/bdp_sq;
-	if (b_line_to_c_sq >= tot_rad_sq) return false; // Circle is to far from movement
-	// Solve equation for when the ball hits the circle
-	double	half_tang_spots_diff_sq; // Square of half the distance between the points where the ball and the circle will tangent each other
-	half_tang_spots_diff_sq	= tot_rad_sq - b_line_to_c_sq;
-	double tmid				= (bp1_to_c)*bdp/bdp_sq; // Middle of the times for the two tangent events
-	if (will_bounce && tmid < 0) return false; //Ball is already half way through the circle;
-	double t1				= tmid - sqrt(half_tang_spots_diff_sq/bdp_sq);
-	double t2				= tmid + sqrt(half_tang_spots_diff_sq/bdp_sq);
-	if (t1 > 1 || t2 < 0) return false; //Ball will not interfere with circle during this frame
-	if (bounce_detected && next_bounce._t <= t1) return false; // Earlier or equally early bounce already detected
-	bounce_detected = true;
-	next_bounce = bounce_event(t1, bp1 + t1*bdp - cp);
-	return true;
-}
-
-bool physics::bounce_check_obj(vec ul_crnr_pos, vec bp1, vec bdp) {
-	bool b = false; // Bounced
-	// Bounce check sides
-	b |= bounce_check_line(ul_crnr_pos                                   , lev.get_square_scale()*vec( 0,-1), bp1, bdp);
-	b |= bounce_check_line(ul_crnr_pos + lev.get_square_scale()*vec(0,-1), lev.get_square_scale()*vec( 1, 0), bp1, bdp);
-	b |= bounce_check_line(ul_crnr_pos + lev.get_square_scale()*vec(1,-1), lev.get_square_scale()*vec( 0, 1), bp1, bdp);
-	b |= bounce_check_line(ul_crnr_pos + lev.get_square_scale()*vec(1, 0), lev.get_square_scale()*vec(-1, 0), bp1, bdp);
-	// Bounce check corners
-	b |= bounce_check_circle(ul_crnr_pos                                   , 0, bp1, bdp);
-	b |= bounce_check_circle(ul_crnr_pos + lev.get_square_scale()*vec(0,-1), 0, bp1, bdp);
-	b |= bounce_check_circle(ul_crnr_pos + lev.get_square_scale()*vec(1,-1), 0, bp1, bdp);
-	b |= bounce_check_circle(ul_crnr_pos + lev.get_square_scale()*vec(1, 0), 0, bp1, bdp);
-	return b;
-}
-
 void physics::bounce_ball(double& dt) {
 	double	t_to_bounce	= dt * next_bounce._t;
 	vec		vel			= lev.get_ball_vel();
 	vec		bnorm		= next_bounce._b_normal;
 	lev.set_ball_pos(lev.get_ball_pos() + t_to_bounce * vel);
 	lev.set_ball_vel(vel - (vel*bnorm)*bnorm/bnorm.sqr_length()*(1+BOUNCE_COEFFICIENT));
+}
+
+void physics::hit_test_line(vec lp1, vec dlp, vec bp1, vec bdp) {
+
+}
+
+void physics::hit_test_circle(vec cp, double crad, vec bp1, vec bdp, bool will_bounce) {
+	double	bdp_sq				= bdp.sqr_length();
+	if (!bdp_sq) return; // The ball isn't moving
+	vec		bp1_to_c			= cp - bp1; // Form ball mid to circle mid
+	double	tot_rad				= crad + ball_rad; // Total radius
+	double	tot_rad_sq			= tot_rad*tot_rad;
+	double	b_line_to_c_sq		= square(bp1_to_c % bdp)/bdp_sq;
+	if (b_line_to_c_sq >= tot_rad_sq) return; // Circle is to far from movement
+	// Solve equation for when the ball hits the circle
+	double	half_tang_spots_diff_sq; // Square of half the distance between the points where the ball and the circle will tangent each other
+	half_tang_spots_diff_sq		= tot_rad_sq - b_line_to_c_sq;
+	double tmid					= (bp1_to_c)*bdp/bdp_sq; // Middle of the times for the two tangent events
+	if (will_bounce && tmid < 0) return; //Ball is already half way through the circle;
+	double t1					= tmid - sqrt(half_tang_spots_diff_sq/bdp_sq);
+	double t2					= tmid + sqrt(half_tang_spots_diff_sq/bdp_sq);
+	if (t1 > 1 || t2 < 0) return; //Ball will not interfere with circle during this frame
+	if (bounce_detected && next_bounce._t <= t1) return; // Earlier or equally early bounce already detected
+	bounce_detected = true;
+	next_bounce = bounce_event(t1, bp1 + t1*bdp - cp);
+}
+
+void physics::hit_test_obj(vec ul_crnr_pos, vec bp1, vec bdp) {
+	// Bounce check sides
+	hit_test_line(ul_crnr_pos                                   , lev.get_square_scale()*vec( 0,-1), bp1, bdp);
+	hit_test_line(ul_crnr_pos + lev.get_square_scale()*vec(0,-1), lev.get_square_scale()*vec( 1, 0), bp1, bdp);
+	hit_test_line(ul_crnr_pos + lev.get_square_scale()*vec(1,-1), lev.get_square_scale()*vec( 0, 1), bp1, bdp);
+	hit_test_line(ul_crnr_pos + lev.get_square_scale()*vec(1, 0), lev.get_square_scale()*vec(-1, 0), bp1, bdp);
+	// Bounce check corners
+	hit_test_circle(ul_crnr_pos                                   , 0, bp1, bdp);
+	hit_test_circle(ul_crnr_pos + lev.get_square_scale()*vec(0,-1), 0, bp1, bdp);
+	hit_test_circle(ul_crnr_pos + lev.get_square_scale()*vec(1,-1), 0, bp1, bdp);
+	hit_test_circle(ul_crnr_pos + lev.get_square_scale()*vec(1, 0), 0, bp1, bdp);
 }
 
 void physics::step(double dt, uint num_calls_left) {
@@ -82,11 +79,8 @@ void physics::step(double dt, uint num_calls_left) {
 			for (x = x1; x < x2; x++) {
 				if (!lev.num_objects(x, y)) continue;
 				curr_obj = lev.get_object(x, y, 0);
-				if (dynamic_cast<wall*>(curr_obj) || dynamic_cast<goal*>(curr_obj) ) {
-					if (bounce_check_obj(vec(x, -int(y))*lev.get_square_scale(), bp1, bp2-bp1) &&
-						dynamic_cast<goal*>(curr_obj) ) {
-							goal_reached = true;
-					}
+				if (dynamic_cast<nondirected_object*>(curr_obj)) {
+					hit_test_obj(vec(x, -int(y))*lev.get_square_scale(), bp1, bp2-bp1);
 				}
 			}
 		}
