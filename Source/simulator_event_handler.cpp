@@ -107,8 +107,8 @@ void simulator_event_handler::e_new_frame() {
 		gra.object_layer_buffer.apply(0, 0, &src_rect);
 		int ball_size = lev.get_ball_pixel_size();
 		coords	ball;
-		ball.x = int(lev.get_ball_pos().x/lev.get_square_scale()*lev.get_grid_size()) - ball_size / 2;
-		ball.y = int(lev.get_ball_pos().y/lev.get_square_scale()*lev.get_grid_size()) - ball_size / 2;
+		ball.x = int(lev.get_ball_pos().x*lev.get_pixels_per_le()) - ball_size / 2;
+		ball.y = int(lev.get_ball_pos().y*lev.get_pixels_per_le()) - ball_size / 2;
 		gra.ball_buffer.apply(ball.x, ball.y);
 
 		gra.update();

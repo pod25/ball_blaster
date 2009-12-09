@@ -313,12 +313,13 @@ double level::get_square_scale() {
  * Set square scale factor (physical)
  */
 bool level::set_square_scale(double scale) {
-	if(scale > 0) {
-		_square_scale = scale;
-		return true;
-	}
-	else
-		return false;
+	if(scale > 0) _square_scale = scale;
+	else          return false;
+	return true;
+}
+
+double level::get_pixels_per_le() {
+	return _grid_size/_square_scale;
 }
 
 /*

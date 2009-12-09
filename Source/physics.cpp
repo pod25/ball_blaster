@@ -16,17 +16,30 @@ void physics::step(double dt, uint num_calls_left) {
 		lev.set_ball_vel(vec(0, 0)); // Stop ball, it have probably got stuck
 		return;
 	}
+	// Calculate new position
 	vec v  = lev.get_ball_vel();
 	vec p1 = lev.get_ball_pos();
 	vec p2 = p1 + dt*v;
+	// Calculate traveling rect
+	size_t x1 = size_t((min(p1.x, p2.x) - ball_rad) / lev.get_square_scale())    ;
+	size_t x2 = size_t((max(p1.x, p2.x) + ball_rad) / lev.get_square_scale()) + 1;
+	size_t y1 = size_t((min(p1.y, p2.y) - ball_rad) / lev.get_square_scale())    ;
+	size_t y2 = size_t((max(p1.y, p2.y) + ball_rad) / lev.get_square_scale()) + 1;
+	size_t x, y;
+	for (y = y1; y < y2; y++) {
+		for (x = x1; x < x2; x++) {
+			if (!lev.num_objects(x, y)) continue;
+		}
+	}
 
 	lev.set_ball_pos(p2);
 }
 
 void physics::init_level_simulation() {
+	ball_rad = lev.get_ball_scale()/2;
 	lev.set_ball_pos((vec(lev.cannon_coords()) + vec(0.5, 0.5))*lev.get_square_scale());
-	//lev.set_ball_vel(vec(lev.get_cannon()->_shot_vec)/100);
-	lev.set_ball_vel(vec(0,0));
+	lev.set_ball_vel(vec(lev.get_cannon()->_shot_vec) * CANNON_STRENGH);
+	//lev.set_ball_vel(vec(0,0));
 	calculate_ball_acceleration();
 }
 

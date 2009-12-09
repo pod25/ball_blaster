@@ -127,7 +127,7 @@ class cannon : public nondirected_object {
 	friend level;
 public:
 	cannon() : nondirected_object(true) {};
-	coords _shot_vec;
+	vec _shot_vec;
 };
 
 #endif
