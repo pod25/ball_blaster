@@ -4,7 +4,7 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-enum HIT_TYPE {
+enum HIT_TYPES {
 	HIT_BOUNCE,
 	HIT_GOAL
 };
@@ -12,15 +12,14 @@ enum HIT_TYPE {
 /*
  * bounce_event class
  */
-class bounce_event {
+class hit_event {
 public:
 	double	_t;		// The time the bounce occured in the sub frame in the interval [0, 1]
-	vec		_b_normal;	// The normal for the bouncing surface
-	bool	_goal;
+	vec		_h_normal;	// The normal for the bouncing surface
 
-	bounce_event(double t, vec b_normal, bool goal = false)
-		: _t(t), _b_normal(b_normal), _goal(goal) {}
-	bounce_event() {}
+	hit_event(double t, vec h_normal)
+		: _t(t), _h_normal(h_normal) {}
+	hit_event() {}
 };
 
 /*
@@ -29,22 +28,28 @@ public:
 class physics {
 	static const uint	MAX_FRAME_ITERATIONS = 50;
 
+	// Simulation statistics
+	double time_taken;
+	// Physics constants
+	double		bounce_coefficient;
 	// Ball statistics
-	double			ball_rad;
-	vec				ball_acc;
+	double		ball_rad;
+	vec			ball_acc;
 	// Bounce event statistics
-	bool			bounce_detected;
-	bounce_event	next_bounce;
+	bool		bounce_detected;
+	hit_event	next_bounce;
 	// Goal statistics
-	bool			goal_reached;
-	bool			in_goal_this_step;
+	bool		goal_reached;
+	bool		in_goal_this_step;
+	hit_event	next_goal_hit;
 
 	void calculate_ball_acceleration();
 	void apply_ball_acceleration	(double dt, double amount);
 	void bounce_ball				(double& dt);
-	void hit_test_line				(vec lp1, vec dlp, vec bp1, vec bdp);
-	void hit_test_circle			(vec cp, double crad, vec bp1, vec bdp, bool will_bounce = true);
-	void hit_test_obj				(vec ul_crnr_pos, vec bp1, vec bdp);
+	void report_hit_event			(int hit_type, hit_event he);
+	void hit_test_line				(int hit_type, vec lp1, vec dlp, vec bp1, vec bdp);
+	void hit_test_circle			(int hit_type, vec cp, double crad, vec bp1, vec bdp, bool will_bounce = true);
+	void hit_test_obj				(int hit_type, vec ul_crnr_pos, vec bp1, vec bdp);
 	void step						(double dt, uint num_calls_left);
 public:
 	void init_level_simulation		();
