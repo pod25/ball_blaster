@@ -26,7 +26,8 @@ public:
  * physics class
  */
 class physics {
-	static const uint	MAX_FRAME_ITERATIONS = 50;
+	static const uint	MAX_MOVES_PER_FRAME		= 50;
+	static const uint	NUM_BOUNCES_ITERATIONS	= 5;
 
 	// Simulation statistics
 	double time_taken;
@@ -45,12 +46,12 @@ class physics {
 
 	void calculate_ball_acceleration();
 	void apply_ball_acceleration	(double dt, double amount);
-	void bounce_ball				(double& dt);
+	void reflect_ball_vel			(double dt);
 	void report_hit_event			(int hit_type, hit_event he);
 	void hit_test_line				(int hit_type, vec lp1, vec dlp, vec bp1, vec bdp);
 	void hit_test_circle			(int hit_type, vec cp, double crad, vec bp1, vec bdp, bool will_bounce = true);
 	void hit_test_obj				(int hit_type, vec ul_crnr_pos, vec bp1, vec bdp);
-	void step						(double dt, uint num_calls_left);
+	void step_dividing				(double dt);
 public:
 	void init_level_simulation		();
 	void step						(double dt);

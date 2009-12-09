@@ -11,13 +11,11 @@ void physics::apply_ball_acceleration(double dt, double amount) {
 	lev.set_ball_vel(lev.get_ball_vel() + amount * dt * ball_acc);
 }
 
-void physics::bounce_ball(double& dt) {
+void physics::reflect_ball_vel(double dt) {
 	double	t_to_bounce	= dt * next_bounce._t;
 	vec		vel			= lev.get_ball_vel();
 	vec		bnorm		= next_bounce._h_normal;
-	lev.set_ball_pos(lev.get_ball_pos() + t_to_bounce * vel);
 	lev.set_ball_vel(vel - (vel*bnorm)*bnorm/bnorm.sqr_length()*(1 + bounce_coefficient));
-	dt *= (1 - t_to_bounce);
 }
 
 void physics::report_hit_event(int hit_type, hit_event he) {
@@ -72,40 +70,62 @@ void physics::hit_test_obj(int hit_type, vec ul_crnr_pos, vec bp1, vec bdp) {
 	hit_test_circle(hit_type, ul_crnr_pos + lev.get_square_scale()*vec(1, 0), 0, bp1, bdp);
 }
 
-void physics::step(double dt, uint num_calls_left) {
-	for (; num_calls_left; num_calls_left--) {
-		bounce_detected		= false;
-		in_goal_this_step	= false;
-		// Extract position and speed and calculate new position
-		vec bv  = lev.get_ball_vel();
-		vec bp1 = lev.get_ball_pos();
-		vec bp2 = bp1 + dt*bv;
-		// Calculate traveling rect
-		bp1 = negated_y(bp1);
-		bp2 = negated_y(bp2);
-		size_t x1 = size_t((min(bp1.x, bp2.x) - ball_rad) / lev.get_square_scale())    ;
-		size_t x2 = size_t((max(bp1.x, bp2.x) + ball_rad) / lev.get_square_scale()) + 1;
-		size_t y1 = size_t((min(bp1.y, bp2.y) - ball_rad) / lev.get_square_scale())    ;
-		size_t y2 = size_t((max(bp1.y, bp2.y) + ball_rad) / lev.get_square_scale()) + 1;
-		bp1 = negated_y(bp1);
-		bp2 = negated_y(bp2);
-		size_t x, y;
-		object* curr_obj;
-		for (y = y1; y < y2; y++) {
-			for (x = x1; x < x2; x++) {
-				if (!lev.num_objects(x, y)) continue;
-				curr_obj = lev.get_object(x, y, 0);
-				if      (dynamic_cast<wall*>(curr_obj)) hit_test_obj(HIT_BOUNCE, vec(x, -int(y))*lev.get_square_scale(), bp1, bp2-bp1);
-				else if (dynamic_cast<goal*>(curr_obj)) hit_test_obj(HIT_GOAL  , vec(x, -int(y))*lev.get_square_scale(), bp1, bp2-bp1);
+void physics::step_dividing(double dt) {
+	double it_dt; // Delta t for this iteration
+	vec bv;
+	vec bp1;
+	vec bp2;
+	for (uint num_moves_left = MAX_MOVES_PER_FRAME; num_moves_left && dt != 0; num_moves_left--) {
+		vec obpos = lev.get_ball_pos(); // Backup of ball position
+		vec obvel = lev.get_ball_vel(); // Backup of ball velocity
+		it_dt = dt;
+		for (int curr_bounce_iteration = 0; curr_bounce_iteration < NUM_BOUNCES_ITERATIONS; curr_bounce_iteration++) {
+			if (curr_bounce_iteration == 1) {
+				curr_bounce_iteration = curr_bounce_iteration;
 			}
-		}
-		if (!bounce_detected) {
-			lev.set_ball_pos(bp2);
-			return;
-		}
-		bounce_ball(dt);
+			lev.set_ball_pos(obpos);
+			lev.set_ball_vel(obvel);
+			calculate_ball_acceleration(); // Calculate ball acceleration for this bounce
+			apply_ball_acceleration(it_dt, .5);
+			bounce_detected		= false;
+			in_goal_this_step	= false;
+			// Extract position and speed and calculate new position
+			bv  = lev.get_ball_vel();
+			bp1 = lev.get_ball_pos();
+			bp2 = bp1 + dt*bv;
+			// Calculate traveling rect
+			bp1 = negated_y(bp1);
+			bp2 = negated_y(bp2);
+			size_t x1 = size_t((min(bp1.x, bp2.x) - ball_rad) / lev.get_square_scale())    ;
+			size_t x2 = size_t((max(bp1.x, bp2.x) + ball_rad) / lev.get_square_scale()) + 1;
+			size_t y1 = size_t((min(bp1.y, bp2.y) - ball_rad) / lev.get_square_scale())    ;
+			size_t y2 = size_t((max(bp1.y, bp2.y) + ball_rad) / lev.get_square_scale()) + 1;
+			bp1 = negated_y(bp1);
+			bp2 = negated_y(bp2);
+			size_t x, y;
+			object* curr_obj;
+			for (y = y1; y < y2; y++) {
+				for (x = x1; x < x2; x++) {
+					if (!lev.num_objects(x, y)) continue;
+					curr_obj = lev.get_object(x, y, 0);
+					if      (dynamic_cast<wall*>(curr_obj)) hit_test_obj(HIT_BOUNCE, vec(x, -int(y))*lev.get_square_scale(), bp1, bp2-bp1);
+					else if (dynamic_cast<goal*>(curr_obj)) hit_test_obj(HIT_GOAL  , vec(x, -int(y))*lev.get_square_scale(), bp1, bp2-bp1);
+				}
+			}
+			if (bounce_detected) it_dt = next_bounce._t * dt;
+			else                 break;
+		} // curr_bounce_iteration
+		lev.set_ball_pos(bp1 + it_dt*bv);
+		calculate_ball_acceleration();
+		apply_ball_acceleration(it_dt, .5);
+		if (bounce_detected) reflect_ball_vel(dt); // Moves ball
+		dt -= it_dt;
+	} // num_calls_left
+	if (dt != 0) { // Had to break because ball bounced to much
+		time_taken -= dt;
+		lev.set_ball_vel(bv + .1*rot_90_deg_ccw(bv)); // Rotate velocity a litte bit to make the ball get out of the dead lock
 	}
-	lev.set_ball_vel(vec(0, 0)); // Stop ball, it have probably got stuck
+	//if (!num_moves_left) lev.set_ball_vel(vec(0, 0)); // Stop ball, it has probably got stuck
 }
 
 void physics::init_level_simulation() {
@@ -114,7 +134,6 @@ void physics::init_level_simulation() {
 	ball_rad		= lev.get_square_scale()*lev.get_ball_scale()/2;
 	lev.set_ball_pos(negated_y(vec(lev.cannon_coords()) + vec(0.5, 0.5))*lev.get_square_scale());
 	lev.set_ball_vel(vec(lev.get_cannon()->_shot_vec) * CANNON_STRENGH);
-	calculate_ball_acceleration();
 }
 
 void physics::step(double dt) {
@@ -127,9 +146,7 @@ void physics::step(double dt) {
 	}
 	time_taken += dt;
 	// Update position, velocity and acceleration of the ball
-	apply_ball_acceleration(dt, .5);
-	step(dt, MAX_FRAME_ITERATIONS);
-	apply_ball_acceleration(dt, .5);
+	step_dividing(dt);
 	// Check for goal hit
 	if (in_goal_this_step) goal_reached = true;
 }

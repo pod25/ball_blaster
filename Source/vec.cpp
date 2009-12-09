@@ -88,6 +88,10 @@ vec negated_y(const vec& v) {
 	return vec(v.x, -v.y);
 }
 
+vec rot_90_deg_ccw (const vec& v) {
+	return vec(-v.y, v.x);
+}
+
 coords vec_to_coords (const vec& v) {
 	return coords(int(v.x), int(v.y));
 }
