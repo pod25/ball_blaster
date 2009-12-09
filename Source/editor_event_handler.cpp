@@ -211,7 +211,7 @@ void editor_event_handler::e_new_frame() {
 	uint	dir					= lev.dir_from_pixel(mouse_level_pos.x, mouse_level_pos.y);
 
 	coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
-	coords cannon_center(cannon_corner.x+lev.get_grid_size()/2, cannon_corner.y+lev.get_grid_size()/2);
+	coords cannon_center = cannon_corner + coords(1,1) * (lev.get_grid_size()/2);
 	coords conv_cannon_c = gam.window_pos_from_level_pos(cannon_center);
 	if(lev.cannon_exists() && _state != STATE_CANNON_CONFIG) {
 		vec line_vec = lev.get_cannon()->_shot_vec;
