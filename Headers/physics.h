@@ -9,14 +9,13 @@
  */
 class bounce_event {
 public:
-	double	_time;
-	vec		_b_pos;
+	double	_t;		// The time the bounce occured in the sub frame in the interval [0, 1]
+	vec		_b_normal;	// The normal for the bouncing surface
 	bool	_goal;
-	bool operator<(const bounce_event& b) {return _time < b._time;}
-	bounce_event(double time, vec b_pos, bool goal = false)
-		: _time(time), _b_pos(b_pos), _goal(goal) {}
-private:
-	bounce_event();
+
+	bounce_event(double t, vec b_normal, bool goal = false)
+		: _t(t), _b_normal(b_normal), _goal(goal) {}
+	bounce_event() {}
 };
 
 /*
@@ -30,19 +29,22 @@ class physics {
 	vec				ball_acc;
 	// Bounce event statistics
 	bool			bounce_detected;
-	bounce_event	next_bounce();
+	bounce_event	next_bounce;
 	// Goal statistics
 	bool			goal_reached;
 
 	void calculate_ball_acceleration();
 	void apply_ball_acceleration	(double dt, double amount);
-	bool bounce_check_line			(vec lp1, vec dlp, vec bp1, vec bv);
-	bool bounce_check_obj			(vec ul_crnr_pos, vec p1, vec v);
-	void bounce_ball				();
+	bool bounce_check_line			(vec lp1, vec dlp, vec bp1, vec bdp);
+	bool bounce_check_circle		(vec cp, double crad, vec bp1, vec bdp, bool will_bounce = true);
+	bool bounce_check_obj			(vec ul_crnr_pos, vec bp1, vec bdp);
+	void bounce_ball				(double& dt);
 	void step						(double dt, uint num_calls_left);
 public:
-	void init_level_simulation	();
-	void step					(double dt);
+	void init_level_simulation		();
+	void step						(double dt);
+
+	physics() {}
 };
 static const double BOUNCE_COEFFICIENT	= 0.8;
 static const double CANNON_STRENGH		= 1.0;
