@@ -7,8 +7,11 @@
  * Simulator constructor
  */
 simulator_event_handler::simulator_event_handler() {
-	
 }
+
+/*
+ * Initialize simulation
+ */
 void simulator_event_handler::init(bool from_editor) {
 	phy.init_level_simulation();
 	_from_editor = from_editor;
@@ -41,6 +44,7 @@ void simulator_event_handler::_follow_ball() {
 	if(ball.y > pos.y + scr_height - FOLLOW_LIMIT)
 		pos.y = ball.y - scr_height + FOLLOW_LIMIT;
 
+	// Keep window in bounds
 	if(pos.x < 0)
 		pos.x = 0;
 	if(pos.x + scr_width > lev_width)
@@ -56,17 +60,14 @@ void simulator_event_handler::_follow_ball() {
  * Simulator mouse movement handler
  */
 void simulator_event_handler::e_mouse_move(int mouse_x, int mouse_y) {
-
 }
 
 /*
  * Simulator mouse button handlers
  */
 void simulator_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
-
 }
 void simulator_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
-
 }
 
 /*
@@ -89,28 +90,31 @@ void simulator_event_handler::e_key_down(int key) {
 	}
 }
 void simulator_event_handler::e_key_up(int key) {
-
 }
 
 /*
  * Simulator new frame handler
  */
 void simulator_event_handler::e_new_frame() {
+	// Refresh screen while running
 	if(_state == STATE_RUNNING) {
 		gra.background_buffer.apply(0, 0);
 
+		// Apply object layer to screen
 		SDL_Rect src_rect;
 		src_rect.x = gam.get_window_pos().x;
 		src_rect.y = gam.get_window_pos().y;
 		src_rect.w = gra.SCREEN_WIDTH;
 		src_rect.h = gra.SCREEN_HEIGHT;
-
 		gra.object_layer_buffer.apply(0, 0, &src_rect);
+
+		// Apply ball buffer
 		int ball_size = lev.get_ball_pixel_size();
 		coords	ball;
-		ball = vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - ball_size/2*vec(1, 1));
+		ball = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - ball_size/2*vec(1, 1)));
 		gra.ball_buffer.apply(ball.x, ball.y);
 
+		// Refresh screen
 		gra.update();
 	}
 }
@@ -122,12 +126,17 @@ void simulator_event_handler::refresh_obj_layer() {
 	// Clear whole buffer
 	gra.object_layer_buffer.clear();
 
+	// Refresh object layer
 	for(size_t cur_x = 0; cur_x < lev.get_width(); cur_x++) {
 		for(size_t cur_y = 0; cur_y < lev.get_height(); cur_y++) {
 			_plot_square(cur_x, cur_y);
 		}
 	}
 }
+
+/*
+ * Refresh square in object layer
+ */
 void simulator_event_handler::_plot_square(size_t x, size_t y) {
 	coords object_level_pos = lev.pixel_coords_from_vector(x, y);
 	int num_objects = lev.num_objects(x, y);

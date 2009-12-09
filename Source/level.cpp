@@ -3,9 +3,6 @@
  */
 #include "common.h"
 
-/*************************************************
- * PUBLIC FUNCTION DEFINITIONS
- *************************************************/ 
 /*
  * Constructor
  */
@@ -749,4 +746,3 @@ bool level::new_level(string name) {
 
 	return false;
 }
-/*************************************************/
