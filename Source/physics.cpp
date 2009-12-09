@@ -17,6 +17,7 @@ void physics::bounce_ball(double& dt) {
 	vec		bnorm		= next_bounce._h_normal;
 	lev.set_ball_pos(lev.get_ball_pos() + t_to_bounce * vel);
 	lev.set_ball_vel(vel - (vel*bnorm)*bnorm/bnorm.sqr_length()*(1 + bounce_coefficient));
+	dt *= (1 - t_to_bounce);
 }
 
 void physics::report_hit_event(int hit_type, hit_event he) {
@@ -73,7 +74,8 @@ void physics::hit_test_obj(int hit_type, vec ul_crnr_pos, vec bp1, vec bdp) {
 
 void physics::step(double dt, uint num_calls_left) {
 	for (; num_calls_left; num_calls_left--) {
-		bounce_detected = false;
+		bounce_detected		= false;
+		in_goal_this_step	= false;
 		// Extract position and speed and calculate new position
 		vec bv  = lev.get_ball_vel();
 		vec bp1 = lev.get_ball_pos();
