@@ -102,8 +102,13 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 	// Is object directed?
 	bool is_dir		= (dir_obj == 0) ? false: true;
 	uint direction	= (dir_obj == 0) ? false: dir_obj->_dir;
+
 	
-	// Insertion possible?
+	// If trying to insert wall when any object already is in that position
+	if(dynamic_cast<wall*>(obj) && num_objects(x, y) > 0)
+		return false;
+	
+	// Insertion else possible?
 	if(!can_insert_obj(x, y, is_dir, direction))
 		return false;
 
@@ -177,11 +182,15 @@ bool level::can_insert_obj(size_t x, size_t y, bool directed, uint direction) {
 	// Gets number of objects in selected square
 	size_t num_obj = num_objects(x, y);
 
-	// Checks when insert is forbidden
-	if(num_obj == 1 && dynamic_cast<nondirected_object*>(get_object(x, y, 0)))
-		return false;
-	else if(!directed && num_obj > 0)
-		return false;
+ 	// Checks when insert is forbidden
+	if(num_obj == 1 && dynamic_cast<wall*>(get_object(x, y, 0)))
+ 		return false;
+	else if(!directed && num_obj > 0) {
+		for(size_t n = 0; n < num_obj; n++) {
+			if(dynamic_cast<nondirected_object*>(get_object(x, y, n)))
+				return false;
+		}
+	}
 	else if(directed) {
 		for(size_t n = 0; n < num_obj; n++) {
 			if(dynamic_cast<directed_object*>(get_object(x, y, n))) 
