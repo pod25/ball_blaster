@@ -103,7 +103,6 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 	bool is_dir		= (dir_obj == 0) ? false: true;
 	uint direction	= (dir_obj == 0) ? false: dir_obj->_dir;
 
-	
 	// If trying to insert wall when any object already is in that position
 	if(dynamic_cast<wall*>(obj) && num_objects(x, y) > 0)
 		return false;
@@ -124,7 +123,9 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 		_objects[x].resize(y+1);
 	}
 
-	_objects[x][y].push_back(obj);
+	// Undirected objects should have index 0
+	if (dynamic_cast<nondirected_object*>(obj)) _objects[x][y].insert   (_objects[x][y].begin(), obj);
+	else                                        _objects[x][y].push_back(                        obj);
 
 	// Update object layer
 	editor_eh.objects_changed(x, y);
