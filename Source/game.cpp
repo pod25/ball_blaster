@@ -3,30 +3,27 @@
  */
 #include "common.h"
 
-/*************************************************
- * PUBLIC FUNCTION DEFINITIONS 
- *************************************************/
 /*
  * Initialize game
  */
 void game::init_game() {
-	_quit = false;
-	cur_eh = &menu_eh;
-	set_window_pos(0, 0);
+	_quit			= false;
+	cur_eh			= &menu_eh;
+	set_window_pos	(0, 0);
 }
 
 /*
- * 
+ * Game main function
  */
 void game::main() {
 	//The event structure that will be used
 	SDL_Event event;
     
+	// Graphic and logic timers
 	uint last_refreshed = 0;
 	uint last_stepped	= 0;
-	//Start the timer
-    last_refreshed	= SDL_GetTicks();
-	last_stepped	= SDL_GetTicks();
+    last_refreshed		= SDL_GetTicks();
+	last_stepped		= SDL_GetTicks();
 
 	//While the user hasn't quit
 	while(_quit == false) {
@@ -78,20 +75,28 @@ void game::quit() {
 	_quit = true;
 }
 
+/*
+ * Position the window
+ */
 void game::set_window_pos(uint x, uint y) {
 	_window_pos.x = x;
 	_window_pos.y = y;
 }
-
 void game::set_window_pos(coords pos) {
 	_window_pos.x = pos.x;
 	_window_pos.y = pos.y;
 }
 
+/*
+ * Get window position
+ */
 coords game::get_window_pos() {
 	return _window_pos;
 }
 
+/*
+ * Convert between level and window coordinates
+ */
 coords game::level_pos_from_window_pos(uint x, uint y) {
 	return coords(_window_pos.x + x, _window_pos.y + y);
 }

@@ -3,34 +3,76 @@
  */
 #include "common.h"
 
-/*
+/*************************************************
  * base_image class methods
+ *************************************************/ 
+/*
+ * Lock / Unlock surfaces
  */
+void base_image::lock() {
+	if(SDL_MUSTLOCK(_sdl_srf) && SDL_LockSurface(_sdl_srf) == -1)
+		throw exception("Couldn't lock image");
+}
+void base_image::unlock() {
+	if(SDL_MUSTLOCK(_sdl_srf))
+		SDL_UnlockSurface(_sdl_srf);
+}
 
-void base_image::  lock() {if (SDL_MUSTLOCK(_sdl_srf) && SDL_LockSurface(_sdl_srf) == -1) throw exception("Couldn't lock image");}
-void base_image::unlock() {if (SDL_MUSTLOCK(_sdl_srf)) SDL_UnlockSurface(_sdl_srf);}
-bool base_image::empty() {return !_sdl_srf;}
-SDL_Surface* base_image::get_sdl_srf() {return _sdl_srf;}
+/*
+ * Has surface?
+ */
+bool base_image::empty() {
+	return !_sdl_srf;
+}
 
+/*
+ * Get surface?
+ */
+SDL_Surface* base_image::get_sdl_srf() {
+	return _sdl_srf;
+}
+
+/*
+ * Fill rectangle with RGBA color
+ */
 void base_image::fill_rect(SDL_Rect *dstrect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	Uint32 pixel = SDL_MapRGBA(_sdl_srf->format, r, g, b, a);
-	if(SDL_FillRect(_sdl_srf, dstrect, pixel)) sdl_obj.error("Couldn't fill rectangle in image");
-}
-void base_image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {fill_rect(NULL, r, g, b, a);}
-void base_image::clear() {set_color(0, 0, 0, 0);} // Clear buffer (to total transparency)
-
-void base_image::line(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-	if (aalineRGBA(_sdl_srf, x1, y1, x2, y2, r, g, b, a)) sdl_obj.error("Couldn't draw line");
+	if(SDL_FillRect(_sdl_srf, dstrect, pixel))
+		sdl_obj.error("Couldn't fill rectangle in image");
 }
 
 /*
- * image class methods
+ * Clear the surface with RGBA color
  */
+void base_image::set_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+	fill_rect(NULL, r, g, b, a);
+}
+/*
+ * Clear buffer (to total transparency)
+ */
+void base_image::clear() {
+	set_color(0, 0, 0, 0);
+}
 
+/*
+ * Draw line
+ */
+void base_image::line(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+	if(aalineRGBA(_sdl_srf, x1, y1, x2, y2, r, g, b, a))
+		sdl_obj.error("Couldn't draw line");
+}
+
+/*************************************************
+ * image class methods
+ *************************************************/ 
+/*
+ * Load image
+ */
 void image::load(string filename) {
 	filename = "Images/" + filename;
 	// Free old image if any
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	if(_sdl_srf)
+		SDL_FreeSurface(_sdl_srf);
 	// Load the image
 	SDL_Surface* loaded_image = IMG_Load(filename.c_str());
 	if(loaded_image != NULL) {
@@ -38,68 +80,107 @@ void image::load(string filename) {
 		_sdl_srf = SDL_DisplayFormatAlpha(loaded_image);
 		// Free the old image
 		SDL_FreeSurface(loaded_image);
-		if (!_sdl_srf) sdl_obj.error("Couldn't optimize loaded image");
+		if(!_sdl_srf)
+			sdl_obj.error("Couldn't optimize loaded image");
 	}
-	else sdl_obj.error("Couldn't load image: " + filename);
+	else
+		sdl_obj.error("Couldn't load image: " + filename);
 }
 
+/*
+ * Create a new surface of given size
+ */
 void image::generate_rect(int w, int h) {//, SDL_Color color) {
 	// Free old image if any
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	if(_sdl_srf)
+		SDL_FreeSurface(_sdl_srf);
 	_sdl_srf = SDL_CreateRGBSurface(gra.IMAGE_FLAGS, w, h, gra.SCREEN_BPP, gra.RMASK, gra.GMASK, gra.BMASK, gra.AMASK);
 	//if (color.r != 0 || color.g != 0 || color.b != 0) set_color(color);
-	if (!_sdl_srf) sdl_obj.error("Couldn't generate rectangular image");
+	if(!_sdl_srf)
+		sdl_obj.error("Couldn't generate rectangular image");
 }
 
+/*
+ * Generate a surface with text
+ */
 void image::generate_text(string text, font &text_font, SDL_Color text_color) {
 	// Free old image if any
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	if(_sdl_srf)
+		SDL_FreeSurface(_sdl_srf);
 	_sdl_srf = TTF_RenderText_Blended(text_font.get_sdl_font(), text.c_str(), text_color);
-	if (!_sdl_srf) sdl_obj.error("Couldn't generate image from text");
+	if(!_sdl_srf)
+		sdl_obj.error("Couldn't generate image from text");
 }
 
+/*
+ * Resize surface
+ */
 void image::generate_resized(base_image& src, double zoomx, double zoomy) {
 	// Free old image if any
 	SDL_Surface* temp_srf = zoomSurface(src.get_sdl_srf(), zoomx, zoomy, 1);
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	if(_sdl_srf)
+		SDL_FreeSurface(_sdl_srf);
 	_sdl_srf = temp_srf;
-	if (!_sdl_srf) sdl_obj.error("Couldn't generate xy-rotated image");
+	if(!_sdl_srf)
+		sdl_obj.error("Couldn't generate xy-rotated image");
 }
 
+/*
+ * Rotate surface
+ */
 void image::generate_rotated (base_image& src, double angle, double zoom) {
 	// Free old image if any
 	SDL_Surface* temp_srf = rotozoomSurface(src.get_sdl_srf(), angle, zoom, 1);
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	if(_sdl_srf)
+		SDL_FreeSurface(_sdl_srf);
 	_sdl_srf = temp_srf;
-	if (!_sdl_srf) sdl_obj.error("Couldn't generate rotated image");
+	if(!_sdl_srf)
+		sdl_obj.error("Couldn't generate rotated image");
 }
 
+/*
+ * Rotate and scale surface
+ */
 void image::generate_rotated_xy (base_image& src, double angle, double zoomx, double zoomy) {
 	// Free old image if any
 	SDL_Surface* temp_srf = rotozoomSurfaceXY(src.get_sdl_srf(), angle, zoomx, zoomy, 1);
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+	if(_sdl_srf)
+		SDL_FreeSurface(_sdl_srf);
 	_sdl_srf = temp_srf;
-	if (!_sdl_srf) sdl_obj.error("Couldn't generate xy-rotated image");
+	if(!_sdl_srf)
+		sdl_obj.error("Couldn't generate xy-rotated image");
 }
 
 void image::resize   (              double zoomx, double zoomy) {generate_resized   (*this,        zoomx, zoomy);}
 void image::rotate   (double angle, double zoom               ) {generate_rotated   (*this, angle, zoom        );}
 void image::rotate_xy(double angle, double zoomx, double zoomy) {generate_rotated_xy(*this, angle, zoomx, zoomy);}
 
+/*
+ * Free surface
+ */
 void image::free() {
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
-	else          throw exception("Trying to free image that is not loaded");
+	if(_sdl_srf)
+		SDL_FreeSurface(_sdl_srf);
+	else
+		throw exception("Trying to free image that is not loaded");
 	_sdl_srf = NULL;
 }
 
+/*
+ * Apply surface to another
+ */
 void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) { // Can't check alpha value of dest so it's ignored
 	SDL_Surface* dest_srf = dest.get_sdl_srf();
-	if (!_sdl_srf) throw invalid_argument("Image being applied not loaded");
-	if (!dest_srf) throw invalid_argument("Image being applied on not loaded");
+	if(!_sdl_srf)
+		throw invalid_argument("Image being applied not loaded");
+	if(!dest_srf)
+		throw invalid_argument("Image being applied on not loaded");
+
 	// Make a temporary rectangle to hold the offsets
 	SDL_Rect offset;
 	offset.x = x;
 	offset.y = y;
+
 	// Check which of the algorithms should be used
 	if (!(_sdl_srf->flags & SDL_SRCALPHA && (alpha < 255 || _sdl_srf->format->Amask &&
 		  dest_srf->flags & SDL_SRCALPHA && dest_srf->format->Amask)) ) { 
@@ -207,29 +288,41 @@ void image::apply(base_image &dest, Sint16 x, Sint16 y, SDL_Rect *src_part) { //
 		unlock();
 	}
 }
-void image::apply(Sint16 x, Sint16 y, SDL_Rect *src_part) {apply(gra.get_screen_buffer(), x, y, src_part);}
+void image::apply(Sint16 x, Sint16 y, SDL_Rect *src_part) {
+	apply(gra.get_screen_buffer(), x, y, src_part);
+}
 
+/*
+ * Set per-surface alpha value
+ */
 void image::set_alpha(Uint8 a, bool enabled) {
 	if (SDL_SetAlpha(_sdl_srf, (enabled ? SDL_SRCALPHA : 0), a+(a==127)) == -1)
 		sdl_obj.error("Couldn't set alpha");
 	alpha = a;
 }
-void image:: enable_alpha() {set_alpha(_sdl_srf->format->alpha, true );}
-void image::disable_alpha() {set_alpha(_sdl_srf->format->alpha, false);}
 
+/*
+ * Enable / Disable alpha for surface
+ */
+void image:: enable_alpha() {
+	set_alpha(_sdl_srf->format->alpha, true );
+}
+void image::disable_alpha() {
+	set_alpha(_sdl_srf->format->alpha, false);
+}
+
+/*
+ * Constructors
+ */
 image::image(string filename) : alpha(255) { // Constructor using a file name
 	load(filename);
 }
-
 image::image(int w, int h) : alpha(255) {//, SDL_Color color) {
 	generate_rect(w, h);//, color);
 }
-
 image::image(string text, font &text_font, SDL_Color text_color) : alpha(255) { // Constructor using a file name
 	generate_text(text, text_font, text_color);
 }
-
-
 image::image(base_image& src, string how, double p1) : alpha(255) {
 	if      (how == "rot" ) generate_rotated(src, p1);
 	else if (how == "zoom") generate_resized(src, p1, p1);
@@ -245,12 +338,19 @@ image::image(base_image& src, string how, double p1, double p2, double p3) : alp
 	else                      throw invalid_argument("Can't " + how + " image using 3 arguments");
 }
 
-image::~image() { // Destructor
-	if (_sdl_srf) SDL_FreeSurface(_sdl_srf);
+/*
+ * Destructor
+ */
+image::~image() {
+	if(_sdl_srf)
+		SDL_FreeSurface(_sdl_srf);
 }
 
-/*
+/*************************************************
  * video_mode class methods
+ *************************************************/ 
+/*
+ * Initialize video mode
  */
 void video_mode::init(int width, int height, int bpp, Uint32 flags) {
 	if (_sdl_srf) throw exception("Video mode already initiated");
@@ -258,10 +358,16 @@ void video_mode::init(int width, int height, int bpp, Uint32 flags) {
 	if (!_sdl_srf) sdl_obj.error("Couldn't initiate video mode");
 }
 
+/*
+ * Output to screen
+ */
 void video_mode::flip() {
-	if(SDL_Flip(_sdl_srf)) sdl_obj.error("Couldn't flip screen buffer");
+	if(SDL_Flip(_sdl_srf))
+		sdl_obj.error("Couldn't flip screen buffer");
 }
-
+/*
+ * Constructor
+ */
 video_mode::video_mode(int width, int height, int bpp, Uint32 flags) {
 	init(width, height, bpp, flags);
 }

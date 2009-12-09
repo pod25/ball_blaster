@@ -11,6 +11,9 @@ menu_event_handler::menu_event_handler() {
 	_init_main_menu();
 }
 
+/*
+ * Reset menu
+ */
 void menu_event_handler::menu_reset() {
 	_init_main_menu();
 }
@@ -19,24 +22,29 @@ void menu_event_handler::menu_reset() {
  * Menu mouse movement handler
  */
 void menu_event_handler::e_mouse_move(int mouse_x, int mouse_y) {
-
 }
 
 /*
  * Menu mouse button handlers
  */
 void menu_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
-
 }
 void menu_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
-
 }
 
 /*
  * Menu key button handlers
  */
 void menu_event_handler::e_key_down(int key) {
+	// For all menus
+	if(key == SDLK_UP)
+		_dec_selection();
+	else if(key == SDLK_DOWN)
+		_inc_selection();
+
+	// Menu selections
 	switch(_state) {
+		// When in main menu
 		case STATE_MAIN:
 			if(key == SDLK_RETURN) {
 				if(_list[_selection] == MENU_MAIN_QUIT)
@@ -49,6 +57,7 @@ void menu_event_handler::e_key_down(int key) {
 			else if(key == SDLK_ESCAPE)
 				gam.quit();
 			break;
+		// When in play menu
 		case STATE_PLAY:
 			if(key == SDLK_RETURN) {
 				if(_list[_selection] == MENU_BACK)
@@ -58,28 +67,29 @@ void menu_event_handler::e_key_down(int key) {
 					sel_level_play = sel_level_play.substr(2);
 					lev.load_level(sel_level_play);
 					editor_eh.set_mode(false);
-					cur_eh = &editor_eh; // Change with _can_edit_const
+					cur_eh = &editor_eh;
 				}
 			}
 			if(key == SDLK_ESCAPE)
 				_init_main_menu();
 			break;
+		// When in edit menu
 		case STATE_EDIT:
 			if(key == SDLK_RETURN) {
 				if(_list[_selection] == MENU_BACK)
 					_init_main_menu();
 				else if(_list[_selection] == MENU_NEW_LEVEL) {
-					// Naming of new edited levels
+					// Naming of new levels
 					lev.new_level(to_string(1+get_level_file_list().size()).insert(0, "level "));
 					editor_eh.set_mode(true);
-					cur_eh = &editor_eh; //With const
+					cur_eh = &editor_eh;
 				}
 				else {
 					string sel_level_edit = _list[_selection];
 					sel_level_edit = sel_level_edit.substr(2);
 					lev.load_level(sel_level_edit);
 					editor_eh.set_mode(true);
-					cur_eh = &editor_eh; //With const
+					cur_eh = &editor_eh;
 				}
 			}
 			if(key == SDLK_ESCAPE)
@@ -88,16 +98,6 @@ void menu_event_handler::e_key_down(int key) {
 	}
 }
 void menu_event_handler::e_key_up(int key) {
-	switch(_state) {
-		case STATE_MAIN:
-		case STATE_PLAY:
-		case STATE_EDIT:
-			if(key == SDLK_UP)
-				_dec_selection();
-			else if(key == SDLK_DOWN)
-				_inc_selection();
-			break;
-	}
 }
 
 /*
@@ -106,7 +106,7 @@ void menu_event_handler::e_key_up(int key) {
 void menu_event_handler::e_new_frame() {
 	gra.menu_background_buffer.apply(0, 0);
 
-	// Display list
+	// List position
 	int start_x;
 	int start_y;
 	if(_state == STATE_MAIN) {
@@ -118,6 +118,7 @@ void menu_event_handler::e_new_frame() {
 		start_y = LEVEL_LIST_Y_POS;
 	}
 
+	// Display list
 	image text;
 	for(uint i = 0; i < _list.size(); i++) {
 		SDL_Color* color = &gra.menu_color;
@@ -127,6 +128,7 @@ void menu_event_handler::e_new_frame() {
 		text.apply(start_x, start_y + i * LIST_SPACING);
 	}
 
+	// Refresh screen
 	gra.update();
 }
 
@@ -134,7 +136,6 @@ void menu_event_handler::e_new_frame() {
  * Menu step handler
  */
 void menu_event_handler::e_step(int delta_t) {
-
 }
 
 /*
