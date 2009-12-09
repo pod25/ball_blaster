@@ -4,7 +4,6 @@
 #include "common.h"
 
 coords::coords(obj_coords c) : x(c.x), y(c.y) {
-
 }
 
 // Doesn't seem to work.

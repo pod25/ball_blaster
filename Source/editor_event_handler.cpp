@@ -74,9 +74,9 @@ void editor_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
 		_right_mouse_is_down = true;
 
 	// Hold left mouse button control cannon
-	if (button == SDL_BUTTON_LEFT && lev.cannon_exists() &&
-		lev.cannon_coords().x == lev.vector_coords_from_pixel(mouse_x, mouse_y).x
-		&& lev.cannon_coords().y == lev.vector_coords_from_pixel(mouse_x, mouse_y).y) {
+	if(button == SDL_BUTTON_LEFT && lev.cannon_exists()) {
+		coords mouse_vector(lev.vector_coords_from_pixel(gam.level_pos_from_window_pos(_mouse_coords())));
+		if(lev.cannon_coords().x == mouse_vector.x && lev.cannon_coords().y == mouse_vector.y) {
 			switch(_state) {
 				case STATE_DEFAULT:
 				case STATE_INSERTION:
@@ -85,6 +85,7 @@ void editor_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
 					SDL_ShowCursor(false);
 					break;
 			}
+		}
 	}
 }
 void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
