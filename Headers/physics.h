@@ -25,16 +25,19 @@ private:
 class physics {
 	static const uint	MAX_FRAME_ITERATIONS = 50;
 
-	// Ball information
+	// Ball statistics
 	double			ball_rad;
 	vec				ball_acc;
-	// Bounce event information
+	// Bounce event statistics
 	bool			bounce_detected;
 	bounce_event	next_bounce();
+	// Goal statistics
+	bool			goal_reached;
 
 	void calculate_ball_acceleration();
 	void apply_ball_acceleration	(double dt, double amount);
-	void bounce_check_obj			(object* curr_obj, vec p1, vec v);
+	bool bounce_check_line			(vec lp1, vec dlp, vec bp1, vec bv);
+	bool bounce_check_obj			(vec ul_crnr_pos, vec p1, vec v);
 	void bounce_ball				();
 	void step						(double dt, uint num_calls_left);
 public:

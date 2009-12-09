@@ -83,3 +83,11 @@ void vec::normalize() {
 vec operator*(double lhs, const vec& rhs) {
 	return vec(lhs*rhs.x, lhs*rhs.y);
 }
+
+vec negated_y(const vec& v) {
+	return vec(v.x, -v.y);
+}
+
+coords vec_to_coords (const vec& v) {
+	return coords(int(v.x), int(v.y));
+}

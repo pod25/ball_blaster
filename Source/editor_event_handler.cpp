@@ -96,7 +96,7 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 		switch(_state) {
 			case STATE_CANNON_CONFIG:
 				dynamic_cast<cannon*>(lev.get_object(lev.cannon_coords()))->_shot_vec =
-					cannon_dir/lev.get_pixels_per_le();
+					negated_y(cannon_dir/lev.get_pixels_per_le());
 				SDL_ShowCursor(true);
 				_state = STATE_DEFAULT;
 				break;
@@ -214,7 +214,7 @@ void editor_event_handler::e_new_frame() {
 	coords cannon_center = cannon_corner + coords(1,1) * (lev.get_grid_size()/2);
 	coords conv_cannon_c = gam.window_pos_from_level_pos(cannon_center);
 	if(lev.cannon_exists() && _state != STATE_CANNON_CONFIG) {
-		vec line_vec = lev.get_cannon()->_shot_vec;
+		vec line_vec = negated_y(lev.get_cannon()->_shot_vec);
 		line_vec *= lev.get_pixels_per_le();
 		gra.screen_buffer.line(conv_cannon_c.x, conv_cannon_c.y,
 			conv_cannon_c.x + Sint16(line_vec.x),

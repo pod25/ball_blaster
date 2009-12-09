@@ -374,8 +374,7 @@ vec level::get_ball_pos() {
  * Set ball position to vector
  */
 bool level::set_ball_pos(vec pos) {
-	if(pos.x >= 0 && pos.y >= 0)
-		_ball._pos = pos;
+	_ball._pos = pos;
 	return true;
 }
 
