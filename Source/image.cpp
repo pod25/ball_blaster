@@ -340,12 +340,12 @@ image::image(string text, font &text_font, SDL_Color text_color) : alpha(255) { 
 }
 image::image(base_image& src, string how, double p1) : alpha(255) {
 	if      (how == "rot" ) generate_rotated(src, p1);
-	else if (how == "zoom") throw exception("zoom does not longer take a factor, but a new size");// generate_resized(src, p1, p1);
+	else if (how == "zoom") generate_resized(src, p1, p1);
 	else                    throw invalid_argument("Can't " + how + " image using 1 argument");
 }
 image::image(base_image& src, string how, double p1, double p2) : alpha(255) {
 	if      (how == "rot" ) generate_rotated(src, p1, p2);
-	else if (how == "zoom") throw exception("zoom does not longer take a factor, but new x and y");// generate_resized(src, p1, p2);
+	else if (how == "zoom") generate_resized(src, p1, p2);
 	else                    throw invalid_argument("Can't " + how + " image using 2 arguments");
 }
 image::image(base_image& src, string how, double p1, double p2, double p3) : alpha(255) {

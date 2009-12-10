@@ -414,6 +414,8 @@ double level::get_ball_ang() {
 }
 
 bool level::set_ball_ang(double ang) {
+	if      (ang > 2*PI) while (ang > 2*PI) ang -= 2*PI;
+	else if (ang < 0   ) while (ang < 0   ) ang += 2*PI;
 	_ball._ang = ang;
 	return true;
 }
