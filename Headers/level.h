@@ -46,9 +46,9 @@ public:
 	bool		remove_obj			(size_t x, size_t y, size_t index);
 	bool		remove_obj			(obj_coords coords);
 	bool		remove_obj_at_pixel	(uint pixel_x, uint pixel_y, bool can_edit_locked);
-	bool		insert_obj			(size_t x, size_t y, object* obj);
+	bool		insert_obj			(size_t x, size_t y, object* obj, bool force_insert = false);
 	bool		insert_obj_at_pixel	(uint oc, uint pixel_x, uint pixel_y, bool locked);
-	bool		can_insert_obj		(size_t x, size_t y, bool directed, uint direction = 0);
+	bool		can_insert_obj		(size_t x, size_t y, bool directed, uint direction = 0, bool force_insert = false);
 	size_t		get_width			();
 	size_t		get_height			();
 	uint		get_pixel_width		();

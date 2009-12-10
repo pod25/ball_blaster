@@ -91,7 +91,7 @@ bool level::remove_obj_at_pixel(uint pixel_x, uint pixel_y, bool can_edit_locked
 /*
  * Insert object at vector coordinates (x, y)
  */
-bool level::insert_obj(size_t x, size_t y, object* obj) {
+bool level::insert_obj(size_t x, size_t y, object* obj, bool force_insert) {
 
 	// Type casts the input object to directed object if that is the case
 	directed_object* dir_obj = dynamic_cast<directed_object*>(obj);
@@ -113,7 +113,7 @@ bool level::insert_obj(size_t x, size_t y, object* obj) {
 		return false;
 	
 	// Insertion else possible?
-	if(!can_insert_obj(x, y, is_dir, direction))
+	if(!can_insert_obj(x, y, is_dir, direction, force_insert))
 		return false;
 
 	// Allow only one cannon
@@ -180,7 +180,7 @@ bool level::insert_obj_at_pixel(uint oc, uint pixel_x, uint pixel_y, bool locked
 /*
  * Can insert directed/nondirected object at vector pos (x, y) ?
  */
-bool level::can_insert_obj(size_t x, size_t y, bool directed, uint direction) {
+bool level::can_insert_obj(size_t x, size_t y, bool directed, uint direction, bool force_insert) {
 	// In bounds?
 	if(x >= _w || y >= _h)
 		return false;
@@ -204,19 +204,20 @@ bool level::can_insert_obj(size_t x, size_t y, bool directed, uint direction) {
 					return false;
 		}
 		// Checks that directed object is inserted against wall
-
-		if(direction == DIR_DOWN)
-			if(!is_wall(x, (y - 1)))
-				return false;
-		if(direction == DIR_UP)
-			if(!is_wall(x, (y + 1)))
-				return false;
-		if(direction == DIR_RIGHT)
-			if(!is_wall((x - 1), y))
-				return false;
-		if(direction == DIR_LEFT)
-			if(!is_wall((x + 1), y))
-				return false;		
+		if(!force_insert) {
+			if(direction == DIR_DOWN)
+				if(!is_wall(x, (y - 1)))
+					return false;
+			if(direction == DIR_UP)
+				if(!is_wall(x, (y + 1)))
+					return false;
+			if(direction == DIR_RIGHT)
+				if(!is_wall((x - 1), y))
+					return false;
+			if(direction == DIR_LEFT)
+				if(!is_wall((x + 1), y))
+					return false;
+		}
 	}
 
 	// Insertion allowed!
@@ -793,23 +794,23 @@ bool level::load_level(string name) {
 			}
 			else if(id == ID_WALL) {
 				wall* o = new wall();
-				insert_obj(prop_pos_x, prop_pos_y, o);
+				insert_obj(prop_pos_x, prop_pos_y, o, true);
 			}
 			else if(id == ID_GOAL) {
 				goal* o = new goal();
-				insert_obj(prop_pos_x, prop_pos_y, o);
+				insert_obj(prop_pos_x, prop_pos_y, o, true);
 			}
 			else if(id == ID_CANNON) {
 				cannon* o = new cannon();
-				insert_obj(prop_pos_x, prop_pos_y, o);
+				insert_obj(prop_pos_x, prop_pos_y, o, true);
 			}
 			else if(id == ID_MAGNET) {
 				magnet* o = new magnet(true, prop_dir, prop_strength);
-				insert_obj(prop_pos_x, prop_pos_y, o);
+				insert_obj(prop_pos_x, prop_pos_y, o, true);
 			}
 			else if(id == ID_FAN) {
 				fan* o = new fan(true, prop_dir, prop_strength);
-				insert_obj(prop_pos_x, prop_pos_y, o);
+				insert_obj(prop_pos_x, prop_pos_y, o, true);
 			}
 		}
 	}
