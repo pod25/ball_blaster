@@ -32,7 +32,8 @@ class physics {
 	static const uint	MAX_MOVES_PER_STEP_ON_FAILURE	= 10;
 
 	// Simulation statistics
-	double time_taken;
+	double		time_taken;
+	double		speed_factor;
 	// Physics constants
 	double		bounce_coefficient;
 	// Ball statistics

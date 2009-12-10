@@ -14,7 +14,8 @@ void physics::apply_ball_acceleration(double dt, double amount) {
 void physics::reflect_ball_vel(double dt) {
 	vec		vel			= lev.get_ball_vel();
 	vec		bnorm		= next_bounce._h_normal;
-	lev.set_ball_vel(vel - (vel*bnorm)*bnorm/bnorm.sqr_length()*(1 + bounce_coefficient));
+	lev.set_ball_vel(vel - (vel*bnorm)*bnorm/bnorm.sqr_length() *
+		(1 + (speed_factor < 0 && bounce_coefficient ? 1/bounce_coefficient : bounce_coefficient)));
 }
 
 void physics::report_hit_event(int hit_type, hit_event he) {
@@ -150,24 +151,24 @@ void physics::step_dividing(double dt, bool iterate_each_bounce) {
 }
 
 void physics::init_level_simulation() {
-	time_taken		= 0;
-	goal_reached	= false;
-	ball_rad		= lev.get_square_scale()*lev.get_ball_scale()/2;
+	time_taken			= 0;
+	speed_factor		= 1;
+	bounce_coefficient	= BOUNCE_COEFFICIENT;
+	goal_reached		= false;
+	ball_rad			= lev.get_square_scale()*lev.get_ball_scale()/2;
 	lev.set_ball_pos(negated_y(vec(lev.cannon_coords()) + vec(0.5, 0.5))*lev.get_square_scale());
 	lev.set_ball_vel(vec(lev.get_cannon()->_shot_vec) * CANNON_STRENGH);
 }
 
 void physics::step(double dt) {
-	if (goal_reached) {
-		dt = -min(dt, time_taken);
-		bounce_coefficient = BOUNCE_COEFFICIENT ? 1/BOUNCE_COEFFICIENT : BOUNCE_COEFFICIENT;
-	}
-	else {
-		bounce_coefficient = BOUNCE_COEFFICIENT;
-	}
+	dt *= speed_factor;
+	if (-dt > time_taken) dt = -time_taken;
 	time_taken += dt;
 	// Update position, velocity and acceleration of the ball
 	step_dividing(dt);
 	// Check for goal hit
-	if (in_goal_this_step) goal_reached = true;
+	if (in_goal_this_step) {
+		goal_reached = true;
+		speed_factor = -3;
+	}
 }
