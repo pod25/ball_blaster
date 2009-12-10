@@ -35,7 +35,9 @@ void editor_event_handler::reset_state() {
 	_state				= STATE_DEFAULT;
 	_left_mouse_is_down	= false;
 	_right_mouse_is_down= false;
-	_sel_obj_type		= 3;
+	_sel_obj_type		= OC_MAGNET;
+	_floating_window_pos.x = 0;
+	_floating_window_pos.y = 0;
 }
 
 
@@ -50,8 +52,6 @@ editor_event_handler::editor_event_handler() {
 	_state				= STATE_DEFAULT;
 	_can_edit_const		= false;
 	_sel_obj_type		= OC_MAGNET;
-	_objects_changed	= true;
-	_scrolled			= true;
 	_floating_window_pos.x = 0;
 	_floating_window_pos.y = 0;
 }

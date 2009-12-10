@@ -19,16 +19,16 @@ void simulator_event_handler::init(bool from_editor) {
 	gra.init_ball_image(lev.get_grid_size() * 1.0 / lev.LEVEL_DEFAULT_GRID_SIZE * lev.get_ball_scale());
 	_follow_ball();
 	_state = STATE_NOT_COMPLETED;
+	gam.set_window_pos(0, 0);
 }
 
 /*
  * Follow the ball
  */
 void simulator_event_handler::_follow_ball() {
-	coords	ball;
-	ball.x = (int)lev.get_ball_pos().x;
-	ball.y = (int)lev.get_ball_pos().y;
-	coords	pos			= _window_pos;
+	coords	ball = vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - lev.get_ball_pixel_size()/2*vec(1, 1));
+
+	coords	pos			= gam.get_window_pos();
 	int		scr_width	= gra.SCREEN_WIDTH;
 	int		scr_height	= gra.SCREEN_HEIGHT;
 	int		lev_width	= lev.get_pixel_width();
@@ -39,7 +39,7 @@ void simulator_event_handler::_follow_ball() {
 		pos.x = ball.x - FOLLOW_LIMIT;
 	if(ball.x > pos.x + scr_width - FOLLOW_LIMIT)
 		pos.x = ball.x - scr_width + FOLLOW_LIMIT;
-	if(ball.y - pos.x < FOLLOW_LIMIT)
+	if(ball.y - pos.y < FOLLOW_LIMIT)
 		pos.y = ball.y - FOLLOW_LIMIT;
 	if(ball.y > pos.y + scr_height - FOLLOW_LIMIT)
 		pos.y = ball.y - scr_height + FOLLOW_LIMIT;
@@ -53,7 +53,7 @@ void simulator_event_handler::_follow_ball() {
 		pos.y = 0;
 	if(pos.y + scr_height > lev_height)
 		pos.y =  lev_height - scr_height;
-	_window_pos = pos;
+	gam.set_window_pos(pos);
 }
 
 /*
@@ -95,6 +95,9 @@ void simulator_event_handler::e_key_up(int key) {
  * Simulator new frame handler
  */
 void simulator_event_handler::e_new_frame() {
+	// Follow ball
+	_follow_ball();
+
 	// Refresh screen
 	gra.background_buffer.apply(0, 0);
 

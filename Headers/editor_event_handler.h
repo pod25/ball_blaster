@@ -16,7 +16,7 @@ private:
 	};
 
 	static const uint SCROLL_AREA_SIZE	= 25;
-	static const uint MAX_SCROLL_SPEED	= 200; // In pixels/second
+	static const uint MAX_SCROLL_SPEED	= 300; // In pixels/second
 
 	int		_mouse_x;
 	int		_mouse_y;
