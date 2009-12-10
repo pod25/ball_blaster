@@ -230,5 +230,6 @@ void physics::step(double dt) {
 	if (in_goal_this_step) {
 		goal_reached = true;
 		speed_factor = -3;
+		sim_eh.level_complete();
 	}
 }

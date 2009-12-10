@@ -9,8 +9,8 @@
  */
 class simulator_event_handler : public event_handler {
 	enum SIMULATION_STATES {
-		STATE_RUNNING,
-		STATE_NOT_RUNNING
+		STATE_NOT_COMPLETED,
+		STATE_COMPLETED
 	};
 	static const int	FOLLOW_LIMIT = 100;
 

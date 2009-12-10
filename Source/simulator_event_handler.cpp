@@ -18,7 +18,7 @@ void simulator_event_handler::init(bool from_editor) {
 	refresh_obj_layer();
 	gra.init_ball_image(lev.get_grid_size() * 1.0 / lev.LEVEL_DEFAULT_GRID_SIZE * lev.get_ball_scale());
 	_follow_ball();
-	_state = STATE_RUNNING;
+	_state = STATE_NOT_COMPLETED;
 }
 
 /*
@@ -75,15 +75,14 @@ void simulator_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
  */
 void simulator_event_handler::e_key_down(int key) {
 	switch(_state) {
-		case STATE_RUNNING:
+		case STATE_NOT_COMPLETED:
 			if(key == SDLK_ESCAPE) {
 				cur_eh = &editor_eh;
 				editor_eh.set_mode(_from_editor);
 				editor_eh.objects_changed(0, 0, true);
-				_state = STATE_NOT_RUNNING;
 			}
 			break;
-		case STATE_NOT_RUNNING:
+		case STATE_COMPLETED:
 			cur_eh = &menu_eh;
 			menu_eh.menu_reset();
 			break;
@@ -96,27 +95,35 @@ void simulator_event_handler::e_key_up(int key) {
  * Simulator new frame handler
  */
 void simulator_event_handler::e_new_frame() {
-	// Refresh screen while running
-	if(_state == STATE_RUNNING) {
-		gra.background_buffer.apply(0, 0);
+	// Refresh screen
+	gra.background_buffer.apply(0, 0);
 
-		// Apply object layer to screen
-		SDL_Rect src_rect;
-		src_rect.x = gam.get_window_pos().x;
-		src_rect.y = gam.get_window_pos().y;
-		src_rect.w = gra.SCREEN_WIDTH;
-		src_rect.h = gra.SCREEN_HEIGHT;
-		gra.object_layer_buffer.apply(0, 0, &src_rect);
+	// Apply object layer to screen
+	SDL_Rect src_rect;
+	src_rect.x = gam.get_window_pos().x;
+	src_rect.y = gam.get_window_pos().y;
+	src_rect.w = gra.SCREEN_WIDTH;
+	src_rect.h = gra.SCREEN_HEIGHT;
+	gra.object_layer_buffer.apply(0, 0, &src_rect);
 
-		// Apply ball buffer
-		int ball_size = lev.get_ball_pixel_size();
-		coords	ball;
-		ball = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - ball_size/2*vec(1, 1)));
-		gra.ball_buffer.apply(ball.x, ball.y);
+	// Apply ball buffer
+	int ball_size = lev.get_ball_pixel_size();
+	coords	ball;
+	ball = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - ball_size/2*vec(1, 1)));
+	gra.ball_buffer.apply(ball.x, ball.y);
 
-		// Refresh screen
-		gra.update();
+	// Completed level?
+	if(_state == STATE_COMPLETED) {
+		image completed;
+		completed.generate_text("Congratulations! You have completed the level!", gra.menu_font, gra.menu_color);
+		completed.apply(200, 300);
+		completed.generate_text("Press any key to continue", gra.menu_font, gra.menu_color_selected);
+		completed.apply(310, 340);
 	}
+
+	// Refresh screen
+	gra.update();
+
 }
 
 /*
@@ -177,19 +184,12 @@ void simulator_event_handler::_plot_square(size_t x, size_t y) {
  * Simulator step handler
  */
 void simulator_event_handler::e_step(int delta_t) {
-	if(_state == STATE_RUNNING)
-		phy.step(delta_t / 1000.0);
+	phy.step(delta_t / 1000.0);
 }
 
 /*
  * Level complete
  */
 void simulator_event_handler::level_complete() {
-	_state = STATE_NOT_RUNNING;
-	image completed;
-	completed.generate_text("Congratulations! You have completed the level!", gra.menu_font, gra.menu_color);
-	completed.apply(200, 300);
-	completed.generate_text("Press any key to continue", gra.menu_font, gra.menu_color_selected);
-	completed.apply(310, 340);
-	gra.update();
+	_state = STATE_COMPLETED;
 }
