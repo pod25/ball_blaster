@@ -68,7 +68,7 @@ public:
 	physics() {}
 };
 static const double FRICTION_COEFFICIENT	= 0.1;
-static const double MAX_NEGATED_MOMENTUM	= 0.2;
+static const double MAX_NEGATED_MOMENTUM	= 0.4;
 static const double BOUNCE_COEFFICIENT		= 0.8;
 static const double CANNON_STRENGH			= 1.0;
 
