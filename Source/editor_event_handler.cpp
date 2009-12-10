@@ -82,7 +82,6 @@ void editor_event_handler::e_mouse_down(int mouse_x, int mouse_y, int button) {
 				case STATE_INSERTION:
 					// Goto cannon config mode
 					_state = STATE_CANNON_CONFIG;
-					SDL_ShowCursor(false);
 					break;
 			}
 		}
@@ -106,7 +105,6 @@ void editor_event_handler::e_mouse_up(int mouse_x, int mouse_y, int button) {
 			case STATE_CANNON_CONFIG:
 				dynamic_cast<cannon*>(lev.get_object(lev.cannon_coords()))->_shot_vec =
 					negated_y(cannon_dir/lev.get_pixels_per_le());
-				SDL_ShowCursor(true);
 				_state = STATE_DEFAULT;
 				break;
 			case STATE_DEFAULT:

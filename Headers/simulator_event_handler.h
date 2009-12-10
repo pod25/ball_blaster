@@ -16,7 +16,6 @@ class simulator_event_handler : public event_handler {
 
 	SIMULATION_STATES	_state;
 	bool				_from_editor;
-	//coords				_window_pos;
 	void _follow_ball	();
 	void _plot_square	(size_t x, size_t y);
 public:
