@@ -45,9 +45,8 @@ void graphics::init_object_images(double scale) {
 /*
  * Initialize ball buffer
  */
-void graphics::init_ball_image(double scale) {
+void graphics::init_ball_image() {
 	ball_buffer.load(std_ball_img);
-	ball_buffer.resize(scale, scale);
 }
 
 /*

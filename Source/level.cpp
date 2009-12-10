@@ -408,6 +408,24 @@ bool level::set_ball_vel(vec vel) {
 	return true;
 }
 
+double level::get_ball_ang() {
+	return _ball._ang;
+}
+
+bool level::set_ball_ang(double ang) {
+	_ball._ang = ang;
+	return true;
+}
+
+double level::get_ball_ang_vel() {
+	return _ball._ang_vel;
+}
+
+bool level::set_ball_ang_vel(double ang_vel) {
+	_ball._ang_vel = ang_vel;
+	return true;
+}
+
 /*
  * Is the ball visible?
  */

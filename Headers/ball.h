@@ -12,6 +12,8 @@ class ball {
 private:
 	vec		_pos;
 	vec		_vel;
+	double	_ang;
+	double	_ang_vel;
 	bool	_visible;
 };
 

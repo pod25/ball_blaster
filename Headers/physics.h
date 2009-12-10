@@ -36,9 +36,12 @@ class physics {
 	double		speed_factor;
 	// Physics constants
 	double		bounce_coefficient;
+	double		max_negated_momentum;
 	// Ball statistics
 	double		ball_rad;
 	vec			ball_acc;
+	double		ball_moment_of_inertia; // Not used yet
+	double		friction_coefficient; // Not used yet
 	// Bounce event statistics
 	bool		bounce_detected;
 	hit_event	next_bounce;
@@ -49,6 +52,7 @@ class physics {
 
 	void calculate_ball_acceleration();
 	void apply_ball_acceleration	(double dt, double amount);
+	void move_and_rotate_ball		(double dt);
 	void reflect_ball_vel			(double dt);
 	void report_hit_event			(int hit_type, hit_event he);
 	void hit_test_line				(int hit_type, vec lp1, vec ldp, vec bp1, vec bdp);
@@ -62,8 +66,9 @@ public:
 
 	physics() {}
 };
-static const double BOUNCE_COEFFICIENT	= 0.8;
-static const double CANNON_STRENGH		= 1.0;
+static const double BOUNCE_COEFFICIENT		= 0.8;
+static const double MAX_NEGATED_MOMENTUM	= .5;
+static const double CANNON_STRENGH			= 1.0;
 
 #endif
 /* end physics.h */
