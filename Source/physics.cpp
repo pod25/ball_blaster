@@ -76,16 +76,27 @@ void physics::move_and_rotate_ball(double dt) {
 	lev.set_ball_ang(lev.get_ball_ang() + dt*lev.get_ball_ang_vel());
 }
 
-void physics::reflect_ball_vel(double dt) {
-	vec		vel			= lev.get_ball_vel();
-	vec		bnnorm		= next_bounce._h_normal.normalized();
-	double	speed_ort	= vel * bnnorm;
-	vec		vel_ort		= speed_ort * bnnorm;
-	vec		vel_par		= vel - vel_ort;
-	double	speed_par	= vel_par % bnnorm;
-	double	bc			= speed_factor < 0 && bounce_coefficient   ? 1/bounce_coefficient   : bounce_coefficient  ;
-	double	mnm			= speed_factor < 0 && max_negated_momentum ? 1/max_negated_momentum : max_negated_momentum;
-	lev.set_ball_vel(vel_par - bc*vel_ort);
+void physics::bounce_ball_vel_and_ang_vel(double dt) { // Assume ball has mass = 1
+	vec		vel			= lev.get_ball_vel(); // [l.u./sek]
+	vec		bnnorm		= next_bounce._h_normal.normalized(); // [1]
+	double	speed_ort	= -(vel * bnnorm); // [l.u./sek] Dot product will be negative
+	vec		vel_ort		= -speed_ort * bnnorm; // [l.u./sek]
+	vec		vel_par		= vel - vel_ort; // [l.u./sek]
+	double	speed_par	= bnnorm % vel_par; // [l.u./sek] In counter-clockwise direction "around" the surface
+	double	bc			= speed_factor < 0 && bounce_coefficient   ? 1/bounce_coefficient   : bounce_coefficient  ; // [1]
+	double	mnm			= speed_factor < 0 && max_negated_momentum ? 1/max_negated_momentum : max_negated_momentum; // [1]
+	double	ort_dp		= speed_ort * (1 + bc) * BALL_MASS; // [kg*l.u./sek]
+	double	max_par_dp	= friction_coefficient * ort_dp; // [kg*l.u./sek]
+	double	ang_vel		= lev.get_ball_ang_vel(); // [1/sek]
+	double	rel_ang_vel	= ang_vel - speed_par/ball_rad; // [1/sek]
+	double	rel_ang_mom	= rel_ang_vel * ball_moment_of_inertia; // [kg*l.u.^2/sek]
+	double	par_dp		= min(max_par_dp, abs(rel_ang_mom/ball_rad) * (1 + mnm)) * sign(rel_ang_mom); // [kg*l.u./sek]
+	double	new_ang_vel	= ang_vel - par_dp * ball_rad/ball_moment_of_inertia; // [1/sek]
+	vec		new_vel_par	= vel_par + par_dp * rotated_90_deg_ccw(bnnorm); // [l.u./sek]
+	vec		new_vel_ort = -bc * vel_ort;
+
+	lev.set_ball_vel(new_vel_par + new_vel_ort);
+	lev.set_ball_ang_vel(new_ang_vel);
 }
 
 void physics::report_hit_event(int hit_type, hit_event he) {
@@ -192,13 +203,16 @@ void physics::step_dividing(double dt, bool iterate_each_bounce) {
 					else if (dynamic_cast<goal*>(curr_obj)) hit_test_obj(HIT_GOAL  , vec(x, -int(y))*lev.get_square_scale(), bp1, bp2-bp1);
 				}
 			}
-			if (bounce_detected) it_dt = next_bounce._t * t_left;
+			if (bounce_detected) {
+				if (it_dt == next_bounce._t * t_left) break; // Further iterations will not improve the result
+				else                                  it_dt = next_bounce._t * t_left;
+			}
 			else                 break;
 		} // curr_bounce_iteration
 		move_and_rotate_ball(it_dt);
 		calculate_ball_acceleration();
 		if (iterate_each_bounce) apply_ball_acceleration(it_dt, .5);
-		if (bounce_detected) reflect_ball_vel(t_left); // Moves ball
+		if (bounce_detected) bounce_ball_vel_and_ang_vel(t_left); // Moves ball
 		t_left -= it_dt;
 	} // num_calls_left
 	if (t_left != 0) { // Had to break because ball bounced to much (it's possibly rolling)
@@ -221,17 +235,21 @@ void physics::step_dividing(double dt, bool iterate_each_bounce) {
 }
 
 void physics::init_level_simulation() {
+	// Simulation statistics
 	time_taken				= 0;
-	speed_factor			= 1;
-	bounce_coefficient		= BOUNCE_COEFFICIENT;
-	max_negated_momentum	= MAX_NEGATED_MOMENTUM;
 	goal_reached			= false;
+	// Physicalic start values
 	ball_rad				= lev.get_square_scale()*lev.get_ball_scale()/2;
-	ball_moment_of_inertia	= 2/5*square(ball_rad); // if mass = 1, see http://en.wikipedia.org/wiki/List_of_moments_of_inertia
 	lev.set_ball_pos(negated_y(vec(lev.cannon_coords()) + vec(0.5, 0.5))*lev.get_square_scale());
 	lev.set_ball_vel(vec(lev.get_cannon()->_shot_vec) * CANNON_STRENGH);
 	lev.set_ball_ang(0);
-	lev.set_ball_ang_vel(1);
+	lev.set_ball_ang_vel(0);
+	// Simulation optins
+	speed_factor			= 1;
+	friction_coefficient	= FRICTION_COEFFICIENT;
+	ball_moment_of_inertia	= 2./5*square(ball_rad) * BALL_MASS; // [kg*l.u.^2] (for mass = 1, see http://en.wikipedia.org/wiki/List_of_moments_of_inertia)
+	max_negated_momentum	= MAX_NEGATED_MOMENTUM;
+	bounce_coefficient		= BOUNCE_COEFFICIENT;
 }
 
 void physics::step(double dt) {

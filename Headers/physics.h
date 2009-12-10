@@ -26,7 +26,8 @@ public:
  * physics class
  */
 class physics {
-	static const uint	MAX_MOVES_PER_STEP				= 50;
+	static const uint	BALL_MASS						= 1;
+	static const uint	MAX_MOVES_PER_STEP				= 10;
 	static const uint	NUM_BOUNCES_ITERATIONS			= 5;
 	static const uint	NUM_SUB_STEPS_ON_FAILURE		= 10;
 	static const uint	MAX_MOVES_PER_STEP_ON_FAILURE	= 10;
@@ -53,7 +54,7 @@ class physics {
 	void calculate_ball_acceleration();
 	void apply_ball_acceleration	(double dt, double amount);
 	void move_and_rotate_ball		(double dt);
-	void reflect_ball_vel			(double dt);
+	void bounce_ball_vel_and_ang_vel(double dt);
 	void report_hit_event			(int hit_type, hit_event he);
 	void hit_test_line				(int hit_type, vec lp1, vec ldp, vec bp1, vec bdp);
 	void hit_test_circle			(int hit_type, vec cp, double crad, vec bp1, vec bdp);
@@ -66,6 +67,7 @@ public:
 
 	physics() {}
 };
+static const double FRICTION_COEFFICIENT	= 0.1;
 static const double BOUNCE_COEFFICIENT		= 0.8;
 static const double MAX_NEGATED_MOMENTUM	= .5;
 static const double CANNON_STRENGH			= 1.0;

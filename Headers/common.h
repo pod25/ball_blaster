@@ -16,6 +16,13 @@
 template<class T>
 T square(T x) {return x*x;}
 
+template<class T>
+T sign(T x) {
+	return x > 0 ?  1 :
+		   x < 0 ? -1 :
+		   0;
+}
+
 /*
  * Library includes
  */
