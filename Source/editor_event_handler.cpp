@@ -221,6 +221,10 @@ void editor_event_handler::e_new_frame() {
 	gra.object_layer_buffer.apply(0, 0, &src_rect);
 
 	// Show number of available objects
+	image text_bg;
+	text_bg.generate_rect(380, 35);
+	text_bg.set_color(255, 255, 255, 125);
+	text_bg.apply(0, 0);
 	image available_objects;
 	string fans(to_string(lev.get_fans_left()));
 	string magnets(to_string(lev.get_magnets_left()));
