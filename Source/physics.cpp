@@ -35,12 +35,17 @@ void physics::report_hit_event(int hit_type, hit_event he) {
 }
 
 void physics::hit_test_line(int hit_type, vec lp1, vec ldp, vec bp1, vec bdp) {
-	vec		bp1_to_lp1	= lp1 - bp1;
+	vec		bp1_to_lp1		= lp1 - bp1;
+	double	bp1_along_line	= bp1_to_lp1 * ldp;
+	double	bdp_along_line	= bdp * ldp;
+	double	line_sq_len		= ldp.sqr_length();
+	if (bp1_along_line > 0 && bdp_along_line < 0 || bp1_along_line < -line_sq_len && bdp_along_line > 0)
+		return; // The ball is outside the edges of the line and is moving from them (prevents negative t bounces)
 	if ((bp1_to_lp1 % ldp) * (bdp % ldp) <= 0) return; // The center of the ball isn't moving towards the line
-	vec		nnorm		= rotated_90_deg_cw(ldp).normalized(); // Normalized normal of the bounce surface
-	double	hit_t		= (bp1_to_lp1 * nnorm + ball_rad) / (bdp * nnorm); // The dot products should be negative
-	double	hit_s		= (hit_t * bdp - bp1_to_lp1) * ldp; // Is between 0 and ldp.sqr_length() if hit
-	if (hit_s > 0 && hit_s < ldp.sqr_length()) report_hit_event(hit_type, hit_event(hit_t, nnorm));
+	vec		nnorm			= rotated_90_deg_cw(ldp).normalized(); // Normalized normal of the bounce surface
+	double	hit_t			= (bp1_to_lp1 * nnorm + ball_rad) / (bdp * nnorm); // The dot products should be negative
+	double	hit_s			= (hit_t * bdp) * ldp - bp1_along_line; // Is between 0 and ldp.sqr_length() if hit
+	if (hit_s > 0 && hit_s < line_sq_len) report_hit_event(hit_type, hit_event(hit_t, nnorm));
 }
 
 void physics::hit_test_circle(int hit_type, vec cp, double crad, vec bp1, vec bdp) {
