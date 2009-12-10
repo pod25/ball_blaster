@@ -124,7 +124,6 @@ void simulator_event_handler::e_new_frame() {
 	rotated_ball.generate_rotated(gra.ball_buffer, lev.get_ball_ang()*(180/PI), lev.get_grid_size() * lev.get_ball_scale() / gra.get_ball_img_size());
 	coords ball = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - vec(rotated_ball.get_w(), rotated_ball.get_h())/2));
 	rotated_ball.apply(ball.x, ball.y);
-	//gra.get_screen_buffer().set_color(0,128,0,255);
 	coords ball_lighting = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - vec(gra.ball_lighting_buffer.get_w(), gra.ball_lighting_buffer.get_h())/2));
 	gra.ball_lighting_buffer.apply(ball_lighting.x, ball_lighting.y);
 
