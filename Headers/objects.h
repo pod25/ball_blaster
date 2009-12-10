@@ -46,6 +46,7 @@ enum OBJECT_DIRECTIONS {
  */
 class object {
 	friend	level;
+	friend	physics;
 private:
 	object();
 protected:
@@ -60,6 +61,7 @@ public:
  */
 class directed_object : public object {
 	friend	level;
+	friend	physics;
 private:
 	directed_object();
 protected:
@@ -73,7 +75,8 @@ public:
  * nondirected object class declaration
  */
 class nondirected_object : public object {
-	friend level;
+	friend	level;
+	friend	physics;
 private:
 	nondirected_object();
 public:
@@ -84,7 +87,8 @@ public:
  * magnet class declaration
  */
 class magnet : public directed_object {
-	friend level;
+	friend	level;
+	friend	physics;
 private:
 	int _strength;
 	magnet();
@@ -96,7 +100,8 @@ public:
  * fan class declaration
  */
 class fan : public directed_object {
-	friend level;
+	friend	level;
+	friend	physics;
 private:
 	int _strength;
 	fan();
@@ -108,7 +113,8 @@ public:
  * wall class declaration
  */
 class wall : public nondirected_object {
-	friend level;
+	friend	level;
+	friend	physics;
 public:
 	wall() : nondirected_object(true) {};
 };
@@ -117,7 +123,8 @@ public:
  * goal class declaration
  */
 class goal : public nondirected_object {
-	friend level;
+	friend	level;
+	friend	physics;
 public:
 	goal() : nondirected_object(true) {};
 };
@@ -126,7 +133,8 @@ public:
  * cannon class declaration
  */
 class cannon : public nondirected_object {
-	friend level;
+	friend	level;
+	friend	physics;
 public:
 	cannon() : nondirected_object(true) {};
 	vec _shot_vec;

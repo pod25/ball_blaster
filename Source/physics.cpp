@@ -5,6 +5,66 @@
 
 void physics::calculate_ball_acceleration() {
 	ball_acc = lev.get_gravity();
+
+	// Calculate acceleration created by fan or magnet
+	coords pixel_pos = vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - lev.get_ball_pixel_size()/2*vec(1, 1));
+	coords ball_square = lev.vector_coords_from_pixel(pixel_pos.x, pixel_pos.y);
+	int c;
+	int i;
+	// Check row
+	int r = ball_square.y;
+	for(c = 0; c < (int)lev.get_width(); c++) {
+		for(i = 0; i < (int)lev.num_objects(c, r); i++) {
+			// Directed object?
+			directed_object* d_o = dynamic_cast<directed_object*>(lev.get_object(c, r, i));
+			if(d_o) {
+				int dir = d_o->get_dir();
+				if((dir == DIR_LEFT && ball_square.x <= c) || (dir == DIR_RIGHT && ball_square.x >= c)) {
+					int step = (dir == DIR_LEFT) ? -1 : 1;
+					bool found_wall = false;
+					int d;
+					for(d = 0; c + d != ball_square.x ; d += step)
+						if(lev.is_wall(c + d, r))
+							found_wall = true;
+					if(!found_wall) {
+						magnet*	m = dynamic_cast<magnet*>(d_o);
+						fan*	f = dynamic_cast<fan*>(d_o);
+						if(m)
+							ball_acc.x -= step * m->_strength / (1 + abs(d));
+						else if(f)
+							ball_acc.x += step * f->_strength / (1 + abs(d));
+					}
+				}
+			}
+		}
+	}
+	// Check column
+	c = ball_square.x;
+	for(r = 0; r < (int)lev.get_height(); r++) {
+		for(i = 0; i < (int)lev.num_objects(c, r); i++) {
+			// Directed object?
+			directed_object* d_o = dynamic_cast<directed_object*>(lev.get_object(c, r, i));
+			if(d_o) {
+				int dir = d_o->get_dir();
+				if((dir == DIR_UP && ball_square.y <= r) || (dir == DIR_DOWN && ball_square.y >= r)) {
+					int step = (dir == DIR_DOWN) ? 1 : -1;
+					bool found_wall = false;
+					int d;
+					for(d = 0; r + d != ball_square.y ; d += step)
+						if(lev.is_wall(c, r + d))
+							found_wall = true;
+					if(!found_wall) {
+						magnet*	m = dynamic_cast<magnet*>(d_o);
+						fan*	f = dynamic_cast<fan*>(d_o);
+						if(m)
+							ball_acc.y += step * m->_strength / (1 + abs(d));
+						else if(f)
+							ball_acc.y -= step * f->_strength / (1 + abs(d));
+					}
+				}
+			}
+		}
+	}
 }
 
 void physics::apply_ball_acceleration(double dt, double amount) {

@@ -33,7 +33,8 @@ public:
 	static const int LEVEL_DEFAULT_GRID_SIZE	= 64;
 	static const int LEVEL_DEFAULT_GRAVITY		= -10;
 
-	static const int MAGNET_DEFAULT_STRENGTH	= 10;
+	static const int MAGNET_DEFAULT_STRENGTH	= 30;
+	static const int FAN_DEFAULT_STRENGTH		= 30;
 
 				level();
 	size_t		num_objects			(size_t x, size_t y);

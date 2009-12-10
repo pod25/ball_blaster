@@ -167,7 +167,7 @@ bool level::insert_obj_at_pixel(uint oc, uint pixel_x, uint pixel_y, bool locked
 			return true;
 		break;
 	case OC_FAN:
-		o = new fan(locked, dir, MAGNET_DEFAULT_STRENGTH);
+		o = new fan(locked, dir, FAN_DEFAULT_STRENGTH);
 		if(insert_obj(vector_pos.x, vector_pos.y, o))
 			return true;
 		break;
