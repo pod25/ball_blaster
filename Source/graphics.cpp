@@ -13,7 +13,7 @@ void graphics::init_images(bool load_images) {
 	std_ball_lighting_img	= "ball_lighting.png";
 	std_obj_images[OC_WALL	][DIR_NODIR	] = "wall.png";
 	std_obj_images[OC_GOAL	][DIR_NODIR	] = "goal.png";
-	std_obj_images[OC_CANNON][DIR_NODIR	] = "ball.png";
+	std_obj_images[OC_CANNON][DIR_NODIR	] = "cannon.png";
 	std_obj_images[OC_FAN	][DIR_LEFT	] = "fan_left.png";
 	std_obj_images[OC_FAN	][DIR_UP	] = "fan_up.png";
 	std_obj_images[OC_FAN	][DIR_RIGHT	] = "fan_right.png";

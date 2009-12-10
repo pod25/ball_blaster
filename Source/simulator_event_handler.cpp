@@ -83,8 +83,15 @@ void simulator_event_handler::e_key_down(int key) {
 			}
 			break;
 		case STATE_COMPLETED:
-			cur_eh = &menu_eh;
-			menu_eh.menu_reset();
+			if(_from_editor) {
+				cur_eh = &editor_eh;
+				editor_eh.set_mode(_from_editor);
+				editor_eh.objects_changed(0, 0, true);
+			}
+			else {
+				cur_eh = &menu_eh;
+				menu_eh.menu_reset();
+			}
 			break;
 	}
 }
@@ -123,11 +130,15 @@ void simulator_event_handler::e_new_frame() {
 
 	// Completed level?
 	if(_state == STATE_COMPLETED) {
+		image text_bg;
+		text_bg.generate_rect(680, 300);
+		text_bg.set_color(235, 245, 255, 128);
+		text_bg.apply(180, 180);
 		image completed;
 		completed.generate_text("Congratulations! You have completed the level!", gra.menu_font, gra.menu_color);
 		completed.apply(200, 300);
 		completed.generate_text("Press any key to continue", gra.menu_font, gra.menu_color_selected);
-		completed.apply(310, 340);
+		completed.apply(335, 340);
 	}
 
 	// Refresh screen
@@ -166,12 +177,10 @@ void simulator_event_handler::_plot_square(size_t x, size_t y) {
 		directed_object*	dir_o		= dynamic_cast<directed_object*>(cur_o);
 		nondirected_object*	nondir_o	= dynamic_cast<nondirected_object*>(cur_o);
 
-		image* image_buffer_array;
-		image* image_buffer_ptr;
+		image* image_buffer_array = 0;
+		image* image_buffer_ptr = 0;
 
-		if(cannon_o)
-			return;
-		else if(wall_o)
+		if(wall_o)
 			image_buffer_array = gra.object_buffers[OC_WALL];
 		else if(goal_o)
 			image_buffer_array = gra.object_buffers[OC_GOAL];
@@ -179,13 +188,16 @@ void simulator_event_handler::_plot_square(size_t x, size_t y) {
 			image_buffer_array = gra.object_buffers[OC_MAGNET];
 		else if(fan_o)
 			image_buffer_array = gra.object_buffers[OC_FAN];
+		
+		if(image_buffer_array) {
+			if(dir_o)
+				image_buffer_ptr = &image_buffer_array[dir_o->get_dir()];
+			else if(nondir_o)
+				image_buffer_ptr = &image_buffer_array[DIR_NODIR];
 
-		if(dir_o)
-			image_buffer_ptr = &image_buffer_array[dir_o->get_dir()];
-		else if(nondir_o)
-			image_buffer_ptr = &image_buffer_array[DIR_NODIR];
-
-		image_buffer_ptr->apply(gra.object_layer_buffer, object_level_pos.x, object_level_pos.y);
+			if(image_buffer_ptr)
+				image_buffer_ptr->apply(gra.object_layer_buffer, object_level_pos.x, object_level_pos.y);
+		}
 	}
 }
 

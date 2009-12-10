@@ -221,6 +221,10 @@ void editor_event_handler::e_new_frame() {
 	gra.object_layer_buffer.apply(0, 0, &src_rect);
 
 	// Show number of available objects
+	image text_bg;
+	text_bg.generate_rect(380, 35);
+	text_bg.set_color(255, 255, 255, 125);
+	text_bg.apply(0, 0);
 	image available_objects;
 	string fans(to_string(lev.get_fans_left()));
 	string magnets(to_string(lev.get_magnets_left()));
@@ -238,7 +242,7 @@ void editor_event_handler::e_new_frame() {
 		gra.screen_buffer.line(conv_cannon_c.x, conv_cannon_c.y,
 			conv_cannon_c.x + Sint16(line_vec.x),
 			conv_cannon_c.y + Sint16(line_vec.y),
-			10, 95, 145);
+			100, 10, 0);
 	}
 		
 	switch(_state) {
@@ -267,7 +271,7 @@ void editor_event_handler::e_new_frame() {
 		case STATE_CANNON_CONFIG:
 			// Follow mouse with cannon vector
 			gra.screen_buffer.line	(conv_cannon_c.x, conv_cannon_c.y,
-									 _mouse_x, _mouse_y, 10, 95, 145);
+									 _mouse_x, _mouse_y, 100, 10, 0);
 			break;
 	}
 
