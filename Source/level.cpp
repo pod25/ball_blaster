@@ -616,7 +616,6 @@ bool level::save_level(string name) {
 		obj_out.push_back(PROP_MAX_MAG_INSERTS);
 		obj_out.push_back(to_string(get_mag_inserts_allowed()));
 
-
 		out.push_back(implode(obj_out, ','));
 	}
 
@@ -724,13 +723,13 @@ bool level::load_level(string name) {
 			int		prop_pos_y				= 0;
 			int		prop_dir				= 0;
 			int		prop_strength			= 0;
-			int		prop_lev_size_x			= 0;
-			int		prop_lev_size_y			= 0;
-			int		prop_lev_grid_size		= 0;
-			int		prop_fan_inserts		= 0;
-			int		prop_mag_inserts		= 0;
-			double	prop_lev_square_scale	= 0;
-			double	prop_lev_ball_scale		= 0;
+			int		prop_lev_size_x			= LEVEL_DEFAULT_WIDTH;
+			int		prop_lev_size_y			= LEVEL_DEFAULT_HEIGHT;
+			int		prop_lev_grid_size		= LEVEL_DEFAULT_GRID_SIZE;
+			int		prop_fan_inserts		= LEVEL_DEFAULT_MAX_FANS;
+			int		prop_mag_inserts		= LEVEL_DEFAULT_MAX_MAGNETS;
+			double	prop_lev_square_scale	= 1;
+			double	prop_lev_ball_scale		= 1;
 
 			// Load the properties
 			while(object.size() > 0) {
@@ -831,8 +830,8 @@ bool level::new_level(string name) {
 	set_gravity		(vec(0, LEVEL_DEFAULT_GRAVITY));
 	set_square_scale(1);
 	set_ball_scale	(1);
-	set_fan_inserts_allowed(10);
-	set_mag_inserts_allowed(10);
+	set_fan_inserts_allowed(LEVEL_DEFAULT_MAX_FANS);
+	set_mag_inserts_allowed(LEVEL_DEFAULT_MAX_MAGNETS);
 
 	return false;
 }

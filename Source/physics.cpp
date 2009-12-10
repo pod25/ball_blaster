@@ -7,8 +7,7 @@ void physics::calculate_ball_acceleration() {
 	ball_acc = lev.get_gravity();
 
 	// Calculate acceleration created by fan or magnet
-	//Why making the last subtraction in the line bellow? That will give the upper left corner pixel pos of the ball
-	//coords pixel_pos	= vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) );// - lev.get_ball_pixel_size()/2*vec(1, 1));
+	//coords pixel_pos	= vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()));
 	//coords ball_square	= lev.vector_coords_from_pixel(pixel_pos.x, pixel_pos.y);
 	coords ball_square = vec_to_coords(negated_y(lev.get_ball_pos())/lev.get_square_scale() - vec(1,1)/2); //Equivalent expression
 	int c;

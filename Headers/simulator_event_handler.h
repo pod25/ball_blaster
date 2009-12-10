@@ -12,11 +12,10 @@ class simulator_event_handler : public event_handler {
 		STATE_NOT_COMPLETED,
 		STATE_COMPLETED
 	};
-	static const int	FOLLOW_LIMIT = 100;
+	static const int	FOLLOW_LIMIT = 200;
 
 	SIMULATION_STATES	_state;
 	bool				_from_editor;
-	coords				_window_pos;
 	void _follow_ball	();
 	void _plot_square	(size_t x, size_t y);
 public:
