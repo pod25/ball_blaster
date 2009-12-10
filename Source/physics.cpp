@@ -7,8 +7,8 @@ void physics::calculate_ball_acceleration() {
 	ball_acc = lev.get_gravity();
 
 	// Calculate acceleration created by fan or magnet
-	coords pixel_pos = vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()));
-	coords ball_square = lev.vector_coords_from_pixel(pixel_pos.x, pixel_pos.y);
+	vec		d_ball_square = negated_y(lev.get_ball_pos())/lev.get_square_scale() - vec(1,1)/2;
+	coords	  ball_square = vec_to_coords(d_ball_square);
 	int c;
 	int i;
 	// Check row
@@ -71,11 +71,21 @@ void physics::apply_ball_acceleration(double dt, double amount) {
 	lev.set_ball_vel(lev.get_ball_vel() + amount * dt * ball_acc);
 }
 
+void physics::move_and_rotate_ball(double dt) {
+	lev.set_ball_pos(lev.get_ball_pos() + dt*lev.get_ball_vel());
+	lev.set_ball_ang(lev.get_ball_ang() + dt*lev.get_ball_ang_vel());
+}
+
 void physics::reflect_ball_vel(double dt) {
 	vec		vel			= lev.get_ball_vel();
-	vec		bnorm		= next_bounce._h_normal;
-	lev.set_ball_vel(vel - (vel*bnorm)*bnorm/bnorm.sqr_length() *
-		(1 + (speed_factor < 0 && bounce_coefficient ? 1/bounce_coefficient : bounce_coefficient)));
+	vec		bnnorm		= next_bounce._h_normal.normalized();
+	double	speed_ort	= vel * bnnorm;
+	vec		vel_ort		= speed_ort * bnnorm;
+	vec		vel_par		= vel - vel_ort;
+	double	speed_par	= vel_par % bnnorm;
+	double	bc			= speed_factor < 0 && bounce_coefficient   ? 1/bounce_coefficient   : bounce_coefficient  ;
+	double	mnm			= speed_factor < 0 && max_negated_momentum ? 1/max_negated_momentum : max_negated_momentum;
+	lev.set_ball_vel(vel_par - bc*vel_ort);
 }
 
 void physics::report_hit_event(int hit_type, hit_event he) {
@@ -185,7 +195,7 @@ void physics::step_dividing(double dt, bool iterate_each_bounce) {
 			if (bounce_detected) it_dt = next_bounce._t * t_left;
 			else                 break;
 		} // curr_bounce_iteration
-		lev.set_ball_pos(bp1 + it_dt*bv);
+		move_and_rotate_ball(it_dt);
 		calculate_ball_acceleration();
 		if (iterate_each_bounce) apply_ball_acceleration(it_dt, .5);
 		if (bounce_detected) reflect_ball_vel(t_left); // Moves ball
@@ -211,16 +221,21 @@ void physics::step_dividing(double dt, bool iterate_each_bounce) {
 }
 
 void physics::init_level_simulation() {
-	time_taken			= 0;
-	speed_factor		= 1;
-	bounce_coefficient	= BOUNCE_COEFFICIENT;
-	goal_reached		= false;
-	ball_rad			= lev.get_square_scale()*lev.get_ball_scale()/2;
+	time_taken				= 0;
+	speed_factor			= 1;
+	bounce_coefficient		= BOUNCE_COEFFICIENT;
+	max_negated_momentum	= MAX_NEGATED_MOMENTUM;
+	goal_reached			= false;
+	ball_rad				= lev.get_square_scale()*lev.get_ball_scale()/2;
+	ball_moment_of_inertia	= 2/5*square(ball_rad); // if mass = 1, see http://en.wikipedia.org/wiki/List_of_moments_of_inertia
 	lev.set_ball_pos(negated_y(vec(lev.cannon_coords()) + vec(0.5, 0.5))*lev.get_square_scale());
 	lev.set_ball_vel(vec(lev.get_cannon()->_shot_vec) * CANNON_STRENGH);
+	lev.set_ball_ang(0);
+	lev.set_ball_ang_vel(1);
 }
 
 void physics::step(double dt) {
+	// Re-calculate time step
 	dt *= speed_factor;
 	if (-dt > time_taken) dt = -time_taken;
 	time_taken += dt;
@@ -230,6 +245,9 @@ void physics::step(double dt) {
 	if (in_goal_this_step) {
 		goal_reached = true;
 		speed_factor = -3;
-		sim_eh.level_complete();
 	}
+}
+
+bool physics::has_reached_goal() {
+	return goal_reached;
 }

@@ -68,6 +68,10 @@ public:
 	vec			get_ball_pos		();
 	bool		set_ball_vel		(vec vel);
 	vec			get_ball_vel		();
+	bool		set_ball_ang		(double ang);
+	double		get_ball_ang		();
+	bool		set_ball_ang_vel	(double ang_vel);
+	double		get_ball_ang_vel	();
 	bool		ball_visible		();
 	void		show_ball			();
 	void		hide_ball			();

@@ -26,10 +26,24 @@ bool base_image::empty() {
 }
 
 /*
- * Get surface?
+ * Get surface
  */
 SDL_Surface* base_image::get_sdl_srf() {
 	return _sdl_srf;
+}
+
+/*
+ * Get width
+ */
+int base_image::get_w() {
+	return _sdl_srf->w;
+}
+
+/*
+ * Get height
+ */
+int base_image::get_h() {
+	return _sdl_srf->h;
 }
 
 /*

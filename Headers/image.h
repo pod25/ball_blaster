@@ -13,6 +13,8 @@ protected:
 public:
 	bool			empty		();
 	SDL_Surface*	get_sdl_srf	();
+	int				get_w();
+	int				get_h();
 	// Access to variables
 	void lock();
 	void unlock();

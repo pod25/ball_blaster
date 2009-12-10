@@ -5,6 +5,12 @@
 #define COMMON_H
 
 /*
+ * Definitions
+ */
+#define  DEBUG  true
+#define  PI		(3.14159265358979323846264338327950288)
+
+/*
  * Templates
  */
 template<class T>
