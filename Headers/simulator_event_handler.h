@@ -12,7 +12,7 @@ class simulator_event_handler : public event_handler {
 		STATE_NOT_COMPLETED,
 		STATE_COMPLETED
 	};
-	static const int	FOLLOW_LIMIT = 200;
+	static const int	FOLLOW_LIMIT = 300;
 
 	SIMULATION_STATES	_state;
 	bool				_from_editor;
