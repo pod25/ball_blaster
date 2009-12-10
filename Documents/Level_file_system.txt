@@ -1,0 +1,18 @@
+Level file system:
+==================
+- Level name can be read from the file name
+- The level has the following properties:
+  - Gravity vector
+  - Cannon position
+- Level and it's properties will be saved as the first object
+- Objects will be saved as a list of objects
+- Objects are separated with a '|'
+- Objects have the following properties:
+  - Identifier
+  - Position
+  - Unique properties for different types
+
+
+Example (mylevel.lev):
+======================
+LEVEL,GRAVITY,0,10,CANNON_POS,5,7|WALL,POS,10,16|MAGNET,POS,23,27,DIR,3,STRENGTH,4|WALL,POS,14,17|GOAL,POS,32,1
