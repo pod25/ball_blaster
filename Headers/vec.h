@@ -42,10 +42,10 @@ public:
 	~vec() {}					// Default destructor
 };
 
-vec		operator*		(double, const vec&);
-vec		negated_y		(const vec&);
-vec		rot_90_deg_ccw	(const vec& v);
-coords	vec_to_coords	(const vec&);
+vec		operator*			(double, const vec&);
+vec		negated_y			(const vec&);
+vec		rotated_90_deg_cw	(const vec& v);
+coords	vec_to_coords		(const vec&);
 
 #endif
 /* end vec.h */

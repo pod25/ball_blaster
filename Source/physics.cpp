@@ -18,6 +18,7 @@ void physics::reflect_ball_vel(double dt) {
 }
 
 void physics::report_hit_event(int hit_type, hit_event he) {
+	if (he._t > 1) return; // Bounce doesn't occur this step
 	if (bounce_detected && next_bounce._t <= he._t) return; // Bounce earlier or equally early detected
 	switch (hit_type) {
 		case HIT_BOUNCE:
@@ -34,7 +35,12 @@ void physics::report_hit_event(int hit_type, hit_event he) {
 }
 
 void physics::hit_test_line(int hit_type, vec lp1, vec ldp, vec bp1, vec bdp) {
-
+	vec		bp1_to_lp1	= lp1 - bp1;
+	if ((bp1_to_lp1 % ldp) * (bdp % ldp) <= 0) return; // The center of the ball isn't moving towards the line
+	vec		nnorm		= rotated_90_deg_cw(ldp).normalized(); // Normalized normal of the bounce surface
+	double	hit_t		= (bp1_to_lp1 * nnorm + ball_rad) / (bdp * nnorm); // The dot products should be negative
+	double	hit_s		= (hit_t * bdp - bp1_to_lp1) * ldp; // Is between 0 and ldp.sqr_length() if hit
+	if (hit_s > 0 && hit_s < ldp.sqr_length()) report_hit_event(hit_type, hit_event(hit_t, nnorm));
 }
 
 void physics::hit_test_circle(int hit_type, vec cp, double crad, vec bp1, vec bdp) {
@@ -122,14 +128,14 @@ void physics::step_dividing(double dt, bool iterate_each_bounce) {
 	if (t_left != 0) { // Had to break because ball bounced to much (it's possibly rolling)
 #if 0 // Anti-freeze measure method 1 ()
 		time_taken -= t_left;
-		lev.set_ball_vel(bv + .1*rot_90_deg_ccw(bv)); // Rotate velocity a litte bit to make the ball get out of the dead lock
+		lev.set_ball_vel(bv + .4*rotated_90_deg_cw(bv)); // Rotate velocity a litte bit to make the ball get out of the dead lock
 #else // Anti-freeze measure method 1 (calculate the rest of the step without iterating each bounces)
 		if (iterate_each_bounce) { // This will cause the ball to freeze when rolling since it's bouncing infinitely much
 			for (int i = 0; i < NUM_SUB_STEPS_ON_FAILURE; i++) { // Divide the time that's left on NUM_SUB_STEPS_ON_FAILURE new steps, without bounce iteration
 				step_dividing(t_left/NUM_SUB_STEPS_ON_FAILURE, false); // Shouldn't make the ball freeze because of rolling
 			}
 		}
-		else {
+		else { // To prevent even deeper recursion
 			lev.set_ball_vel(vec(0,0)); // Stop ball, maybe it has got stuck
 			time_taken -= t_left; // This would be unexpected
 		}
