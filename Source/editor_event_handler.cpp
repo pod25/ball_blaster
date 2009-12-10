@@ -196,6 +196,11 @@ void editor_event_handler::e_key_down(int key) {
 	// Save level when in level editor
 	else if(key == SDLK_s && _can_edit_const)
 		lev.save_level("");
+	else if(key == SDLK_KP_MINUS)
+		lev.set_grid_size(lev.get_grid_size() - 4);
+	else if(key == SDLK_KP_PLUS)
+		lev.set_grid_size(lev.get_grid_size() + 4);
+		
 }
 void editor_event_handler::e_key_up(int key) {
 }
@@ -214,6 +219,14 @@ void editor_event_handler::e_new_frame() {
 	src_rect.w = gra.SCREEN_WIDTH;
 	src_rect.h = gra.SCREEN_HEIGHT;
 	gra.object_layer_buffer.apply(0, 0, &src_rect);
+
+	// Show number of available objects
+	image available_objects;
+	string fans(to_string(lev.get_fans_left()));
+	string magnets(to_string(lev.get_magnets_left()));
+	string out = string("Fans: ")+fans+string("	  Magnets: ")+magnets;
+	available_objects.generate_text(out, gra.menu_font, gra.menu_color);
+	available_objects.apply(5, 5);
 
 	// Show cannon vector
 	coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
