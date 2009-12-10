@@ -36,11 +36,12 @@ private:
 	string	std_background_img;
 	string	std_menu_background_img;
 	string	std_ball_img;
+	string	std_ball_lighting_img;
 	string	std_obj_images[NUM_OBJECT_CLASSES][NUM_DIRECTIONS];
 
 	void init_sdl			();
 	void init_images		(bool load_images = false);
-	void init_object_images	(double scale = 1);
+	void init_object_images	(int grid_size = 0);
 
 public:
 	video_mode	screen_buffer;						// The buffer that contains the screen image, SDL_Flip to flip
@@ -48,6 +49,7 @@ public:
 	image		menu_background_buffer;				// The buffer that contains the menu background image
 	image		object_layer_buffer;				// The buffer that contains the object layer
 	image		ball_buffer;						// The buffer for the ball image
+	image		ball_lighting_buffer;				// The buffer for the ball image
 	image		object_buffers[NUM_OBJECT_CLASSES][NUM_DIRECTIONS];	// Every buffer for the images of the object types
 	font		menu_font;
 	SDL_Color	menu_color;
@@ -57,7 +59,8 @@ public:
 	video_mode& get_screen_buffer	();
 	void set_object_layer_size		(size_t w, size_t h);
 	void set_grid_size				(uint grid_size);
-	void init_ball_image			();
+	void init_ball_image			(double new_diameter);
+	uint get_ball_img_size			();
 
 	graphics();
 private:

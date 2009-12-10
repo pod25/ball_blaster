@@ -9,7 +9,8 @@
 void graphics::init_images(bool load_images) {
 	std_background_img		= "background.png";
 	std_menu_background_img	= "menu_background.png";
-	std_ball_img			= "ball.png";
+	std_ball_img			= "ball_base.png";
+	std_ball_lighting_img	= "ball_lighting.png";
 	std_obj_images[OC_WALL	][DIR_NODIR	] = "wall.png";
 	std_obj_images[OC_GOAL	][DIR_NODIR	] = "goal.png";
 	std_obj_images[OC_CANNON][DIR_NODIR	] = "ball.png";
@@ -26,27 +27,37 @@ void graphics::init_images(bool load_images) {
 		screen_buffer			.init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SCREEN_FLAGS);
 		background_buffer		.load(std_background_img);
 		menu_background_buffer	.load(std_menu_background_img);
-		init_object_images		(0.5);
+		init_object_images		(lev.LEVEL_DEFAULT_GRID_SIZE / 2);
 	}
 }
 
 /*
  * Initialize object buffers
  */
-void graphics::init_object_images(double scale) {
+void graphics::init_object_images(int grid_size) {
+	if (!grid_size) grid_size = lev.LEVEL_DEFAULT_GRID_SIZE;
 	for(uint i = 0; i < NUM_OBJECT_CLASSES; i++)
 		for(uint d = 0; d < NUM_DIRECTIONS; d++)
 			if(!std_obj_images[i][d].empty()) {
 				object_buffers[i][d].load(std_obj_images[i][d]);
-				object_buffers[i][d].resize(scale, scale);
+				object_buffers[i][d].resize(grid_size, grid_size);
 			}
 }
 
 /*
  * Initialize ball buffer
  */
-void graphics::init_ball_image() {
+void graphics::init_ball_image(double new_diameter) {
 	ball_buffer.load(std_ball_img);
+	ball_lighting_buffer.load(std_ball_lighting_img);
+	ball_lighting_buffer.resize(new_diameter, new_diameter);
+}
+
+/*
+ * Get the size of the ball image
+ */
+uint graphics::get_ball_img_size() {
+	return ball_buffer.get_sdl_srf()->w;
 }
 
 /*
@@ -94,6 +105,5 @@ void graphics::set_object_layer_size(size_t w, size_t h) {
  * Redraw object buffers when grid size is changed
  */
 void graphics::set_grid_size(uint grid_size) {
-	double scale = grid_size * 1.0 / lev.LEVEL_DEFAULT_GRID_SIZE;
-	init_object_images(scale);
+	init_object_images(grid_size);
 }

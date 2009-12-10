@@ -16,7 +16,7 @@ void simulator_event_handler::init(bool from_editor) {
 	phy.init_level_simulation();
 	_from_editor = from_editor;
 	refresh_obj_layer();
-	gra.init_ball_image();
+	gra.init_ball_image(lev.get_grid_size() * lev.get_ball_scale());
 	_follow_ball();
 	_state = STATE_NOT_COMPLETED;
 	gam.set_window_pos(0, 0);
@@ -114,9 +114,11 @@ void simulator_event_handler::e_new_frame() {
 	//ball = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - ball_size/2*vec(1, 1)));
 	//gra.ball_buffer.apply(ball.x, ball.y);
 	image rotated_ball;
-	rotated_ball.generate_rotated(gra.ball_buffer, lev.get_ball_ang()*(180/PI), lev.get_grid_size() * lev.get_ball_scale() / lev.LEVEL_DEFAULT_GRID_SIZE);
+	rotated_ball.generate_rotated(gra.ball_buffer, lev.get_ball_ang()*(180/PI), lev.get_grid_size() * lev.get_ball_scale() / gra.get_ball_img_size());
 	coords ball = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - vec(rotated_ball.get_w(), rotated_ball.get_h())/2));
 	rotated_ball.apply(ball.x, ball.y);
+	coords ball_lighting = gam.window_pos_from_level_pos(vec_to_coords(negated_y(lev.get_ball_pos()*lev.get_pixels_per_le()) - vec(gra.ball_lighting_buffer.get_w(), gra.ball_lighting_buffer.get_h())/2));
+	gra.ball_lighting_buffer.apply(ball_lighting.x, ball_lighting.y);
 
 	// Completed level?
 	if(_state == STATE_COMPLETED) {
