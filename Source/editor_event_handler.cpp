@@ -215,6 +215,17 @@ void editor_event_handler::e_new_frame() {
 	src_rect.h = gra.SCREEN_HEIGHT;
 	gra.object_layer_buffer.apply(0, 0, &src_rect);
 
+	// Show number of available objects
+	image available_objects;
+	char temp[3];
+	_itoa_s(lev.get_fans_left(), temp, 10);
+	string fans(temp);
+	_itoa_s(lev.get_magnets_left(), temp, 10);
+	string magnets(temp);
+	string out = string("Fans: ")+fans+string("	  Magnets: ")+magnets;
+	available_objects.generate_text(out, gra.menu_font, gra.menu_color);
+	available_objects.apply(5, 5);
+
 	// Show cannon vector
 	coords cannon_corner = lev.pixel_coords_from_vector(lev.cannon_coords().x, lev.cannon_coords().y);
 	coords cannon_center = cannon_corner + coords(1,1) * (lev.get_grid_size()/2);
