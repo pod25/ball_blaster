@@ -42,10 +42,10 @@ public:
 	void load					(string filename);
 	void generate_rect			(int w, int h); //, SDL_Color color = {0,0,0});
 	void generate_text			(string text, font &text_font, SDL_Color text_color);
-	void generate_resized		(base_image& src, double zoomx, double zoomy);
+	void generate_resized		(base_image& src, double neww , double newh);
 	void generate_rotated		(base_image& src, double angle, double zoom = 1);
 	void generate_rotated_xy	(base_image& src, double angle, double zoomx, double zoomy);
-	void resize					(double zoomx, double zoomy);
+	void resize					(double neww , double newh);
 	void rotate					(double angle, double zoom = 1);
 	void rotate_xy				(double angle, double zoomx, double zoomy);
 	void free					();

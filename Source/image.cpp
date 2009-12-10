@@ -129,9 +129,10 @@ void image::generate_text(string text, font &text_font, SDL_Color text_color) {
 /*
  * Resize surface
  */
-void image::generate_resized(base_image& src, double zoomx, double zoomy) {
+void image::generate_resized(base_image& src, double neww, double newh) {
 	// Free old image if any
-	SDL_Surface* temp_srf = zoomSurface(src.get_sdl_srf(), zoomx, zoomy, 1);
+	SDL_Surface* src_srf = src.get_sdl_srf();
+	SDL_Surface* temp_srf = zoomSurface(src_srf, neww/src_srf->w, newh/src_srf->h, 1);
 	if(_sdl_srf)
 		SDL_FreeSurface(_sdl_srf);
 	_sdl_srf = temp_srf;
@@ -165,7 +166,7 @@ void image::generate_rotated_xy (base_image& src, double angle, double zoomx, do
 		sdl_obj.error("Couldn't generate xy-rotated image");
 }
 
-void image::resize   (              double zoomx, double zoomy) {generate_resized   (*this,        zoomx, zoomy);}
+void image::resize   (              double neww , double newh ) {generate_resized   (*this,        neww , newh );}
 void image::rotate   (double angle, double zoom               ) {generate_rotated   (*this, angle, zoom        );}
 void image::rotate_xy(double angle, double zoomx, double zoomy) {generate_rotated_xy(*this, angle, zoomx, zoomy);}
 
@@ -339,12 +340,12 @@ image::image(string text, font &text_font, SDL_Color text_color) : alpha(255) { 
 }
 image::image(base_image& src, string how, double p1) : alpha(255) {
 	if      (how == "rot" ) generate_rotated(src, p1);
-	else if (how == "zoom") generate_resized(src, p1, p1);
+	else if (how == "zoom") throw exception("zoom does not longer take a factor, but a new size");// generate_resized(src, p1, p1);
 	else                    throw invalid_argument("Can't " + how + " image using 1 argument");
 }
 image::image(base_image& src, string how, double p1, double p2) : alpha(255) {
 	if      (how == "rot" ) generate_rotated(src, p1, p2);
-	else if (how == "zoom") generate_resized(src, p1, p2);
+	else if (how == "zoom") throw exception("zoom does not longer take a factor, but new x and y");// generate_resized(src, p1, p2);
 	else                    throw invalid_argument("Can't " + how + " image using 2 arguments");
 }
 image::image(base_image& src, string how, double p1, double p2, double p3) : alpha(255) {
