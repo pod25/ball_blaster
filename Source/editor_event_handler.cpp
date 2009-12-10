@@ -196,6 +196,11 @@ void editor_event_handler::e_key_down(int key) {
 	// Save level when in level editor
 	else if(key == SDLK_s && _can_edit_const)
 		lev.save_level("");
+	else if(key == SDLK_KP_MINUS)
+		lev.set_grid_size(lev.get_grid_size() - 4);
+	else if(key == SDLK_KP_PLUS)
+		lev.set_grid_size(lev.get_grid_size() + 4);
+		
 }
 void editor_event_handler::e_key_up(int key) {
 }
@@ -217,11 +222,8 @@ void editor_event_handler::e_new_frame() {
 
 	// Show number of available objects
 	image available_objects;
-	char temp[3];
-	_itoa_s(lev.get_fans_left(), temp, 10);
-	string fans(temp);
-	_itoa_s(lev.get_magnets_left(), temp, 10);
-	string magnets(temp);
+	string fans(to_string(lev.get_fans_left()));
+	string magnets(to_string(lev.get_magnets_left()));
 	string out = string("Fans: ")+fans+string("	  Magnets: ")+magnets;
 	available_objects.generate_text(out, gra.menu_font, gra.menu_color);
 	available_objects.apply(5, 5);
