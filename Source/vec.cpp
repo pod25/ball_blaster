@@ -93,5 +93,5 @@ vec rot_90_deg_ccw (const vec& v) {
 }
 
 coords vec_to_coords (const vec& v) {
-	return coords(int(v.x), int(v.y));
+	return coords(int(v.x + 0.5 - (v.x < 0)), int(v.y + 0.5 - (v.y < 0)));
 }

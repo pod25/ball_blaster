@@ -26,8 +26,10 @@ public:
  * physics class
  */
 class physics {
-	static const uint	MAX_MOVES_PER_FRAME		= 50;
-	static const uint	NUM_BOUNCES_ITERATIONS	= 5;
+	static const uint	MAX_MOVES_PER_STEP				= 50;
+	static const uint	NUM_BOUNCES_ITERATIONS			= 5;
+	static const uint	NUM_SUB_STEPS_ON_FAILURE		= 10;
+	static const uint	MAX_MOVES_PER_STEP_ON_FAILURE	= 10;
 
 	// Simulation statistics
 	double time_taken;
@@ -48,10 +50,10 @@ class physics {
 	void apply_ball_acceleration	(double dt, double amount);
 	void reflect_ball_vel			(double dt);
 	void report_hit_event			(int hit_type, hit_event he);
-	void hit_test_line				(int hit_type, vec lp1, vec dlp, vec bp1, vec bdp);
-	void hit_test_circle			(int hit_type, vec cp, double crad, vec bp1, vec bdp, bool will_bounce = true);
+	void hit_test_line				(int hit_type, vec lp1, vec ldp, vec bp1, vec bdp);
+	void hit_test_circle			(int hit_type, vec cp, double crad, vec bp1, vec bdp);
 	void hit_test_obj				(int hit_type, vec ul_crnr_pos, vec bp1, vec bdp);
-	void step_dividing				(double dt);
+	void step_dividing				(double dt, bool iterate_each_bounce = true);
 public:
 	void init_level_simulation		();
 	void step						(double dt);
