@@ -83,8 +83,15 @@ void simulator_event_handler::e_key_down(int key) {
 			}
 			break;
 		case STATE_COMPLETED:
-			cur_eh = &menu_eh;
-			menu_eh.menu_reset();
+			if(_from_editor) {
+				cur_eh = &editor_eh;
+				editor_eh.set_mode(_from_editor);
+				editor_eh.objects_changed(0, 0, true);
+			}
+			else {
+				cur_eh = &menu_eh;
+				menu_eh.menu_reset();
+			}
 			break;
 	}
 }
@@ -122,11 +129,15 @@ void simulator_event_handler::e_new_frame() {
 
 	// Completed level?
 	if(_state == STATE_COMPLETED) {
+		image text_bg;
+		text_bg.generate_rect(680, 300);
+		text_bg.set_color(235, 245, 255, 128);
+		text_bg.apply(180, 180);
 		image completed;
 		completed.generate_text("Congratulations! You have completed the level!", gra.menu_font, gra.menu_color);
 		completed.apply(200, 300);
 		completed.generate_text("Press any key to continue", gra.menu_font, gra.menu_color_selected);
-		completed.apply(310, 340);
+		completed.apply(335, 340);
 	}
 
 	// Refresh screen
