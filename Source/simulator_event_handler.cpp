@@ -185,6 +185,7 @@ void simulator_event_handler::_plot_square(size_t x, size_t y) {
  */
 void simulator_event_handler::e_step(int delta_t) {
 	phy.step(delta_t / 1000.0);
+	if (phy.has_reached_goal()) _state = STATE_COMPLETED;
 }
 
 /*
