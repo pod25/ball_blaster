@@ -81,7 +81,7 @@ graphics::graphics() {
 	try {
 		init_images(true);
 
-		menu_font.load("Fonts/lazy.ttf", 28);
+		menu_font.load("Fonts/lazy.ttf", FONT_SIZE);
 		menu_color.r = 0; menu_color.g = 0; menu_color.b = 0;
 		menu_color_selected.r = 255; menu_color_selected.g = 255; menu_color_selected.b = 255;
 	}

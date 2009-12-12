@@ -19,6 +19,25 @@ void menu_event_handler::menu_reset() {
 }
 
 /*
+ * Reset current state
+ */
+void menu_event_handler::reset_current_state() {
+	switch (_state) {
+		case STATE_MAIN:
+			_init_main_menu();
+			break;
+		case STATE_PLAY:
+			_init_play_menu();
+			break;
+		case STATE_EDIT:
+			_init_edit_menu();
+			break;
+		default:
+			throw exception("Menu state unknown");
+	}
+}
+
+/*
  * Menu mouse movement handler
  */
 void menu_event_handler::e_mouse_move(int mouse_x, int mouse_y) {
@@ -120,11 +139,29 @@ void menu_event_handler::e_new_frame() {
 
 	// Display list
 	image text;
-	for(uint i = 0; i < _list.size(); i++) {
-		SDL_Color* color = &gra.menu_color;
-		if(i == _selection)
-			color = &gra.menu_color_selected;
-		text.generate_text(_list[i], gra.menu_font, *color);
+	if      (_selection < _scrolled                        + 1) _scrolled = max(_selection - 1                 , 0                            );
+	else if (_selection > _scrolled + (MAX_LIST_ITEMS - 1) - 1) _scrolled = min(_selection - MAX_LIST_ITEMS + 2, int(_list.size()) - MAX_LIST_ITEMS);
+	for(uint i = 0; i < min(MAX_LIST_ITEMS, _list.size()); i++) {
+		if      (i == 0 && _scrolled) {
+			text.generate_rect(gra.FONT_SIZE, gra.FONT_SIZE);
+			text.clear();
+			for (uint y = 0; y < gra.FONT_SIZE/2; y++) text.line(gra.FONT_SIZE/2 - (y+1), y,
+																 gra.FONT_SIZE/2 + (y+0), y,
+																 0, 0, 0, 128);
+		}
+		else if (i == MAX_LIST_ITEMS - 1 && _scrolled != _list.size() - MAX_LIST_ITEMS) {
+			text.generate_rect(gra.FONT_SIZE, gra.FONT_SIZE);
+			text.clear();
+			for (uint y = 0; y < gra.FONT_SIZE/2; y++) text.line(gra.FONT_SIZE/2 - (y+1), gra.FONT_SIZE - (y+1),
+																 gra.FONT_SIZE/2 + (y+0), gra.FONT_SIZE - (y+1),
+																 0, 0, 0, 128);
+		}
+		else {
+			SDL_Color* color = &gra.menu_color;
+			if(i + _scrolled == _selection)
+				color = &gra.menu_color_selected;
+			text.generate_text(_list[i + _scrolled], gra.menu_font, *color);
+		}
 		text.apply(start_x, start_y + i * LIST_SPACING);
 	}
 
@@ -174,6 +211,7 @@ void menu_event_handler::_init_edit_menu() {
 void menu_event_handler::_clear_list() {
 	_list.clear();
 	_selection = 0;
+	_scrolled  = 0;
 }
 void menu_event_handler::_add_list_item(string str) {
 	_list.push_back(str);

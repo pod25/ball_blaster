@@ -123,10 +123,6 @@ extern game						gam;
 #include "ball.h"
 #include "font.h"
 #include "image.h"
-#include "event_handler.h"
-#include "menu_event_handler.h"
-#include "editor_event_handler.h"
-#include "simulator_event_handler.h"
 #include "files.h"
 #include "game.h"
 #include "level.h"
@@ -134,6 +130,10 @@ extern game						gam;
 #include "sdl_handler.h"
 #include "graphics.h"
 #include "physics.h"
+#include "event_handler.h"
+#include "menu_event_handler.h"
+#include "editor_event_handler.h"
+#include "simulator_event_handler.h"
 
 #endif
 /* end common.h */

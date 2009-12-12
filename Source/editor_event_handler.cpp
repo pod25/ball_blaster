@@ -189,7 +189,8 @@ void editor_event_handler::e_key_down(int key) {
 		start_simulation();
 	// Go back to menu
 	else if(key == SDLK_ESCAPE){
-		menu_eh.menu_reset();
+		//menu_eh.menu_reset();
+		if (_can_edit_const) menu_eh.reset_current_state(); // Editor could have created a new level; display this in that case
 		cur_eh = &menu_eh;
 		reset_state();
 	}

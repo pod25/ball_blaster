@@ -14,6 +14,7 @@ public:
 	static const int SCREEN_BPP		= 32;
 	static const int SCREEN_FLAGS	= SDL_SWSURFACE | (!DEBUG * SDL_FULLSCREEN); // Creates a surface in system memory
 	static const int IMAGE_FLAGS	= SDL_SWSURFACE | SDL_SRCALPHA; // Creates a surface in system memory with alpha-blending enabled
+	static const int FONT_SIZE		= 28;
 #if 0
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     static const Uint32 RMASK = 0xFF000000; static const Uint8 RSHIFT = 3*8, RLOSS = 0;

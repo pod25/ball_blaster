@@ -90,7 +90,7 @@ void simulator_event_handler::e_key_down(int key) {
 			}
 			else {
 				cur_eh = &menu_eh;
-				menu_eh.menu_reset();
+				//menu_eh.menu_reset();
 			}
 			break;
 	}
