@@ -64,6 +64,7 @@ public:
 	void init_level_simulation		();
 	void step						(double dt);
 	bool has_reached_goal			();
+	void set_speed_factor			(double f);
 
 	physics() {}
 };

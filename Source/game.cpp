@@ -54,8 +54,9 @@ void game::main() {
 
 		// Step event handlers
 		uint cur_time = SDL_GetTicks();
-		if(cur_time - last_refreshed >= 5) {
-			cur_eh->e_step(cur_time - last_stepped);
+		if(cur_time - last_stepped >= 5) {
+			//cur_eh->e_step(cur_time - last_stepped);
+			cur_eh->e_step(5);
 			last_stepped = cur_time;
 		}
 

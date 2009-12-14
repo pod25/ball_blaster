@@ -81,6 +81,9 @@ void simulator_event_handler::e_key_down(int key) {
 				editor_eh.set_mode(_from_editor);
 				editor_eh.objects_changed(0, 0, true);
 			}
+			if(key == SDLK_SPACE) {
+				phy.set_speed_factor(3);
+			}
 			break;
 		case STATE_COMPLETED:
 			if(_from_editor) {
@@ -96,6 +99,13 @@ void simulator_event_handler::e_key_down(int key) {
 	}
 }
 void simulator_event_handler::e_key_up(int key) {
+	switch(_state) {
+		case STATE_NOT_COMPLETED:
+			if(key == SDLK_SPACE) {
+				phy.set_speed_factor(1);
+			}
+			break;
+	}
 }
 
 /*

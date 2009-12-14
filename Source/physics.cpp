@@ -262,10 +262,14 @@ void physics::step(double dt) {
 	// Check for goal hit
 	if (in_goal_this_step) {
 		goal_reached = true;
-		speed_factor = 0.15;
+		set_speed_factor(0.15);
 	}
 }
 
 bool physics::has_reached_goal() {
 	return goal_reached;
+}
+
+void physics::set_speed_factor(double f) {
+	speed_factor = f;
 }
