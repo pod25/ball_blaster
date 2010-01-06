@@ -13,6 +13,7 @@ simulator_event_handler::simulator_event_handler() {
  * Initialize simulation
  */
 void simulator_event_handler::init(bool from_editor) {
+	gam.set_speed_multiplyer();
 	phy.init_level_simulation();
 	_from_editor = from_editor;
 	refresh_obj_layer();
@@ -81,9 +82,7 @@ void simulator_event_handler::e_key_down(int key) {
 				editor_eh.set_mode(_from_editor);
 				editor_eh.objects_changed(0, 0, true);
 			}
-			if(key == SDLK_SPACE) {
-				phy.set_speed_factor(3);
-			}
+			if(key == SDLK_SPACE) gam.set_speed_multiplyer(3);
 			break;
 		case STATE_COMPLETED:
 			if(_from_editor) {
@@ -101,9 +100,7 @@ void simulator_event_handler::e_key_down(int key) {
 void simulator_event_handler::e_key_up(int key) {
 	switch(_state) {
 		case STATE_NOT_COMPLETED:
-			if(key == SDLK_SPACE) {
-				phy.set_speed_factor(1);
-			}
+			if(key == SDLK_SPACE) gam.set_speed_multiplyer(1);
 			break;
 	}
 }

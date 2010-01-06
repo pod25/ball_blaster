@@ -8,6 +8,7 @@
  */
 void game::init_game() {
 	_quit			= false;
+	_speed_multiplyer = 1;
 	cur_eh			= &menu_eh;
 	set_window_pos	(0, 0);
 }
@@ -56,7 +57,7 @@ void game::main() {
 		uint cur_time = SDL_GetTicks();
 		if(cur_time - last_stepped >= 5) {
 			//cur_eh->e_step(cur_time - last_stepped);
-			cur_eh->e_step(5);
+			for (uint i = 0; i < _speed_multiplyer; i++) cur_eh->e_step(5);
 			last_stepped = cur_time;
 		}
 
@@ -74,6 +75,11 @@ void game::main() {
  */
 void game::quit() {
 	_quit = true;
+}
+
+
+void game::set_speed_multiplyer (uint m) {
+	_speed_multiplyer = m;
 }
 
 /*

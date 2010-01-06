@@ -240,7 +240,8 @@ void physics::init_level_simulation() {
 	goal_reached			= false;
 	// Physicalic start values
 	ball_rad				= lev.get_square_scale()*lev.get_ball_scale()/2;
-	lev.set_ball_pos(negated_y(vec(lev.cannon_coords()) + vec(0.5, 0.5))*lev.get_square_scale());
+	ball_square				= lev.cannon_coords();
+	lev.set_ball_pos(negated_y(vec(ball_square) + vec(0.5, 0.5))*lev.get_square_scale());
 	lev.set_ball_vel(vec(lev.get_cannon()->_shot_vec) * CANNON_STRENGH);
 	lev.set_ball_ang(0);
 	lev.set_ball_ang_vel(0);

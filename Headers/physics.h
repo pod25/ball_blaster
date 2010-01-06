@@ -6,7 +6,8 @@
 
 enum HIT_TYPES {
 	HIT_BOUNCE,
-	HIT_GOAL
+	HIT_GOAL,
+	HIT_CHANGE_SQUARE
 };
 
 /*
@@ -41,8 +42,9 @@ class physics {
 	// Ball statistics
 	double		ball_rad;
 	vec			ball_acc;
-	double		ball_moment_of_inertia; // Not used yet
-	double		friction_coefficient; // Not used yet
+	coords		ball_square;
+	double		ball_moment_of_inertia;
+	double		friction_coefficient;
 	// Bounce event statistics
 	bool		bounce_detected;
 	hit_event	next_bounce;
